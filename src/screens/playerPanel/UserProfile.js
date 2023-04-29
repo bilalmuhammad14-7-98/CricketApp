@@ -38,6 +38,7 @@ import images from "../../config/images";
 import { sizes } from "../../config/sizes";
 
 import { useDispatch } from "react-redux";
+import { logoutUser } from "../../store/actions/UserLogin";
 import { UnSetUser } from "../../store/actions/authAction";
 
 const curve_height = windowHeight * 0.15;
@@ -48,17 +49,17 @@ const CARD_HEIGHT = windowHeight * 0.07;
 const button_margin = windowWidth * 0.26;
 const input_width1 = windowWidth * 0.33;
 
-
 const UserProfile = (props) => {
   const dispatch = useDispatch();
   const { colors } = useTheme();
-  const { profile } = useContext(profileContext);
-  console.log(profile.payLoad.email);
+  // const { profile } = useContext(profileContext);
+  // console.log(profile.payLoad.email);
 
   //   const [text, onChangeText] = React.useState("Useless Text");
   //   const [number, onChangeNumber] = React.useState(null);
   const handleLogout = async () => {
-    await AsyncStorage.removeItem("Profile");
+    // await AsyncStorage.removeItem("Profile");
+    dispatch(logoutUser());
     alert("Logout Successfully.");
     props.navigation.navigate("LoginScreen");
   };
@@ -98,11 +99,10 @@ const UserProfile = (props) => {
               margin: sizes.m8,
               color: "#2BB789",
               width: input_width1,
-
-
             }}
           >
-            {profile.payLoad.email}
+            {/* {profile.payLoad.email} */}
+            {/* abc@gmail.com */}
           </Text>
           <View style={{ marginTop: sizes.m3 }}>
             <CustomButton1
@@ -116,8 +116,7 @@ const UserProfile = (props) => {
           </View>
         </View>
 
-        <TouchableOpacity 
-          onPress={() => handleLogout()}>
+        <TouchableOpacity onPress={() => handleLogout()}>
           <View style={styles.card}>
             <View style={{ flexDirection: "row", margin: sizes.m10 }}>
               <View>

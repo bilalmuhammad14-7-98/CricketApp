@@ -49,11 +49,11 @@ const PROFILECARD_HEIGHT = windowHeight * 0.6;
 
 const Profile = (props) => {
   const theme = useTheme();
-  const { profile } = useContext(profileContext);
+  // const { profile } = useContext(profileContext);
   const [modal, setModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
-  console.log(profile.payLoad.name);
+  // console.log(profile.payLoad.name);
 
   const [model, setModel] = useState({
     Name: "",
@@ -91,12 +91,12 @@ const Profile = (props) => {
   };
 
   const init = async () => {
-    await fetchPlayerProfile();
-    setIsLoading(false);
+    // await fetchPlayerProfile();
+    // setIsLoading(false);
   };
 
   useEffect(() => {
-    init();
+    // init();
   }, []);
 
   return (
@@ -166,7 +166,7 @@ const Profile = (props) => {
                   ellipsizeMode="tail"
                   style={styles.profile_text1}
                 >
-                  {profile.payLoad.name}
+                  {/* {profile.payLoad.name} */}
                 </Text>
 
                 <View
@@ -230,7 +230,7 @@ const Profile = (props) => {
             </View>
           </View>
 
-          {isLoading ? (
+          {!isLoading ? (
             <Text>Loading...</Text>
           ) : (
             <View
@@ -263,7 +263,8 @@ const Profile = (props) => {
                       ellipsizeMode="tail"
                       style={{ width: input_width, color: "#000" }}
                     >
-                      {model.Name} 
+                      Bilal
+                      {/* {model.Name}  */}
                     </Text>
                   </View>
                   <View style={{ flexDirection: "column" }}>
@@ -290,7 +291,7 @@ const Profile = (props) => {
                       ellipsizeMode="tail"
                       style={{ width: input_width }}
                     >
-                      {model.PlayingRole}
+                      {/* {model.PlayingRole} */}
                     </Text>
                   </View>
                   <View style={{ flexDirection: "column" }}>
@@ -306,7 +307,7 @@ const Profile = (props) => {
                       ellipsizeMode="tail"
                       style={{ width: input_width }}
                     >
-                      {model.BattingStyle}
+                      {/* {model.BattingStyle} */}
                     </Text>
                   </View>
                 </View>
@@ -329,7 +330,7 @@ const Profile = (props) => {
                       ellipsizeMode="tail"
                       style={{ width: input_width }}
                     >
-                      {model.BowlingStyle}
+                      {/* {model.BowlingStyle} */}
                     </Text>
                   </View>
                   <View style={{ flexDirection: "column" }}>
@@ -343,7 +344,7 @@ const Profile = (props) => {
                     >
                       Age
                     </Text>
-                    <Text>{profile.payLoad.age}</Text>
+                    <Text>{/* {profile.payLoad.age} */}</Text>
                   </View>
                 </View>
 
@@ -365,7 +366,7 @@ const Profile = (props) => {
                       ellipsizeMode="tail"
                       style={{ width: input_width }}
                     >
-                      {profile.payLoad.email}
+                      {/* {profile.payLoad.email} */}
                     </Text>
                   </View>
                 </View>
