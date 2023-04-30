@@ -103,7 +103,7 @@ const Login = (props) => {
         },
       });
     } else {
-      alert("Something Went Wrong");
+      // alert("Something Went Wrong");
     }
 
     // return () => {
