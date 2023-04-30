@@ -31,6 +31,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import CustomButton1 from "../../components/formComponents/CustomButton1";
 import { AsyncStorage } from "react-native";
 import { profileContext } from "../../components/context/context";
+import Toast from "react-native-root-toast";
 
 //import
 import { windowHeight, windowWidth } from "../../config/dimensions";
@@ -60,7 +61,25 @@ const UserProfile = (props) => {
   const handleLogout = async () => {
     // await AsyncStorage.removeItem("Profile");
     dispatch(logoutUser());
-    alert("Logout Successfully.");
+    // alert("Logout Successfully.");
+    Toast.show("User Logout Successfully", {
+      duration: Toast.durations.LONG,
+      position: Toast.positions.TOP,
+      textColor: "#FFFFFF",
+      shadow: true,
+      animation: true,
+      hideOnPress: true,
+      delay: 0,
+      position: 80,
+      backgroundColor: "#32de84",
+      style: {
+        height: 100,
+        padding: 30,
+        borderRadius: 10,
+        paddingLeft: 45,
+        paddingRight: 15,
+      },
+    });
     props.navigation.navigate("LoginScreen");
   };
 

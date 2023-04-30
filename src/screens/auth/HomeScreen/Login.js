@@ -37,8 +37,8 @@ const button_height = windowHeight * 0.36;
 
 const Login = (props) => {
   const dispatch = useDispatch();
-  const [username, setUsername] = useState("irfan@gulfresource.org");
-  const [password, setPassword] = useState("Bilal12345$");
+  const [username, setUsername] = useState("usman@gmail.com");
+  const [password, setPassword] = useState("Abc12345678$");
   const [isLoading, setIsLoading] = useState();
   const { profile } = useContext(profileContext);
   const [toast, setToast] = useState({
@@ -59,79 +59,51 @@ const Login = (props) => {
     return state.loginData.error;
   });
 
-  // useEffect(() => {
-  //   console.log(profile, "profile");
-  //   if (profile) {
-  //     props.navigation.navigate("PlayerHome");
-  //   }
-  // }, []);
-
   useEffect(() => {
     if (userLoginSuccess) {
+      // console.log(userLoginSuccess, "if userLogin Success");
       props.navigation.navigate("PlayerHome");
-      alert("Login Successfully !!!");
-      // console.log(loginSuccess, "if useEffect login data");
-      // history.push("/home");
-      // history.push("/dashboard");
-      // if (loginSuccess) {
-      // setAuthLoading(false);
-      // console.log("true");
-      // toast.success(" Admin Login Successfully!", {
-      //   position: "top-center",
-      //   autoClose: 5000,
-      //   hideProgressBar: false,
-      //   closeOnClick: true,
-      //   pauseOnHover: true,
-      //   draggable: true,
-      //   progress: undefined,
-      //   theme: "colored",
-      // });
-      // console.warn("login data successssssss", loginData);
-      // const session_token = loginData.data.token;
-      // const id = loginData.data._id;
-      // const { name } = loginData.data;
-      // const { email } = loginData.data;
-      // const { phone } = loginData.data;
-      // const data = [session_token, id, name, email, phone];
-      // localStorage.setItem("SessionData", JSON.stringify(data));
-      // setAdminEmail("");
-      // setPassword("");
-      // history.push("/dashboard");
-      // dispatch(resetloginAdmin());
-      // } else if (loginSuccess) {
-      // setAuthLoading(false);
-      // console.log("false");
-      // setErrMsg(true);
-      // dispatch(resetloginAdmin());
-      // }
+      // alert(userLoginSuccess.message);
+      Toast.show(userLoginSuccess.message, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.TOP,
+        textColor: "#FFFFFF",
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0,
+        position: 80,
+        backgroundColor: "#32de84",
+        style: {
+          height: 100,
+          padding: 30,
+          borderRadius: 10,
+          paddingLeft: 45,
+          paddingRight: 15,
+        },
+      });
     } else if (userLoginError) {
-      alert("Login Failed !!!");
-      // setAuthLoading(false);
-      // setErrMsg(true);
-      // console.log(loginError, "else if useEffect login data");
-      // toast.error(`❌ ${loginError.message} !`, {
-      //   position: "top-center",
-      //   autoClose: 5000,
-      //   hideProgressBar: false,
-      //   closeOnClick: true,
-      //   pauseOnHover: true,
-      //   draggable: true,
-      //   progress: undefined,
-      // });
+      // alert("Login Failed !!!");
+      Toast.show(userLoginError.message, {
+        duration: Toast.durations.LONG,
+        position: Toast.positions.TOP,
+        textColor: "#FFFFFF",
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0,
+        position: 80,
+        backgroundColor: "#FF033E",
+        style: {
+          height: 100,
+          padding: 30,
+          borderRadius: 10,
+          paddingLeft: 45,
+          paddingRight: 15,
+        },
+      });
     } else {
-      // console.log(loginData, "else useEffect login data");
-      // setAuthLoading(false);
-      // toast.error("Something Went Wrong", {
-      //   position: "top-center",
-      //   autoClose: 5000,
-      //   hideProgressBar: false,
-      //   closeOnClick: true,
-      //   pauseOnHover: true,
-      //   draggable: true,
-      //   progress: undefined,
-      //   theme: "colored",
-      // });
-      // dispatch(resetloginAdmin());
+      alert("Something Went Wrong");
     }
 
     // return () => {
@@ -147,23 +119,6 @@ const Login = (props) => {
 
     console.log(data, "login data");
     dispatch(UserLogin(data));
-    return;
-    // try {
-    //   const response = await axios.post(`${http}/api/signin`, {
-    //     email: username,
-    //     password: password,
-    //   });
-
-    //   if (response.data.isOk == false) {
-    //     alert(response.data.message);
-    //   } else if (response.data.isOk == true) {
-    //     await AsyncStorage.setItem("Profile", JSON.stringify(response.data));
-    //     alert("Login Successfully !!!");
-    //     props.navigation.navigate("PlayerHome");
-    //   }
-    // } catch (error) {
-    //   console.log(error);
-    // }
   };
 
   const handleUsernameChange = (text) => {

@@ -24,6 +24,8 @@ import { http } from "../../../components/http/http.js";
 import { colors } from "../../../config/colors";
 import { useRef } from "react";
 import { ScrollView } from "react-native-gesture-handler";
+// import { apiActiveURL } from "../../ApiBaseURL";
+import { apiActiveURL } from "../../../ApiBaseURL";
 
 const curve_height = windowHeight * 0.25;
 const input_width = windowHeight * 0.48;
@@ -34,8 +36,16 @@ const Signup = (props) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [gender, setGender] = useState("");
-  const [age, setAge] = useState("");
-  const [role, setrole] = useState("");
+  const [phone, setPhone] = useState("");
+
+  const [selectedRole, setSelectedRole] = useState("");
+  const [role, setrole] = useState([]);
+
+  const [selectedCountry, setSelectedCountry] = useState();
+  const [country, setCountry] = useState([]);
+
+  const [selectedCity, setSelectedCity] = useState();
+  const [cities, setCities] = useState([]);
   const inputRef = useRef(null);
 
   const data_gender = [
@@ -51,39 +61,128 @@ const Signup = (props) => {
 
   const { colors } = useTheme();
 
+  useEffect(() => {
+    listCountries();
+    listRoles();
+  }, []);
+
+  useEffect(() => {
+    if (selectedCountry) {
+      listCities(selectedCountry);
+    } else return;
+  }, [selectedCountry]);
+
+  const listCountries = async () => {
+    var config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: `${apiActiveURL}get-country`,
+    };
+
+    await axios(config)
+      .then(function (response) {
+        setCountry(response.data.countries);
+      })
+      .catch(function (error) {});
+  };
+
+  const listCities = async (value) => {
+    var config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: `${apiActiveURL}get-city?countryId=${value.value}`,
+    };
+
+    axios(config)
+      .then(function (response) {
+        setCities(response.data.cities);
+      })
+      .catch(function (error) {});
+  };
+
+  const listRoles = async () => {
+    var config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: `${apiActiveURL}get-role`,
+    };
+
+    await axios(config)
+      .then(function (response) {
+        setrole(response.data.roles);
+      })
+      .catch(function (error) {});
+  };
+
   const onClick = async (event) => {
-    const data = {
+    const Signupdata = {
       name: name,
       password: password,
       email: email,
-      age: age,
-      gender: gender,
-      role: role,
+      phone: phone,
+      country: selectedCountry,
+      city: selectedCity,
+      role: selectedRole,
     };
 
-    console.log(data, "signup Data");
+    var data = new FormData();
+    data.append("countryId", selectedCountry.value);
+    data.append("cityId", selectedCity.value);
+    data.append("roleId", selectedRole.value);
+    data.append("firstName", name);
+    data.append("email", email);
+    data.append("phone", phone);
+    data.append("password", password);
 
-    // try {
-    //   const response = await axios.post(`${http}/api/signup`, {
-    //     name: name,
-    //     password: password,
-    //     email: email,
-    //     age: age,
-    //     gender: gender,
-    //     role:role,
-    //   })
-    //   if (response.data.isOk == false) {
+    var config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: `${apiActiveURL}user/signUp`,
 
-    //     alert(response.data.message)
-    //   }
-    //   else if (response.data.isOk == true) {
-    //     alert(response.data.message)
-    //     props.navigation.navigate("LoginScreen")
-    //   }
+      data: data,
+    };
 
-    // } catch (error) {
-    //   console.log(error.message)
-    // }
+    await axios(config)
+      .then(function (response) {
+        Toast.show(response.data.message, {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.TOP,
+          textColor: "#FFFFFF",
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+          position: 80,
+          backgroundColor: "#32de84",
+          style: {
+            height: 100,
+            padding: 30,
+            borderRadius: 10,
+            paddingLeft: 45,
+            paddingRight: 15,
+          },
+        });
+      })
+      .catch(function (error) {
+        Toast.show("Something went wrong", {
+          duration: Toast.durations.LONG,
+          position: Toast.positions.TOP,
+          textColor: "#FFFFFF",
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+          position: 80,
+          backgroundColor: "#32de84",
+          style: {
+            height: 100,
+            padding: 30,
+            borderRadius: 10,
+            paddingLeft: 45,
+            paddingRight: 15,
+          },
+        });
+      });
   };
 
   return (
@@ -135,19 +234,19 @@ const Signup = (props) => {
             />
 
             <AuthCustomFormInput
-              value={age}
-              onChangeText={(text) => setAge(text)}
-              placeholder="Age"
-              keyboardType={""}
+              value={phone}
+              onChangeText={(text) => setPhone(text)}
+              placeholder="Phone"
+              keyboardType="numeric"
               // keyboardType={"email-address"}
             />
-            <AuthCustomFormInput
+            {/* <AuthCustomFormInput
               value={role}
               onChangeText={(text) => setrole(text)}
               placeholder="Role"
               keyboardType={""}
               // keyboardType={"email-address"}
-            />
+            /> */}
             {/* <AuthCustomFormInput
               value={gender}
               onChangeText={(text) => setGender(text)}
@@ -164,12 +263,47 @@ const Signup = (props) => {
                   fontSize: sizes.h3,
                 }}
               >
-                Gender
+                Country
               </Text>
               <CustomDropDown
-                value={gender}
-                onChange={(text) => setGender(text)}
-                data={data_gender}
+                value={selectedCountry}
+                onChange={(text) => setSelectedCountry(text)}
+                data={country}
+              />
+            </View>
+
+            <View>
+              <Text
+                style={{
+                  paddingHorizontal: 10,
+                  color: "#2BB789",
+                  fontSize: sizes.h3,
+                }}
+              >
+                City
+              </Text>
+              <CustomDropDown
+                disable={selectedCountry ? false : true}
+                value={selectedCity}
+                onChange={(text) => setSelectedCity(text)}
+                data={cities}
+              />
+            </View>
+
+            <View>
+              <Text
+                style={{
+                  paddingHorizontal: 10,
+                  color: "#2BB789",
+                  fontSize: sizes.h3,
+                }}
+              >
+                Role
+              </Text>
+              <CustomDropDown
+                value={selectedRole}
+                onChange={(text) => setSelectedRole(text)}
+                data={role}
               />
             </View>
 

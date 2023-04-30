@@ -26,6 +26,7 @@ export default function CustomDropDown(props) {
         // value={value}
         // onSelect={value1 => setSelectedItem(value1)}
         // value1={selectedItem}
+        // disable={true}
         onFocus={() => setIsFocus(true)}
         onBlur={() => setIsFocus(false)}
         // onChange={(item) => {
@@ -42,16 +43,16 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: "white",
     marginBottom: sizes.m10,
-    color: '#2BB789'
+    color: "#2BB789",
   },
-  
+
   dropdown: {
     height: 50,
     borderColor: "gray",
     borderBottomWidth: 1.5,
-    borderColor: '#B2BEB5',
+    borderColor: "#B2BEB5",
     // paddingHorizontal: 8,
-    padding: sizes.m10
+    padding: sizes.m10,
   },
 
   placeholderStyle: {
