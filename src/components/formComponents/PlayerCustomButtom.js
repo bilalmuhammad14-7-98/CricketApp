@@ -22,14 +22,14 @@ export default function PlayerCustomButtom({
   bgColor,
   btnLabel,
   textColor,
-  Press,
+  onPress,
   myStyle,
 }) {
   const a = useTheme();
   const colors = a.colors;
   return (
     <TouchableOpacity
-      onPress={Press}
+      onPress={onPress}
       style={[
         styles.button,
         {
@@ -39,7 +39,7 @@ export default function PlayerCustomButtom({
         },
       ]}
     >
-      <View style={{ flexDirection: "row"}}>
+      <View style={{ flexDirection: "row" }}>
         <AntDesign
           name="adduser"
           size={IMAGE_SIZE1}
@@ -58,7 +58,6 @@ export default function PlayerCustomButtom({
         </Text>
       </View>
     </TouchableOpacity>
-   
   );
 }
 
@@ -73,6 +72,6 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 12,
     fontWeight: "bold",
-    paddingLeft: sizes.m5
+    paddingLeft: sizes.m5,
   },
 });

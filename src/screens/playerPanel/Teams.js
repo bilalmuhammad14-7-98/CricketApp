@@ -33,6 +33,11 @@ import PlayerCustomButtom from "../../components/formComponents/PlayerCustomButt
 import colors from "../../config/colors";
 import SearchBar from "../../components/formComponents/SearchBar";
 
+import { apiActiveURL } from "../../ApiBaseURL";
+import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import axios from "axios";
+
 const curve_height = windowHeight * 0.2;
 const CARD_WIDTH = windowWidth * 0.93;
 const CARD_HEIGHT = windowHeight * 0.12;
@@ -46,9 +51,16 @@ const TeamsScreen = ({ navigation }) => {
   const searchRef = useRef();
   const [search, setSearch] = useState("");
   const [data, setData] = useState("");
+  const [teams, setTeams] = useState([]);
   // const [filter, setFilter] = useState("");
 
   const [clicked, setClicked] = useState(false);
+
+  const userLoginSuccess = useSelector((state) => {
+    console.log(state, "state");
+    console.log(state.loginData.data, "login data success");
+    return state.loginData.data;
+  });
 
   const onSearch = (text) => {
     if (text == "") {
@@ -93,14 +105,45 @@ const TeamsScreen = ({ navigation }) => {
     },
   ];
 
+  useEffect(() => {
+    listTeams();
+  }, []);
+
+  const listTeams = async () => {
+    console.log(userLoginSuccess.token, "teams");
+    var config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: `${apiActiveURL}list-teams`,
+      headers: {
+        Authorization: `Bearer ${userLoginSuccess.token}`,
+      },
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console.log(response.data, "teams response");
+        // setCountry(response.data.countries);
+        setTeams(response.data.teams);
+      })
+      .catch(function (error) {
+        console.log(error, "error");
+      });
+  };
+
+  const onPress = (item) => {
+    console.log(item, "Button pressed!");
+  };
+
   const renderList = (item) => {
+    console.log(item, "item---");
     return (
-      <View style={styles.cardsWrapper} key={item.id}>
+      <View style={styles.cardsWrapper} key={item.value}>
         <View style={styles.card}>
           <View style={styles.cardImgWrapper}>
             <Image
-              source={images.logo}
-              resizeMode="cover"
+              source={{ uri: item.logo }}
+              resizeMode="contain"
               style={styles.cardImg}
             />
           </View>
@@ -111,11 +154,14 @@ const TeamsScreen = ({ navigation }) => {
               numberOfLines={1}
               ellipsizeMode="tail"
             >
-              {item.name}
+              {item.label}
             </Text>
             <PlayerCustomButtom
               textColor="white"
               btnLabel="Request to Join"
+              onPress={() => {
+                onPress(item);
+              }}
               myStyle={{
                 alignSelf: "flex-end",
               }}
@@ -207,8 +253,6 @@ const TeamsScreen = ({ navigation }) => {
                     onSearch(txt);
                     setSearch(txt);
                   }}
-                 
-                  
                 />
 
                 <Entypo
@@ -232,11 +276,12 @@ const TeamsScreen = ({ navigation }) => {
             }}
           >
             <FlatList
-              data={data1}
+              data={teams}
               renderItem={({ item }) => {
+                // console.log(item, "item list");
                 return renderList(item);
               }}
-              keyExtractor={(item) => `${item.id}`}
+              keyExtractor={(item) => `${item.value}`}
             />
           </View>
         </View>
@@ -308,7 +353,7 @@ const styles = StyleSheet.create({
   },
 
   cardImg: {
-    height: "100%",
+    height: "50%",
     width: "100%",
     alignSelf: "center",
     borderRadius: 10,
@@ -338,10 +383,10 @@ const styles = StyleSheet.create({
     color: "#444",
   },
 
-  input:{
+  input: {
     paddingLeft: sizes.m8,
     fontWeight: "bold",
     fontSize: sizes.m16,
     width: INPUT_WIDTH * 0.75,
-  }
+  },
 });
