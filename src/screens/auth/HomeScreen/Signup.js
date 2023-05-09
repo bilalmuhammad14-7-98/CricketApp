@@ -145,7 +145,7 @@ const Signup = (props) => {
     await axios(config)
       .then(function (response) {
         Toast.show(response.data.message, {
-          duration: Toast.durations.LONG,
+          duration: Toast.durations.SHORT,
           position: Toast.positions.TOP,
           textColor: "#FFFFFF",
           shadow: true,
@@ -165,7 +165,7 @@ const Signup = (props) => {
       })
       .catch(function (error) {
         Toast.show("Something went wrong", {
-          duration: Toast.durations.LONG,
+          duration: Toast.durations.SHORT,
           position: Toast.positions.TOP,
           textColor: "#FFFFFF",
           shadow: true,

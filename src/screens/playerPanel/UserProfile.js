@@ -63,7 +63,7 @@ const UserProfile = (props) => {
     dispatch(logoutUser());
     // alert("Logout Successfully.");
     Toast.show("User Logout Successfully", {
-      duration: Toast.durations.LONG,
+      duration: Toast.durations.SHORT,
       position: Toast.positions.TOP,
       textColor: "#FFFFFF",
       shadow: true,

@@ -65,7 +65,7 @@ const Login = (props) => {
       props.navigation.navigate("PlayerHome");
       // alert(userLoginSuccess.message);
       Toast.show(userLoginSuccess.message, {
-        duration: Toast.durations.LONG,
+        duration: Toast.durations.SHORT,
         position: Toast.positions.TOP,
         textColor: "#FFFFFF",
         shadow: true,
@@ -85,7 +85,7 @@ const Login = (props) => {
     } else if (userLoginError) {
       // alert("Login Failed !!!");
       Toast.show(userLoginError.message, {
-        duration: Toast.durations.LONG,
+        duration: Toast.durations.SHORT,
         position: Toast.positions.TOP,
         textColor: "#FFFFFF",
         shadow: true,

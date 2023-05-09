@@ -21,6 +21,7 @@ import {
   Fontisto,
   MaterialIcons,
 } from "react-native-vector-icons";
+import Toast from "react-native-root-toast";
 
 //import
 import { windowHeight, windowWidth } from "../../config/dimensions";
@@ -57,8 +58,8 @@ const TeamsScreen = ({ navigation }) => {
   const [clicked, setClicked] = useState(false);
 
   const userLoginSuccess = useSelector((state) => {
-    console.log(state, "state");
-    console.log(state.loginData.data, "login data success");
+    // console.log(state, "state");
+    // console.log(state.loginData.data, "login data success");
     return state.loginData.data;
   });
 
@@ -106,11 +107,12 @@ const TeamsScreen = ({ navigation }) => {
   ];
 
   useEffect(() => {
+    // console.log("bilal");
     listTeams();
   }, []);
 
   const listTeams = async () => {
-    console.log(userLoginSuccess.token, "teams");
+    // console.log(userLoginSuccess.token, "teams");
     var config = {
       method: "get",
       maxBodyLength: Infinity,
@@ -122,21 +124,63 @@ const TeamsScreen = ({ navigation }) => {
 
     await axios(config)
       .then(function (response) {
-        console.log(response.data, "teams response");
+        // console.log(response.data, "teams response");
         // setCountry(response.data.countries);
         setTeams(response.data.teams);
       })
       .catch(function (error) {
-        console.log(error, "error");
+        // console.log(error, "error");
       });
   };
 
-  const onPress = (item) => {
-    console.log(item, "Button pressed!");
+  const onPress = async (item) => {
+    // console.log(item, "Button pressed!");
+
+    let data = new FormData();
+
+    data.append("team_id", item.value);
+    data.append("recruiter_id", item.recruiter_id);
+
+    var config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: `${apiActiveURL}join-team`,
+      headers: {
+        Authorization: `Bearer ${userLoginSuccess.token}`,
+      },
+      data: data,
+    };
+
+    await axios(config)
+      .then(function (response) {
+        // console.log(response.data, "join team response");
+        Toast.show(response.data.message, {
+          duration: 2000,
+          position: Toast.positions.TOP,
+          textColor: "#FFFFFF",
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+          position: 80,
+          backgroundColor: "#32de84",
+          style: {
+            height: 100,
+            padding: 30,
+            borderRadius: 10,
+            paddingLeft: 45,
+            paddingRight: 15,
+          },
+        });
+        listTeams();
+      })
+      .catch(function (error) {
+        // console.log(error);
+      });
   };
 
   const renderList = (item) => {
-    console.log(item, "item---");
+    // console.log(item, "item---");
     return (
       <View style={styles.cardsWrapper} key={item.value}>
         <View style={styles.card}>
@@ -158,7 +202,7 @@ const TeamsScreen = ({ navigation }) => {
             </Text>
             <PlayerCustomButtom
               textColor="white"
-              btnLabel="Request to Join"
+              btnLabel={item.requested_status}
               onPress={() => {
                 onPress(item);
               }}
