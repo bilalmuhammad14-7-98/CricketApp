@@ -30,7 +30,10 @@ import { LinearGradient } from "expo-linear-gradient";
 import { ScrollView } from "react-native-gesture-handler";
 import { profileContext } from "../../components/context/context";
 import { colors } from "../../config/colors";
-import { searchPlayer } from "../../services/playerService";
+import { useSelector } from "react-redux";
+import { apiActiveURL } from "../../ApiBaseURL";
+import axios from "axios";
+// import { searchPlayer } from "../../services/playerService";
 
 const CARD_WIDTH = windowWidth * 0.05;
 const CARD_HEIGHT = windowHeight * 0.23;
@@ -52,8 +55,15 @@ const Profile = (props) => {
   // const { profile } = useContext(profileContext);
   const [modal, setModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [userData, setUserData] = useState();
 
   // console.log(profile.payLoad.name);
+
+  const userLoginSuccess = useSelector((state) => {
+    // console.log(state, "state");
+    // console.log(state.loginData.data, "login data success");
+    return state.loginData.data;
+  });
 
   const [model, setModel] = useState({
     Name: "",
@@ -65,37 +75,29 @@ const Profile = (props) => {
     BowlingStyle: "",
   });
 
-  const fetchPlayerProfile = async () => {
-    try {
-      var res = await searchPlayer();
-      var payLoad = res.payLoad;
-      console.log(res);
-      if (!res.isOk) {
-        alert(payLoad.message);
-        return;
-      }
+  const getUserData = async () => {
+    // console.log(userLoginSuccess.token, "teams");
+    var config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: `${apiActiveURL}user/profile`,
+      headers: {
+        Authorization: `Bearer ${userLoginSuccess.token}`,
+      },
+    };
 
-      setModel({
-        ...model,
-        Name: payLoad.User.name,
-        Gender: payLoad.User.gender,
-        Age: payLoad.User.age,
-        Email: payLoad.User.email,
-        PlayingRole: payLoad.PlayingRole,
-        BowlingStyle: payLoad.BowlingStyle,
-        BattingStyle: payLoad.BattingStyle,
+    await axios(config)
+      .then(function (response) {
+        console.log(response.data.data, "get user data response");
+        setUserData(response.data.data);
+      })
+      .catch(function (error) {
+        // console.log(error, "error");
       });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const init = async () => {
-    // await fetchPlayerProfile();
-    // setIsLoading(false);
   };
 
   useEffect(() => {
+    getUserData();
     // init();
   }, []);
 
@@ -215,7 +217,9 @@ const Profile = (props) => {
 
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TouchableOpacity
-                onPress={() => props.navigation.navigate("EditProfile")}
+                onPress={() =>
+                  props.navigation.navigate("EditProfile", { item: userData })
+                }
                 style={{
                   marginRight: CARD_WIDTH,
                 }}
@@ -259,17 +263,17 @@ const Profile = (props) => {
                       Name
                     </Text>
                     <Text
-                      numberOfLines={1}
+                      numberOfLines={2}
                       ellipsizeMode="tail"
                       style={{ width: input_width, color: "#000" }}
                     >
-                      Bilal
+                      {userData?.fullName}
                       {/* {model.Name}  */}
                     </Text>
                   </View>
                   <View style={{ flexDirection: "column" }}>
                     <Text style={styles.profile_text3}>Gender</Text>
-                    <Text>{model.Gender}</Text>
+                    <Text> {userData?.gender}</Text>
                   </View>
                 </View>
 
@@ -291,7 +295,7 @@ const Profile = (props) => {
                       ellipsizeMode="tail"
                       style={{ width: input_width }}
                     >
-                      {/* {model.PlayingRole} */}
+                      {userData?.player[0]?.playing_role_id}
                     </Text>
                   </View>
                   <View style={{ flexDirection: "column" }}>
@@ -307,7 +311,7 @@ const Profile = (props) => {
                       ellipsizeMode="tail"
                       style={{ width: input_width }}
                     >
-                      {/* {model.BattingStyle} */}
+                      {userData?.player[0]?.batting_style_id}
                     </Text>
                   </View>
                 </View>
@@ -330,7 +334,7 @@ const Profile = (props) => {
                       ellipsizeMode="tail"
                       style={{ width: input_width }}
                     >
-                      {/* {model.BowlingStyle} */}
+                      {userData?.player[0]?.bowling_style_id}
                     </Text>
                   </View>
                   <View style={{ flexDirection: "column" }}>
@@ -344,7 +348,7 @@ const Profile = (props) => {
                     >
                       Age
                     </Text>
-                    <Text>{/* {profile.payLoad.age} */}</Text>
+                    <Text> {userData?.dob}</Text>
                   </View>
                 </View>
 
@@ -362,11 +366,11 @@ const Profile = (props) => {
                       Email
                     </Text>
                     <Text
-                      numberOfLines={1}
+                      numberOfLines={2}
                       ellipsizeMode="tail"
                       style={{ width: input_width }}
                     >
-                      {/* {profile.payLoad.email} */}
+                      {userData?.email}
                     </Text>
                   </View>
                 </View>

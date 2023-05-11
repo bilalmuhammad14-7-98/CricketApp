@@ -74,38 +74,6 @@ const TeamsScreen = ({ navigation }) => {
     }
   };
 
-  const data1 = [
-    {
-      id: 1,
-      name: "Falcon FC1",
-      // notification: "accept it"
-    },
-
-    {
-      id: 2,
-      name: "User564",
-      // notification: "follow you"
-    },
-
-    {
-      id: 3,
-      name: "Shaheer",
-      // notification: "accept it"
-    },
-
-    {
-      id: 4,
-      name: "Ali",
-      // notification: "accept it"
-    },
-
-    {
-      id: 5,
-      name: "Shan",
-      // notification: "accept it"
-    },
-  ];
-
   useEffect(() => {
     // console.log("bilal");
     listTeams();
