@@ -38,7 +38,7 @@ import { windowHeight, windowWidth } from "../../config/dimensions";
 import images from "../../config/images";
 import { sizes } from "../../config/sizes";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../store/actions/UserLogin";
 import { UnSetUser } from "../../store/actions/authAction";
 
@@ -53,6 +53,11 @@ const input_width1 = windowWidth * 0.33;
 const UserProfile = (props) => {
   const dispatch = useDispatch();
   const { colors } = useTheme();
+
+  const userLoginSuccess = useSelector((state) => {
+    console.log(state.loginData.data);
+    return state.loginData.data;
+  });
   // const { profile } = useContext(profileContext);
   // console.log(profile.payLoad.email);
 

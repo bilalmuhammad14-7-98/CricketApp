@@ -158,7 +158,7 @@ const Profile = (props) => {
                 <Avatar.Image
                   size={IMAGE_SIZE}
                   onPress={() => props.navigation.navigate("Profile")}
-                  source={images.logo}
+                  source={{ uri: userData ? userData?.profileImg : null }}
                 />
               </View>
 

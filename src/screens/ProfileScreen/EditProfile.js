@@ -16,6 +16,7 @@ import {
   SafeAreaView,
   Modal,
   Alert,
+  Platform,
 } from "react-native";
 import { apiActiveURL } from "../../ApiBaseURL";
 import Toast from "react-native-root-toast";
@@ -75,7 +76,10 @@ const EditProfile = (props) => {
     return state.loginData.data;
   });
   const { colors } = useTheme();
-  const [image, setImage] = useState(null);
+  const [image, setImage] = useState(props?.route?.params?.item?.profileImg);
+  const [imageName, setImageName] = useState();
+  const [imgObj, setImgObj] = useState(null);
+
   const [data, setData] = useState([]);
   const { profile } = useContext(profileContext);
   const [picture, setPicture] = useState("");
@@ -85,13 +89,13 @@ const EditProfile = (props) => {
   const { item } = route.params;
   const [userData, setUserData] = useState();
 
-  const [selectedGender, setSelectedGender] =
-    useState();
-    // item.gender == "male"
-    //   ? { label: "Male", value: "1" }
-    //   : item.gender == "female"
-    //   ? { label: "Female", value: "2" }
-    //   : ""
+  const [selectedGender, setSelectedGender] = useState(
+    item.gender == "male"
+      ? { label: "male", value: "1" }
+      : item.gender == "female"
+      ? { label: "female", value: "2" }
+      : ""
+  );
 
   const [selectedBattingStyle, setSelectedBattingStyle] = useState(
     item?.player[0]?.batting_style_id == "left hand"
@@ -147,7 +151,7 @@ const EditProfile = (props) => {
     lastName: item ? item.last_name : "",
     middleName: item ? item.middle_name : "",
     address: item ? item.address : "",
-    dob: "",
+    dob: item ? item?.dob : "",
     total_runs: item ? item?.player[0]?.total_runs : "",
     total_overs: item ? item?.player[0]?.total_overs : "",
     total_wickets: item ? item?.player[0]?.total_wickets : "",
@@ -189,7 +193,8 @@ const EditProfile = (props) => {
       country: selectedCountry,
       city: selectedCity,
     };
-    console.log(updateData, selectedGender.value, image, "dropdown data");
+    // console.log(updateData, selectedGender.value, image, "dropdown data");
+    console.log(imgObj, "imagesOBJ");
 
     // return;
 
@@ -199,7 +204,18 @@ const EditProfile = (props) => {
     data.append("middleName", model.middleName);
     data.append("address", model.address);
     data.append("gender", selectedGender ? selectedGender.label : "");
-    data.append("profile_img", image);
+    data.append(
+      "profile_img",
+      imgObj
+      // {
+      //   name: imgObj.name,
+      //   type: imgObj.type,
+      //   uri: imgObj.uri,
+      //   // Platform.OS === 'android'
+      //   // ? photo.uri
+      //   // : photo.uri.replace('file://', ''),
+      // }
+    );
     data.append("banner", "");
     data.append("dob", model.dob);
     data.append(
@@ -231,6 +247,7 @@ const EditProfile = (props) => {
       url: `${apiActiveURL}user/updateProfile`,
       headers: {
         Authorization: `Bearer ${userLoginSuccess.token}`,
+        "Content-Type": "multipart/form-data",
       },
       data: data,
     };
@@ -350,6 +367,23 @@ const EditProfile = (props) => {
     console.log(result);
 
     if (!result.canceled) {
+      let pathParts = result.uri.split("/");
+      console.log(pathParts, "path parts");
+      let typeLength = pathParts[pathParts.length - 1].split(".");
+      let typeimg = typeLength[1];
+      console.log(typeimg, "type----------");
+
+      const imageObj = {
+        name: pathParts[pathParts.length - 1],
+        type: `image/${typeimg}`,
+        uri: result.uri,
+      };
+
+      setImgObj(imageObj);
+
+      console.log(imageObj, "image obj");
+      console.log(pathParts[pathParts.length - 1].split("."), "name");
+      setImageName(pathParts[pathParts.length - 1]);
       setImage(result.uri);
     }
   };
@@ -456,6 +490,7 @@ const EditProfile = (props) => {
               size={LOGO_SIZE}
               // onPress={() => props.navigation.navigate("Profile")}
               source={{ uri: image ? image : null }}
+              // source={{ uri: item?.profileImg }}
               // source={{ uri: image }}
               style={{
                 marginTop: LOGO_SIZE * 0.5 * -1,
@@ -568,8 +603,8 @@ const EditProfile = (props) => {
 
             <CustomFormInput
               // autoComplete="name"
-              onChangeText={(val) => setModel({ ...model, Age: val })}
-              value={model.Age}
+              onChangeText={(val) => setModel({ ...model, dob: val })}
+              value={model.dob}
               placeholderText="Age"
             />
 
