@@ -85,13 +85,13 @@ const EditProfile = (props) => {
   const { item } = route.params;
   const [userData, setUserData] = useState();
 
-  const [selectedGender, setSelectedGender] = useState(
-    item.gender == "male"
-      ? { label: "Male", value: "1" }
-      : item.gender == "female"
-      ? { label: "Female", value: "2" }
-      : ""
-  );
+  const [selectedGender, setSelectedGender] =
+    useState();
+    // item.gender == "male"
+    //   ? { label: "Male", value: "1" }
+    //   : item.gender == "female"
+    //   ? { label: "Female", value: "2" }
+    //   : ""
 
   const [selectedBattingStyle, setSelectedBattingStyle] = useState(
     item?.player[0]?.batting_style_id == "left hand"
@@ -198,8 +198,8 @@ const EditProfile = (props) => {
     data.append("lastName", model.lastName);
     data.append("middleName", model.middleName);
     data.append("address", model.address);
-    data.append("gender", selectedGender ? selectedGender.value : "");
-    data.append("profile_img", "");
+    data.append("gender", selectedGender ? selectedGender.label : "");
+    data.append("profile_img", image);
     data.append("banner", "");
     data.append("dob", model.dob);
     data.append(
@@ -324,137 +324,37 @@ const EditProfile = (props) => {
       .catch(function (error) {});
   };
 
-  // const handleUpload = (image) => {
-  //   const data = new FormData();
-  //   data.append("file", image);
-  //   data.append("upload_preset", "fyp_TeamRecruiter");
-  //   data.append("cloud_name", "hashir561");
-
-  //   fetch("https://api.cloudinary.com/v1_1/hashir561/image/upload", {
-  //     method: "post",
-  //     body: data,
-  //   })
-  //     .then((res) => res.json())
-  //     .then((data) => {
-  //       console.log(data);
-  //     });
-  // };
+  useEffect(() => {
+    (async () => {
+      if (Platform.OS !== "web") {
+        console.log("hello");
+        // alert("Login Successfully !!!");
+        const { status } =
+          await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== "granted") {
+          alert("Sorry, we need camera roll permissions to make this work!");
+          Alert("Sorry, we need camera roll permissions to make this work!");
+        }
+      }
+    })();
+  }, []);
 
   const pickFromGallery = async () => {
-    // let result = await ImagePicker.launchImageLibraryAsync({
-    //   mediaTypes: ImagePicker.MediaTypeOptions.All,
-    //   allowsEditing: true,
-    //   aspect: [4, 3],
-    //   quality: 1,
-    // });
-    // console.log(result);
-    // if (!result.canceled) {
-    //   setImage(result.assets[0].uri);
-    // }
-    // ImageCropPicker.openPicker({}).then((image) => {
-    //   console.log(image, "image");
-    // });
-    // ImagePicker.openPicker({
-    //   width: 300,
-    //   height: 400,
-    //   cropping: true,
-    // })
-    //   .then((image) => {
-    //     console.log(image);
-    //     setImage(image.path);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
-    // let result = await ImagePicker.launchImageLibraryAsync({
-    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //   allowsEditing: true,
-    //   aspect: [4, 3],
-    //   quality: 1,
-    // });
-    // if (!result.canceled) {
-    //   // Use assets[0].uri instead of uri
-    //   console.log(result.assets[0].uri, "image");
-    //   setImage(result.assets[0].uri);
-    // }
-    // let result = await ImagePicker.launchImageLibraryAsync({
-    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //   allowsEditing: true,
-    //   aspect: [4, 3],
-    //   quality: 1,
-    // });
-    // if (!result.canceled) {
-    //   console.log(result, "images");
-    //   setImage(result.assets);
-    // }
-    // ImagePicker.openPicker({
-    //   width: 300,
-    //   height: 400,
-    // }).then((image) => {
-    //   console.log(image, "image");
-    // });
-    // ImagePicker.openPicker({
-    //   width: 300,
-    //   height: 400,
-    //   cropping: true,
-    //   mediaType: "photo",
-    // }).then((image) => {
-    //   // console.log(image, "image");
-    //   setImage({ uri: image.path });
-    // });
-    // Ask the user for the permission to access the media library
-    // const { granted } = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    // if (granted) {
-    //   let data = await ImagePicker.launchImageLibraryAsync({
-    //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //     allowsEditing: true,
-    //     aspect: [1, 1],
-    //     quality: 0.5,
-    //   });
-    //   if (!data.canceled) {
-    //     // let newfile = {
-    //     //   uri: data.assets.uri,
-    //     //   type: `test/${data.assets.uri.split(".")[1]}`,
-    //     //   name: `test.${data.assets.split(".")[1]}`,
-    //     // };
-    //     console.log(data, "image file gallery");
-    //     // handleUpload(newfile);
-    //   }
-    // } else {
-    //   Alert.alert("you need to give up permission to work");
-    // }
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 3],
+      quality: 1,
+    });
+
+    console.log(result);
+
+    if (!result.canceled) {
+      setImage(result.uri);
+    }
   };
 
-  const pickFromCamera = async () => {
-    // No permissions request is necessary for launching the image library
-    // let result = await ImagePicker.launchImageLibraryAsync({
-    //   mediaTypes: ImagePicker.MediaTypeOptions.All,
-    //   allowsEditing: true,
-    //   aspect: [4, 3],
-    //   quality: 1,
-    // });
-    // Ask the user for the permission to access the camera
-    // const { granted } = await ImagePicker.requestCameraPermissionsAsync();
-    // if (granted) {
-    //   let data = await ImagePicker.launchCameraAsync({
-    //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //     allowsEditing: true,
-    //     aspect: [1, 1],
-    //     quality: 0.5,
-    //   });
-    //   if (!data.canceled) {
-    //     let newfile = {
-    //       uri: data.assets.uri,
-    //       type: `test/${data.assets.uri.split(".")[1]}`,
-    //       name: `test.${data.assets.split(".")[1]}`,
-    //     };
-    //     console.log(data.assets.uri, "image file camera");
-    //     // handleUpload(newfile);
-    //   }
-    // } else {
-    //   Alert.alert("you need to give up permission to work");
-    // }
-  };
+  const pickFromCamera = async () => {};
 
   // const fetchPlayerProfile = async () => {
   //   try {
@@ -545,16 +445,17 @@ const EditProfile = (props) => {
           }}
         >
           <View style={styles.profile}>
-            {image && (
+            {/* {image && (
               <Image
                 source={{ uri: image }}
                 style={{ width: 200, height: 200 }}
               />
-            )}
+            )} */}
+
             <Avatar.Image
               size={LOGO_SIZE}
               // onPress={() => props.navigation.navigate("Profile")}
-              source={images.logo}
+              source={{ uri: image ? image : null }}
               // source={{ uri: image }}
               style={{
                 marginTop: LOGO_SIZE * 0.5 * -1,
@@ -562,6 +463,10 @@ const EditProfile = (props) => {
                 // borderWidth: 5
               }}
             />
+            {/* <Image
+              source={{ uri: image }}
+              style={{ width: 200, height: 200 }}
+            /> */}
             <Text
               style={styles.image_text}
               mode="contained"
@@ -591,14 +496,14 @@ const EditProfile = (props) => {
             >
               <View style={styles.modalView}>
                 <View style={styles.modalButtonView}>
-                  <Button
+                  {/* <Button
                     icon="camera"
                     theme={theme}
                     mode="contained"
                     onPress={() => pickFromCamera()}
                   >
                     Camera
-                  </Button>
+                  </Button> */}
                   <Button
                     icon="image-area"
                     mode="contained"
