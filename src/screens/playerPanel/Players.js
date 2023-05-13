@@ -43,7 +43,7 @@ const Search_Bar = windowHeight * 0.06;
 const INPUT_HEIGHT1 = windowHeight * 0.07;
 
 const PlayersScreen = (navigation) => {
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
 
   useEffect(() => {
     async function getPlayers() {
@@ -54,36 +54,37 @@ const PlayersScreen = (navigation) => {
     }
     getPlayers();
   }, []);
-  // const data = [
-  //   { 
-  //     id: 1,
-  //     name: "Muhammad hashirhashirhashirhashirhashirhashirhashir",
-  //     // notification: "accept it"
-  //   },
+  const data = [
+    {
+      id: 1,
+      name: "Muhammad hashirhashirhashirhashirhashirhashirhashir",
+      // notification: "accept it"
+    },
 
-  //   {
-  //     id: 2,
-  //     name: "User564",
-  //     // notification: "follow you"
-  //   },
+    {
+      id: 2,
+      name: "User564",
+      // notification: "follow you"
+    },
 
-  //   {
-  //     id: 3,
-  //     name: "Shaheer",
-  //     // notification: "accept it"
-  //   },
+    {
+      id: 3,
+      name: "Shaheer",
+      // notification: "accept it"
+    },
 
-  //   {
-  //     id: 4,
-  //     name: "Shan",
-  //     // notification: "accept it"
-  //   },
+    {
+      id: 4,
+      name: "Shan",
+      // notification: "accept it"
+    },
 
-  //   {
-  //     id: 5,
-  //     name: "Uzair",
-  //     // notification: "accept it"
-  //   },
+    {
+      id: 5,
+      name: "Uzair",
+      // notification: "accept it"
+    },
+  ];
   //   // { id: 3, name: "abd24", notification: "reject invitation" },
   //   // { id: 4, name: "humayun", notification: "accept tournament invitation" },
   //   // { id: 5, name: "hassan", notification: "Hi" },
@@ -95,7 +96,7 @@ const PlayersScreen = (navigation) => {
   //   // { id: 11, name: "humayun", notification: "accept tournament invitation" },
   // ];
 
-  const renderList = (item , index) => {
+  const renderList = (item, index) => {
     return (
       <View style={{ flex: 1 }}>
         <View>
@@ -201,9 +202,8 @@ const PlayersScreen = (navigation) => {
           >
             <FlatList
               data={data}
-              renderItem={( item ) => {
+              renderItem={(item) => {
                 return renderList(item.item);
-                
               }}
               keyExtractor={(item) => `${item.id}`}
             />

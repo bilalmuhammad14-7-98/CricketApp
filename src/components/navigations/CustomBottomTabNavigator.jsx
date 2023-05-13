@@ -30,6 +30,8 @@ import CricketProfile from "../../screens/ProfileScreen/CricketProfile";
 import EditProfile from "../../screens/ProfileScreen/EditProfile";
 import NavigationHeader from "./NavigationHeader";
 import Umpire from "../../screens/playerPanel/Umpire"
+
+import CreateTeam from "../../screens/teamScreens/CreateTeam";
 const upper_margin = windowWidth * 0.001;
 const upper_margin1 = windowWidth * 0.01;
 const LOGO_SIZE = windowHeight * 0.06;
@@ -159,6 +161,33 @@ function TeamsScreenNavigationContainer() {
               </View>
             );
           },
+
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
+
+<StackTeams.Screen
+        name="CreateTeam"
+        component={CreateTeam}
+        options={({ navigation }) => ({
+          title: "",
+          headerLeft: () => {
+            return <NavigationHeader title={"Create Team"} navigation={navigation} />;
+          },
+          // headerRight: () => {
+          //   return (
+          //     <View style={{ marginRight: upper_margin1 }}>
+          //       <Ionicons
+          //         name="notifications"
+          //         size={logo_size}
+          //         color="#2BB789"
+          //       />
+          //     </View>
+          //   );
+          // },
 
           headerStyle: {
             backgroundColor: "#FAF9F6",

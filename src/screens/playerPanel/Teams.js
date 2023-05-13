@@ -38,6 +38,7 @@ import { apiActiveURL } from "../../ApiBaseURL";
 import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
+import { useIsFocused } from "@react-navigation/native";
 
 const curve_height = windowHeight * 0.2;
 const CARD_WIDTH = windowWidth * 0.93;
@@ -49,6 +50,7 @@ const Search_Bar = windowHeight * 0.06;
 const cross_icon = windowHeight * 0.01;
 
 const TeamsScreen = ({ navigation }) => {
+  const isFocused = useIsFocused();
   const searchRef = useRef();
   const [search, setSearch] = useState("");
   const [data, setData] = useState("");
@@ -59,7 +61,7 @@ const TeamsScreen = ({ navigation }) => {
 
   const userLoginSuccess = useSelector((state) => {
     // console.log(state, "state");
-    // console.log(state.loginData.data, "login data success");
+    console.log(state.loginData.data, "login data success");
     return state.loginData.data;
   });
 
@@ -73,6 +75,17 @@ const TeamsScreen = ({ navigation }) => {
       setData(templist);
     }
   };
+
+  useEffect(() => {
+    if (isFocused) {
+      // This code will run when the screen gains focus
+      // alert("screen gained focus");
+      listTeams();
+    } else {
+      // This code will run when the screen loses focus
+      // alert("screen lost focus");
+    }
+  }, [isFocused]);
 
   useEffect(() => {
     // console.log("bilal");
@@ -168,16 +181,33 @@ const TeamsScreen = ({ navigation }) => {
             >
               {item.label}
             </Text>
-            <PlayerCustomButtom
-              textColor="white"
-              btnLabel={item.requested_status}
-              onPress={() => {
-                onPress(item);
-              }}
-              myStyle={{
-                alignSelf: "flex-end",
-              }}
-            />
+
+            {userLoginSuccess?.data?.roleId == "recruiter" ? (
+              <PlayerCustomButtom
+                textColor="white"
+                btnLabel="Schedule Match"
+                onPress={() => {
+                  // navigation.navigate("CreateTeam");
+                }}
+                myStyle={{
+                  alignSelf: "flex-end",
+
+                  // marginRight: 20,
+                  // paddingVertical: 10,
+                }}
+              />
+            ) : (
+              <PlayerCustomButtom
+                textColor="white"
+                btnLabel={item.requested_status}
+                onPress={() => {
+                  onPress(item);
+                }}
+                myStyle={{
+                  alignSelf: "flex-end",
+                }}
+              />
+            )}
           </View>
         </View>
       </View>
@@ -279,14 +309,30 @@ const TeamsScreen = ({ navigation }) => {
               </View>
             </View>
           </LinearGradient>
+
           <View
             style={{
               marginTop: -35,
               backgroundColor: "white",
               borderTopLeftRadius: 30,
               borderTopRightRadius: 30,
+              paddingVertical: 10,
             }}
           >
+            {userLoginSuccess?.data?.roleId == "recruiter" ? (
+              <PlayerCustomButtom
+                textColor="white"
+                btnLabel="Create Team"
+                onPress={() => {
+                  navigation.navigate("CreateTeam");
+                }}
+                myStyle={{
+                  alignSelf: "center",
+                  marginRight: 20,
+                  paddingVertical: 10,
+                }}
+              />
+            ) : null}
             <FlatList
               data={teams}
               renderItem={({ item }) => {
@@ -362,6 +408,10 @@ const styles = StyleSheet.create({
   cardImgWrapper: {
     flex: 1,
     flexDirection: "row",
+    // backgroundColor: "red",
+    borderWidth: 1,
+    borderRadius: 3,
+    borderColor: "green",
   },
 
   cardImg: {

@@ -37,8 +37,8 @@ const button_height = windowHeight * 0.36;
 
 const Login = (props) => {
   const dispatch = useDispatch();
-  const [username, setUsername] = useState("usman@gmail.com");
-  const [password, setPassword] = useState("Abc12345678$");
+  const [username, setUsername] = useState("Ambani@gmail.com");
+  const [password, setPassword] = useState("Ambani1234$");
   const [isLoading, setIsLoading] = useState();
   const { profile } = useContext(profileContext);
   const [toast, setToast] = useState({
