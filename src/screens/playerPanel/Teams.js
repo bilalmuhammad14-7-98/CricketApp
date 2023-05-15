@@ -105,7 +105,7 @@ const TeamsScreen = ({ navigation }) => {
 
     await axios(config)
       .then(function (response) {
-        // console.log(response.data, "teams response");
+        console.log(response.data, "teams response");
         // setCountry(response.data.countries);
         setTeams(response.data.teams);
       })

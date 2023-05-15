@@ -32,6 +32,8 @@ import CustomButton1 from "../../components/formComponents/CustomButton1";
 import { AsyncStorage } from "react-native";
 import { profileContext } from "../../components/context/context";
 import Toast from "react-native-root-toast";
+import { apiActiveURL } from "../../ApiBaseURL";
+import axios from "axios";
 
 //import
 import { windowHeight, windowWidth } from "../../config/dimensions";
@@ -41,6 +43,7 @@ import { sizes } from "../../config/sizes";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../store/actions/UserLogin";
 import { UnSetUser } from "../../store/actions/authAction";
+import { useIsFocused } from "@react-navigation/native";
 
 const curve_height = windowHeight * 0.15;
 const LOGO_SIZE = windowHeight * 0.15;
@@ -51,13 +54,53 @@ const button_margin = windowWidth * 0.26;
 const input_width1 = windowWidth * 0.33;
 
 const UserProfile = (props) => {
+  const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const { colors } = useTheme();
+  const [userData, setUserData] = useState();
 
   const userLoginSuccess = useSelector((state) => {
     console.log(state.loginData.data, "login data");
     return state.loginData.data;
   });
+
+  const getUserData = async () => {
+    // console.log(userLoginSuccess.token, "teams");
+    var config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: `${apiActiveURL}user/profile`,
+      headers: {
+        Authorization: `Bearer ${userLoginSuccess.token}`,
+      },
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console.log(response.data.data, "get user data response");
+        setUserData(response.data.data);
+      })
+      .catch(function (error) {
+        // console.log(error, "error");
+      });
+  };
+
+  useEffect(() => {
+    if (isFocused) {
+      getUserData();
+      // This code will run when the screen gains focus
+      // alert("screen gained focus");
+      // listTeams();
+    } else {
+      // This code will run when the screen loses focus
+      // alert("screen lost focus");
+    }
+  }, [isFocused]);
+
+  useEffect(() => {
+    getUserData();
+    // init();
+  }, []);
   // const { profile } = useContext(profileContext);
   // console.log(profile.payLoad.email);
 
@@ -107,9 +150,7 @@ const UserProfile = (props) => {
           <Avatar.Image
             size={LOGO_SIZE}
             source={
-              userLoginSuccess?.data?.profileImg
-                ? { uri: userLoginSuccess?.data?.profileImg }
-                : images.logo
+              userData?.profileImg ? { uri: userData?.profileImg } : images.logo
             }
             style={{
               marginTop: LOGO_SIZE * 0.5 * -1,
