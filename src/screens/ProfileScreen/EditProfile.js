@@ -206,7 +206,7 @@ const EditProfile = (props) => {
     data.append("gender", selectedGender ? selectedGender.label : "");
     data.append(
       "profile_img",
-      imgObj
+      imgObj ? imgObj : ""
       // {
       //   name: imgObj.name,
       //   type: imgObj.type,
@@ -489,7 +489,8 @@ const EditProfile = (props) => {
             <Avatar.Image
               size={LOGO_SIZE}
               // onPress={() => props.navigation.navigate("Profile")}
-              source={{ uri: image ? image : null }}
+              // source={{ uri: image ? image : null }}
+              source={image ? { uri: image } : images.FypLogo}
               // source={{ uri: item?.profileImg }}
               // source={{ uri: image }}
               style={{
@@ -608,42 +609,54 @@ const EditProfile = (props) => {
               placeholderText="Age"
             />
 
-            <CustomFormInput
-              // autoComplete="name"
-              onChangeText={(val) => setModel({ ...model, total_runs: val })}
-              value={model.total_runs}
-              placeholderText="Total Runs"
-            />
+            {userLoginSuccess?.data?.roleId == "recruiter" ? null : (
+              <>
+                <CustomFormInput
+                  // autoComplete="name"
+                  onChangeText={(val) =>
+                    setModel({ ...model, total_runs: val })
+                  }
+                  value={model.total_runs}
+                  placeholderText="Total Runs"
+                />
 
-            <CustomFormInput
-              // autoComplete="name"
-              onChangeText={(val) => setModel({ ...model, total_overs: val })}
-              value={model.total_overs}
-              placeholderText="Total Overs"
-            />
+                <CustomFormInput
+                  // autoComplete="name"
+                  onChangeText={(val) =>
+                    setModel({ ...model, total_overs: val })
+                  }
+                  value={model.total_overs}
+                  placeholderText="Total Overs"
+                />
 
-            <CustomFormInput
-              // autoComplete="name"
-              onChangeText={(val) => setModel({ ...model, total_wickets: val })}
-              value={model.total_wickets}
-              placeholderText="Total Wickets"
-            />
+                <CustomFormInput
+                  // autoComplete="name"
+                  onChangeText={(val) =>
+                    setModel({ ...model, total_wickets: val })
+                  }
+                  value={model.total_wickets}
+                  placeholderText="Total Wickets"
+                />
 
-            <CustomFormInput
-              // autoComplete="name"
-              onChangeText={(val) => setModel({ ...model, total_matches: val })}
-              value={model.total_matches}
-              placeholderText="Total Matches"
-            />
+                <CustomFormInput
+                  // autoComplete="name"
+                  onChangeText={(val) =>
+                    setModel({ ...model, total_matches: val })
+                  }
+                  value={model.total_matches}
+                  placeholderText="Total Matches"
+                />
 
-            <CustomFormInput
-              // autoComplete="name"
-              onChangeText={(val) =>
-                setModel({ ...model, player_ratings: val })
-              }
-              value={model.player_ratings}
-              placeholderText="Player Ratings"
-            />
+                <CustomFormInput
+                  // autoComplete="name"
+                  onChangeText={(val) =>
+                    setModel({ ...model, player_ratings: val })
+                  }
+                  value={model.player_ratings}
+                  placeholderText="Player Ratings"
+                />
+              </>
+            )}
 
             <CustomFormInput
               // autoComplete="name"
@@ -694,56 +707,58 @@ const EditProfile = (props) => {
               />
             </View>
 
-            <View>
-              <Text
-                style={{
-                  paddingHorizontal: 10,
-                  color: "#2BB789",
-                  fontSize: sizes.h3,
-                }}
-              >
-                Batting Style
-              </Text>
-              <CustomDropDown
-                value={selectedBattingStyle}
-                onChange={(text) => setSelectedBattingStyle(text)}
-                data={battingStyle}
-              />
-            </View>
-
-            <View>
-              <Text
-                style={{
-                  paddingHorizontal: 10,
-                  color: "#2BB789",
-                  fontSize: sizes.h3,
-                }}
-              >
-                Playing Role
-              </Text>
-              <CustomDropDown
-                value={selectedPlayingRole}
-                onChange={(text) => setSelectedPlayingRole(text)}
-                data={playingRole}
-              />
-            </View>
-
-            <View>
-              <Text
-                style={{
-                  paddingHorizontal: 10,
-                  color: "#2BB789",
-                  fontSize: sizes.h3,
-                }}
-              >
-                Bowling Style
-              </Text>
-              <CustomDropDown
-                value={selectedBowlingStyle}
-                onChange={(text) => setSelectedBowlingStyle(text)}
-                data={bowlingStyle}
-              />
-            </View>
+            {userLoginSuccess?.data?.roleId == "recruiter" ? null : (
+              <>
+                <View>
+                  <Text
+                    style={{
+                      paddingHorizontal: 10,
+                      color: "#2BB789",
+                      fontSize: sizes.h3,
+                    }}
+                  >
+                    Batting Style
+                  </Text>
+                  <CustomDropDown
+                    value={selectedBattingStyle}
+                    onChange={(text) => setSelectedBattingStyle(text)}
+                    data={battingStyle}
+                  />
+                </View>
+                <View>
+                  <Text
+                    style={{
+                      paddingHorizontal: 10,
+                      color: "#2BB789",
+                      fontSize: sizes.h3,
+                    }}
+                  >
+                    Playing Role
+                  </Text>
+                  <CustomDropDown
+                    value={selectedPlayingRole}
+                    onChange={(text) => setSelectedPlayingRole(text)}
+                    data={playingRole}
+                  />
+                </View>
+                <View>
+                  <Text
+                    style={{
+                      paddingHorizontal: 10,
+                      color: "#2BB789",
+                      fontSize: sizes.h3,
+                    }}
+                  >
+                    Bowling Style
+                  </Text>
+                  <CustomDropDown
+                    value={selectedBowlingStyle}
+                    onChange={(text) => setSelectedBowlingStyle(text)}
+                    data={bowlingStyle}
+                  />
+                </View>
+              </>
+            )}
 
             {/* <View>
               <Text

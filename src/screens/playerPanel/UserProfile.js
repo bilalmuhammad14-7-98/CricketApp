@@ -55,7 +55,7 @@ const UserProfile = (props) => {
   const { colors } = useTheme();
 
   const userLoginSuccess = useSelector((state) => {
-    console.log(state.loginData.data);
+    console.log(state.loginData.data, "login data");
     return state.loginData.data;
   });
   // const { profile } = useContext(profileContext);
@@ -106,7 +106,11 @@ const UserProfile = (props) => {
         <View style={styles.profile}>
           <Avatar.Image
             size={LOGO_SIZE}
-            source={images.logo}
+            source={
+              userLoginSuccess?.data?.profileImg
+                ? { uri: userLoginSuccess?.data?.profileImg }
+                : images.logo
+            }
             style={{
               marginTop: LOGO_SIZE * 0.5 * -1,
               // borderColor: colors.primary,

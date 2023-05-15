@@ -180,7 +180,9 @@ const Profile = (props) => {
                   }}
                 >
                   <TouchableOpacity
-                    onPress={() => props.navigation.navigate("CricketProfile")}
+                    onPress={() => {
+                      // props.navigation.navigate("CricketProfile")
+                    }}
                     style={{
                       width: IMAGE_SIZE1,
                       height: IMAGE_SIZE1,
@@ -276,67 +278,71 @@ const Profile = (props) => {
                     <Text> {userData?.gender}</Text>
                   </View>
                 </View>
+                {userLoginSuccess?.data?.roleId == "recruiter" ? null : (
+                  <View style={styles.profile_stats1}>
+                    <View style={{ flexDirection: "column" }}>
+                      <Text
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                        style={{
+                          fontSize: 15,
+                          fontWeight: "bold",
+                          color: colors.primary,
+                        }}
+                      >
+                        Playing Role
+                      </Text>
+                      <Text
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                        style={{ width: input_width }}
+                      >
+                        {userData?.player[0]?.playing_role_id}
+                      </Text>
+                    </View>
+                    <View style={{ flexDirection: "column" }}>
+                      <Text
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                        style={styles.profile_text2}
+                      >
+                        Batting Style
+                      </Text>
+                      <Text
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                        style={{ width: input_width }}
+                      >
+                        {userData?.player[0]?.batting_style_id}
+                      </Text>
+                    </View>
+                  </View>
+                )}
 
                 <View style={styles.profile_stats1}>
-                  <View style={{ flexDirection: "column" }}>
-                    <Text
-                      numberOfLines={1}
-                      ellipsizeMode="tail"
-                      style={{
-                        fontSize: 15,
-                        fontWeight: "bold",
-                        color: colors.primary,
-                      }}
-                    >
-                      Playing Role
-                    </Text>
-                    <Text
-                      numberOfLines={1}
-                      ellipsizeMode="tail"
-                      style={{ width: input_width }}
-                    >
-                      {userData?.player[0]?.playing_role_id}
-                    </Text>
-                  </View>
-                  <View style={{ flexDirection: "column" }}>
-                    <Text
-                      numberOfLines={1}
-                      ellipsizeMode="tail"
-                      style={styles.profile_text2}
-                    >
-                      Batting Style
-                    </Text>
-                    <Text
-                      numberOfLines={1}
-                      ellipsizeMode="tail"
-                      style={{ width: input_width }}
-                    >
-                      {userData?.player[0]?.batting_style_id}
-                    </Text>
-                  </View>
-                </View>
+                  {userLoginSuccess?.data?.roleId == "recruiter" ? null : (
+                    <View style={{ flexDirection: "column" }}>
+                      <Text
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                        style={{
+                          fontSize: 15,
+                          fontWeight: "bold",
+                          color: colors.primary,
+                        }}
+                      >
+                        Bowling Style
+                      </Text>
+                      <Text
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                        style={{ width: input_width }}
+                      >
+                        {userData?.player[0]?.bowling_style_id}
+                      </Text>
+                    </View>
+                  )}
 
-                <View style={styles.profile_stats1}>
-                  <View style={{ flexDirection: "column" }}>
-                    <Text
-                      numberOfLines={1}
-                      ellipsizeMode="tail"
-                      style={{
-                        fontSize: 15,
-                        fontWeight: "bold",
-                        color: colors.primary,
-                      }}
-                    >
-                      Bowling Style
-                    </Text>
-                    <Text
-                      numberOfLines={1}
-                      ellipsizeMode="tail"
-                      style={{ width: input_width }}
-                    >
-                      {userData?.player[0]?.bowling_style_id}
-                    </Text>
-                  </View>
                   <View style={{ flexDirection: "column" }}>
                     <Text
                       style={{
