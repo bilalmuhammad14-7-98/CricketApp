@@ -31,6 +31,8 @@ import { LinearGradient } from "expo-linear-gradient";
 import { ScrollView } from "react-native-gesture-handler";
 import axios from "axios";
 import { http } from "../../components/http/http";
+import { apiActiveURL } from "../../ApiBaseURL";
+import { useSelector } from "react-redux";
 
 const LOGO_SIZE = windowHeight * 0.1;
 const CARD_WIDTH = windowWidth * 0.95;
@@ -43,67 +45,57 @@ const Search_Bar = windowHeight * 0.06;
 const INPUT_HEIGHT1 = windowHeight * 0.07;
 
 const PlayersScreen = (navigation) => {
-  // const [data, setData] = useState([]);
+  const userLoginSuccess = useSelector((state) => {
+    // console.log(state, "state");
+    console.log(state.loginData.data, "login data success");
+    return state.loginData.data;
+  });
+  const [players, setPlayers] = useState([]);
+
+  const listPlayers = async () => {
+    console.log(userLoginSuccess?.data?.id, "recruiter id");
+    var config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: `${apiActiveURL}list-players?teamId=${userLoginSuccess?.data?.id}`,
+      headers: {
+        Authorization: `Bearer ${userLoginSuccess.token}`,
+      },
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console.log(response.data, "players response");
+        setPlayers(response?.data?.players);
+        // setTeams(response.data.teams);
+      })
+      .catch(function (error) {
+        // console.log(error, "error");
+      });
+  };
+
+  const onPress = async (item) => {
+    console.log(item, "clicked item");
+  };
 
   useEffect(() => {
-    async function getPlayers() {
-      try {
-        const response = await axios.get(`${http}/api/player/players`);
-        setData(response.data.players);
-      } catch (error) {}
-    }
-    getPlayers();
+    listPlayers();
   }, []);
-  const data = [
-    {
-      id: 1,
-      name: "Muhammad hashirhashirhashirhashirhashirhashirhashir",
-      // notification: "accept it"
-    },
-
-    {
-      id: 2,
-      name: "User564",
-      // notification: "follow you"
-    },
-
-    {
-      id: 3,
-      name: "Shaheer",
-      // notification: "accept it"
-    },
-
-    {
-      id: 4,
-      name: "Shan",
-      // notification: "accept it"
-    },
-
-    {
-      id: 5,
-      name: "Uzair",
-      // notification: "accept it"
-    },
-  ];
-  //   // { id: 3, name: "abd24", notification: "reject invitation" },
-  //   // { id: 4, name: "humayun", notification: "accept tournament invitation" },
-  //   // { id: 5, name: "hassan", notification: "Hi" },
-  //   // { id: 6, name: "abd24", notification: "reject invitation" },
-  //   // { id: 7, name: "humayun", notification: "accept tournament invitation" },
-  //   // { id: 8, name: "abd24", notification: "reject invitation" },
-  //   // { id: 9, name: "humayun", notification: "accept tournament invitation" },
-  //   // { id: 10, name: "abd24", notification: "reject invitation" },
-  //   // { id: 11, name: "humayun", notification: "accept tournament invitation" },
-  // ];
 
   const renderList = (item, index) => {
+    console.log(item, "item");
     return (
       <View style={{ flex: 1 }}>
         <View>
           <View style={styles.card} key={index}>
             <View style={styles.cardView}>
               <View style={styles.logo}>
-                <Avatar.Image size={LOGO_SIZE} source={images.logo} />
+                <Avatar.Image
+                  size={LOGO_SIZE}
+                  source={
+                    item?.playerImage ? { uri: item?.playerImage } : images.logo
+                  }
+                />
               </View>
             </View>
 
@@ -120,7 +112,7 @@ const PlayersScreen = (navigation) => {
                   ellipsizeMode="tail"
                   style={styles.text}
                 >
-                  {item.name}
+                  {item?.playerName}
                 </Text>
                 {/* <Text style={styles.text}>{item.notification}</Text> */}
               </View>
@@ -133,7 +125,10 @@ const PlayersScreen = (navigation) => {
               >
                 <PlayerCustomButtom
                   textColor="white"
-                  btnLabel="Request to Join"
+                  btnLabel="Schedule Match"
+                  onPress={() => {
+                    onPress(item);
+                  }}
                   myStyle={{
                     alignSelf: "flex-end",
                   }}
@@ -201,7 +196,7 @@ const PlayersScreen = (navigation) => {
             }}
           >
             <FlatList
-              data={data}
+              data={players}
               renderItem={(item) => {
                 return renderList(item.item);
               }}
