@@ -25,6 +25,7 @@ import PlayerHome from "../../screens/playerPanel/PlayerHome";
 import TeamsScreen from "../../screens/playerPanel/Teams";
 import UserProfile from "../../screens/playerPanel/UserProfile";
 import PlayersScreen from "../../screens/playerPanel/Players";
+import PlayerRequests from "../../screens/playerPanel/PlayerRequests";
 import Profile from "../../screens/ProfileScreen/Profile";
 import CricketProfile from "../../screens/ProfileScreen/CricketProfile";
 import EditProfile from "../../screens/ProfileScreen/EditProfile";
@@ -87,7 +88,7 @@ function PlayerHomeNavigationContainer() {
           title: "",
           headerLeft: () => {
             return (
-              <NavigationHeader title={"Profile"} navigation={navigation} />
+              <NavigationHeader title={"Players List"} navigation={navigation} />
             );
           },
           headerRight: () => {
@@ -101,6 +102,34 @@ function PlayerHomeNavigationContainer() {
               </View>
             );
           },
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
+
+      <StackPlayerHome.Screen
+        name="PlayerRequest"
+        component={PlayerRequests}
+        options={({ navigation }) => ({
+          title: "",
+          headerLeft: () => {
+            return (
+              <NavigationHeader title={"Players Request"} navigation={navigation} />
+            );
+          },
+          // headerRight: () => {
+          //   return (
+          //     <View style={{ marginRight: upper_margin1 }}>
+          //       <Ionicons
+          //         name="notifications"
+          //         size={logo_size}
+          //         color="#2BB789"
+          //       />
+          //     </View>
+          //   );
+          // },
           headerStyle: {
             backgroundColor: "#FAF9F6",
             elevation: 0,
@@ -169,7 +198,7 @@ function TeamsScreenNavigationContainer() {
         })}
       />
 
-<StackTeams.Screen
+     <StackTeams.Screen
         name="CreateTeam"
         component={CreateTeam}
         options={({ navigation }) => ({

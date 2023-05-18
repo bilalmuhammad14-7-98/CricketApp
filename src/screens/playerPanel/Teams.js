@@ -115,7 +115,7 @@ const TeamsScreen = ({ navigation }) => {
   };
 
   const onPress = async (item) => {
-    // console.log(item, "Button pressed!");
+    console.log(item, "Button pressed!");
 
     let data = new FormData();
 
@@ -156,7 +156,7 @@ const TeamsScreen = ({ navigation }) => {
         listTeams();
       })
       .catch(function (error) {
-        // console.log(error);
+        console.log(error);
       });
   };
 

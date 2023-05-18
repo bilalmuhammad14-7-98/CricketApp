@@ -33,7 +33,7 @@ import axios from "axios";
 import { http } from "../../components/http/http";
 import { apiActiveURL } from "../../ApiBaseURL";
 import { useSelector } from "react-redux";
-import { useIsFocused } from "@react-navigation/native";
+import Toast from "react-native-root-toast";
 
 const LOGO_SIZE = windowHeight * 0.1;
 const CARD_WIDTH = windowWidth * 0.95;
@@ -45,8 +45,7 @@ const cross_icon = windowHeight * 0.01;
 const Search_Bar = windowHeight * 0.06;
 const INPUT_HEIGHT1 = windowHeight * 0.07;
 
-const PlayersScreen = ({ navigation }) => {
-  const isFocused = useIsFocused();
+const PlayerRequests = (navigation) => {
   const userLoginSuccess = useSelector((state) => {
     // console.log(state, "state");
     console.log(state.loginData.data, "login data success");
@@ -54,23 +53,12 @@ const PlayersScreen = ({ navigation }) => {
   });
   const [players, setPlayers] = useState([]);
 
-  useEffect(() => {
-    if (isFocused) {
-      // This code will run when the screen gains focus
-      // alert("screen gained focus");
-      listPlayers();
-    } else {
-      // This code will run when the screen loses focus
-      // alert("screen lost focus");
-    }
-  }, [isFocused]);
-
   const listPlayers = async () => {
-    console.log(userLoginSuccess?.data?.id, "recruiter id");
+    // console.log(userLoginSuccess?.data?.id, "recruiter id");
     var config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${apiActiveURL}list-players?teamId=${userLoginSuccess?.data?.id}`,
+      url: `${apiActiveURL}team-request-listing`,
       headers: {
         Authorization: `Bearer ${userLoginSuccess.token}`,
       },
@@ -78,8 +66,8 @@ const PlayersScreen = ({ navigation }) => {
 
     await axios(config)
       .then(function (response) {
-        console.log(response.data, "players response");
-        setPlayers(response?.data?.players);
+        console.log(response.data, "players request response");
+        setPlayers(response?.data?.teams);
         // setTeams(response.data.teams);
       })
       .catch(function (error) {
@@ -87,8 +75,56 @@ const PlayersScreen = ({ navigation }) => {
       });
   };
 
-  const onPress = async (item) => {
-    console.log(item, "clicked item");
+  const onPress = async (item, status) => {
+    console.log(item, status, "clicked item");
+    var data = new FormData();
+    data.append("team_req_id", item.team_req_id);
+    data.append("team_id", item.team_id);
+    data.append("player_id", item.player_id);
+    data.append("status", status);
+
+    var config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: `${apiActiveURL}change-join-status`,
+      headers: {
+        Authorization: `Bearer ${userLoginSuccess.token}`,
+        "Content-Type": "multipart/form-data",
+      },
+      data: data,
+    };
+
+    console.log(config, "config");
+
+    await axios(config)
+      .then(function (response) {
+        console.log(response, "players request response");
+
+        Toast.show(response.data.message, {
+          duration: 2000,
+          position: Toast.positions.TOP,
+          textColor: "#FFFFFF",
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+          position: 80,
+          backgroundColor: "#32de84",
+          style: {
+            height: 100,
+            padding: 30,
+            borderRadius: 10,
+            paddingLeft: 45,
+            paddingRight: 15,
+          },
+        });
+
+        // props.navigation.goBack();
+        // listTeams();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   useEffect(() => {
@@ -98,9 +134,9 @@ const PlayersScreen = ({ navigation }) => {
   const renderList = (item, index) => {
     console.log(item, "item");
     return (
-      <View style={{ flex: 1 }} key={item.playerId}>
+      <View style={{ flex: 1 }}>
         <View>
-          <View style={styles.card}>
+          <View style={styles.card} key={item.player_id}>
             <View style={styles.cardView}>
               <View style={styles.logo}>
                 <Avatar.Image
@@ -125,8 +161,9 @@ const PlayersScreen = ({ navigation }) => {
                   ellipsizeMode="tail"
                   style={styles.text}
                 >
-                  {item?.playerName}
+                  {item?.player_name}
                 </Text>
+
                 {/* <Text style={styles.text}>{item.notification}</Text> */}
               </View>
               <View
@@ -134,13 +171,26 @@ const PlayersScreen = ({ navigation }) => {
                   marginRight: sizes.m5,
                   marginBottom: sizes.m5,
                   justifyContent: "flex-end",
+                  //   backgroundColor: "red",
                 }}
               >
                 <PlayerCustomButtom
                   textColor="white"
-                  btnLabel="View Profile"
+                  btnLabel="Accept"
                   onPress={() => {
-                    onPress(item);
+                    onPress(item, "accept");
+                  }}
+                  myStyle={{
+                    alignSelf: "flex-end",
+                    marginTop: -10,
+                    marginBottom: 5,
+                  }}
+                />
+                <PlayerCustomButtom
+                  textColor="white"
+                  btnLabel="Decline"
+                  onPress={() => {
+                    onPress(item, "decline");
                   }}
                   myStyle={{
                     alignSelf: "flex-end",
@@ -208,27 +258,12 @@ const PlayersScreen = ({ navigation }) => {
               borderTopRightRadius: 30,
             }}
           >
-            <PlayerCustomButtom
-              textColor="white"
-              btnLabel="View Player request"
-              onPress={() => {
-                navigation.navigate("PlayerRequest");
-              }}
-              myStyle={{
-                marginTop: 10,
-                alignSelf: "flex-end",
-                marginRight: 20,
-                paddingVertical: 15,
-                paddingHorizontal: 20,
-                borderRadius: 40,
-              }}
-            />
             <FlatList
               data={players}
               renderItem={(item) => {
                 return renderList(item.item);
               }}
-              keyExtractor={(item) => `${item.playerId}`}
+              keyExtractor={(item) => `${item.player_id}`}
             />
           </View>
         </View>
@@ -237,7 +272,7 @@ const PlayersScreen = ({ navigation }) => {
   );
 };
 
-export default PlayersScreen;
+export default PlayerRequests;
 
 const styles = StyleSheet.create({
   root: {
