@@ -37,7 +37,7 @@ import Marketplace from "./Marketplace";
 import UserProfile from "./UserProfile";
 import { ScrollView } from "react-native-gesture-handler";
 import SearchBar from "../../components/formComponents/SearchBar";
-
+import { useSelector } from "react-redux";
 const CARD_WIDTH1 = windowWidth * 0.93;
 const CARD_HEIGHT1 = windowWidth * 0.5;
 const CARD_WIDTH = windowWidth * 0.44;
@@ -103,11 +103,16 @@ const Card = ({ item, navigation }) => {
 };
 
 const PlayerHome = ({ navigation }) => {
+  // console.log(props, "props");
+  const userLoginSuccess = useSelector((state) => {
+    console.log(state.loginData.data, "login data ");
+    return state.loginData.data;
+  });
   const [playinRole, setplayinRole] = useState("");
   const [battingStyle, setbattingStyle] = useState("");
   const [bowlingStyle, setbowlingStyle] = useState("");
   const [searchPhrase, setSearchPhrase] = useState("");
-  const [clicked, setClicked] = useState(false);
+  const [clicked, setClicked] = useState(true);
 
   const { colors } = useTheme();
 
@@ -131,8 +136,13 @@ const PlayerHome = ({ navigation }) => {
       name: "Players",
       code: colors.white,
       image: images.cricketerAndfootballer,
-      navigationScreen: () =>
-        navigation.navigate("PlayerHomeRoot", { screen: "PlayersScreen" }),
+      navigationScreen: () => {
+        {
+          userLoginSuccess?.data?.roleId == "recruiter"
+            ? navigation.navigate("PlayerHomeRoot", { screen: "PlayersScreen" })
+            : null;
+        }
+      },
     },
     {
       name: "Umpire/Referee",
