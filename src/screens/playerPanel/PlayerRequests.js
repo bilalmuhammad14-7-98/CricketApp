@@ -118,6 +118,7 @@ const PlayerRequests = (navigation) => {
             paddingRight: 15,
           },
         });
+        listPlayers();
 
         // props.navigation.goBack();
         // listTeams();
