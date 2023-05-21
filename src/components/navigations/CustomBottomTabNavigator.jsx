@@ -30,9 +30,11 @@ import Profile from "../../screens/ProfileScreen/Profile";
 import CricketProfile from "../../screens/ProfileScreen/CricketProfile";
 import EditProfile from "../../screens/ProfileScreen/EditProfile";
 import NavigationHeader from "./NavigationHeader";
-import Umpire from "../../screens/playerPanel/Umpire"
+import Umpire from "../../screens/playerPanel/Umpire";
 
 import CreateTeam from "../../screens/teamScreens/CreateTeam";
+import ScheduleMatch from "../../screens/teamScreens/ScheduleMatch";
+import InviteList from "../../screens/teamScreens/InviteList";
 const upper_margin = windowWidth * 0.001;
 const upper_margin1 = windowWidth * 0.01;
 const LOGO_SIZE = windowHeight * 0.06;
@@ -88,7 +90,10 @@ function PlayerHomeNavigationContainer() {
           title: "",
           headerLeft: () => {
             return (
-              <NavigationHeader title={"Players List"} navigation={navigation} />
+              <NavigationHeader
+                title={"Players List"}
+                navigation={navigation}
+              />
             );
           },
           headerRight: () => {
@@ -116,7 +121,10 @@ function PlayerHomeNavigationContainer() {
           title: "",
           headerLeft: () => {
             return (
-              <NavigationHeader title={"Players Request"} navigation={navigation} />
+              <NavigationHeader
+                title={"Players Request"}
+                navigation={navigation}
+              />
             );
           },
           // headerRight: () => {
@@ -198,13 +206,15 @@ function TeamsScreenNavigationContainer() {
         })}
       />
 
-     <StackTeams.Screen
+      <StackTeams.Screen
         name="CreateTeam"
         component={CreateTeam}
         options={({ navigation }) => ({
           title: "",
           headerLeft: () => {
-            return <NavigationHeader title={"Create Team"} navigation={navigation} />;
+            return (
+              <NavigationHeader title={"Create Team"} navigation={navigation} />
+            );
           },
           // headerRight: () => {
           //   return (
@@ -217,6 +227,45 @@ function TeamsScreenNavigationContainer() {
           //     </View>
           //   );
           // },
+
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
+
+      <StackTeams.Screen
+        name="ScheduleMatch"
+        component={ScheduleMatch}
+        options={({ navigation }) => ({
+          title: "",
+          headerLeft: () => {
+            return (
+              <NavigationHeader
+                title={"Schedule a Match"}
+                navigation={navigation}
+              />
+            );
+          },
+
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
+
+      <StackTeams.Screen
+        name="InviteList"
+        component={InviteList}
+        options={({ navigation }) => ({
+          title: "",
+          headerLeft: () => {
+            return (
+              <NavigationHeader title={"Invite List"} navigation={navigation} />
+            );
+          },
 
           headerStyle: {
             backgroundColor: "#FAF9F6",
