@@ -42,19 +42,19 @@ import { useIsFocused } from "@react-navigation/native";
 
 const curve_height = windowHeight * 0.2;
 const CARD_WIDTH = windowWidth * 0.93;
-const CARD_HEIGHT = windowHeight * 0.12;
+const CARD_HEIGHT = windowHeight * 0.2;
 const INPUT_WIDTH = windowWidth - 40;
 const INPUT_HEIGHT = windowHeight * 0.07;
 const INPUT_HEIGHT1 = windowHeight * 0.07;
 const Search_Bar = windowHeight * 0.06;
 const cross_icon = windowHeight * 0.01;
 
-const TeamsScreen = ({ navigation }) => {
+const RecivedInviteList = ({ navigation }) => {
   const isFocused = useIsFocused();
   const searchRef = useRef();
   const [search, setSearch] = useState("");
   const [data, setData] = useState("");
-  const [teams, setTeams] = useState([]);
+  const [invite, setInvite] = useState([]);
   // const [filter, setFilter] = useState("");
 
   const [clicked, setClicked] = useState(false);
@@ -80,24 +80,24 @@ const TeamsScreen = ({ navigation }) => {
     if (isFocused) {
       // This code will run when the screen gains focus
       // alert("screen gained focus");
-      listTeams();
+      listInvites();
     } else {
       // This code will run when the screen loses focus
       // alert("screen lost focus");
     }
   }, [isFocused]);
 
-  useEffect(() => {
-    // console.log("bilal");
-    listTeams();
-  }, []);
+  //   useEffect(() => {
+  //     // console.log("bilal");
+  //     listTeams();
+  //   }, []);
 
-  const listTeams = async () => {
+  const listInvites = async () => {
     // console.log(userLoginSuccess.token, "teams");
     var config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${apiActiveURL}list-teams`,
+      url: `${apiActiveURL}receiving-list`,
       headers: {
         Authorization: `Bearer ${userLoginSuccess.token}`,
       },
@@ -105,109 +105,77 @@ const TeamsScreen = ({ navigation }) => {
 
     await axios(config)
       .then(function (response) {
-        console.log(response.data, "teams response");
+        console.log(response.data, "recieved response -----");
         // setCountry(response.data.countries);
-        setTeams(response.data.teams);
+        setInvite(response.data.data);
       })
       .catch(function (error) {
         // console.log(error, "error");
       });
   };
 
-  const onPress = async (item) => {
-    console.log(item, "Button pressed!");
+  //   const onPress = async (item) => {
+  //     console.log(item, "Button pressed!");
 
-    let data = new FormData();
+  //     let data = new FormData();
 
-    data.append("team_id", item.value);
-    data.append("recruiter_id", item.recruiter_id);
+  //     data.append("team_id", item.value);
+  //     data.append("recruiter_id", item.recruiter_id);
 
-    var config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: `${apiActiveURL}join-team`,
-      headers: {
-        Authorization: `Bearer ${userLoginSuccess.token}`,
-      },
-      data: data,
-    };
+  //     var config = {
+  //       method: "post",
+  //       maxBodyLength: Infinity,
+  //       url: `${apiActiveURL}join-team`,
+  //       headers: {
+  //         Authorization: `Bearer ${userLoginSuccess.token}`,
+  //       },
+  //       data: data,
+  //     };
 
-    await axios(config)
-      .then(function (response) {
-        // console.log(response.data, "join team response");
-        Toast.show(response.data.message, {
-          duration: 2000,
-          position: Toast.positions.TOP,
-          textColor: "#FFFFFF",
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-          position: 80,
-          backgroundColor: "#32de84",
-          style: {
-            height: 100,
-            padding: 30,
-            borderRadius: 10,
-            paddingLeft: 45,
-            paddingRight: 15,
-          },
-        });
-        listTeams();
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
+  //     await axios(config)
+  //       .then(function (response) {
+  //         // console.log(response.data, "join team response");
+  //         Toast.show(response.data.message, {
+  //           duration: 2000,
+  //           position: Toast.positions.TOP,
+  //           textColor: "#FFFFFF",
+  //           shadow: true,
+  //           animation: true,
+  //           hideOnPress: true,
+  //           delay: 0,
+  //           position: 80,
+  //           backgroundColor: "#32de84",
+  //           style: {
+  //             height: 100,
+  //             padding: 30,
+  //             borderRadius: 10,
+  //             paddingLeft: 45,
+  //             paddingRight: 15,
+  //           },
+  //         });
+  //         listTeams();
+  //       })
+  //       .catch(function (error) {
+  //         console.log(error);
+  //       });
+  //   };
 
   const renderList = (item) => {
     // console.log(item, "item---");
     return (
       <View style={styles.cardsWrapper} key={item.value}>
         <View style={styles.card}>
-          <View style={styles.cardImgWrapper}>
-            <Image
-              source={{ uri: item.logo }}
-              resizeMode="contain"
-              style={styles.cardImg}
-            />
-          </View>
+          {/* <View style={styles.cardImgWrapper}></View> */}
 
           <View style={styles.cardInfo}>
-            <Text
-              style={styles.cardTitle}
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
-              {item.label}
-            </Text>
-
-            {userLoginSuccess?.data?.roleId == "recruiter" ? (
-              <PlayerCustomButtom
-                textColor="white"
-                btnLabel="Schedule Match"
-                onPress={() => {
-                  navigation.navigate("ScheduleMatch", { data: item });
-                }}
-                myStyle={{
-                  alignSelf: "flex-end",
-
-                  // marginRight: 20,
-                  // paddingVertical: 10,
-                }}
-              />
-            ) : (
-              <PlayerCustomButtom
-                textColor="white"
-                btnLabel={item.requested_status}
-                onPress={() => {
-                  onPress(item);
-                }}
-                myStyle={{
-                  alignSelf: "flex-end",
-                }}
-              />
-            )}
+            <Text style={styles.cardTitle}>Venue:</Text>
+            <Text>{item.venue}</Text>
+            <Text style={styles.cardTitle}>Description:</Text>
+            <Text>{item.description}</Text>
+            <Text style={styles.cardTitle}>Match Date & Time:</Text>
+            <Text>{item.match_date_time}</Text>
+            <Text style={styles.cardTitle}>Match Type: </Text>
+            <Text>{item.match_type}</Text>
           </View>
         </View>
       </View>
@@ -275,7 +243,7 @@ const TeamsScreen = ({ navigation }) => {
               />
             </View> */}
 
-              <View style={[styles.text_input]}>
+              {/* <View style={[styles.text_input]}>
                 <Ionicons
                   name="search-outline"
                   size={INPUT_HEIGHT * 0.5}
@@ -306,7 +274,7 @@ const TeamsScreen = ({ navigation }) => {
                     marginLeft: cross_icon,
                   }}
                 />
-              </View>
+              </View> */}
             </View>
           </LinearGradient>
 
@@ -319,60 +287,8 @@ const TeamsScreen = ({ navigation }) => {
               paddingVertical: 10,
             }}
           >
-            {userLoginSuccess?.data?.roleId == "recruiter" ? (
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignSelf: "center",
-                  justifyContent: "center",
-                  flexWrap: "wrap",
-                }}
-              >
-                <PlayerCustomButtom
-                  textColor="white"
-                  btnLabel="Create Team"
-                  onPress={() => {
-                    navigation.navigate("CreateTeam");
-                  }}
-                  myStyle={{
-                    alignSelf: "center",
-                    marginRight: 20,
-                    paddingVertical: 10,
-                    width: 150,
-                  }}
-                />
-
-                <PlayerCustomButtom
-                  textColor="white"
-                  btnLabel="Send Invite List"
-                  onPress={() => {
-                    navigation.navigate("InviteList");
-                  }}
-                  myStyle={{
-                    alignSelf: "center",
-                    marginRight: 20,
-                    paddingVertical: 10,
-                    width: 150,
-                  }}
-                />
-                <PlayerCustomButtom
-                  textColor="white"
-                  btnLabel="Received Invite List"
-                  onPress={() => {
-                    navigation.navigate("RecivedInviteList");
-                  }}
-                  myStyle={{
-                    alignSelf: "center",
-                    marginRight: 20,
-                    marginTop: 20,
-                    paddingVertical: 10,
-                    width: 150,
-                  }}
-                />
-              </View>
-            ) : null}
             <FlatList
-              data={teams}
+              data={invite}
               renderItem={({ item }) => {
                 console.log(item, "item list");
                 return renderList(item);
@@ -386,7 +302,7 @@ const TeamsScreen = ({ navigation }) => {
   );
 };
 
-export default TeamsScreen;
+export default RecivedInviteList;
 
 const styles = StyleSheet.create({
   // root: {
@@ -436,11 +352,11 @@ const styles = StyleSheet.create({
     height: CARD_HEIGHT,
     marginTop: 8,
     flexDirection: "row",
-    shadowColor: "#999",
-    shadowOffset: { width: CARD_WIDTH, height: CARD_HEIGHT },
-    shadowOpacity: 1,
-    shadowRadius: 2,
-    elevation: 5,
+    // shadowColor: "#999",
+    // shadowOffset: { width: CARD_WIDTH, height: CARD_HEIGHT },
+    // shadowOpacity: 1,
+    // shadowRadius: 2,
+    // elevation: 5,
   },
 
   cardImgWrapper: {
@@ -466,16 +382,20 @@ const styles = StyleSheet.create({
     padding: 10,
     borderColor: "#2BB789",
     borderWidth: 1,
-    borderLeftWidth: 0,
+    borderLeftWidth: 1,
     borderBottomRightRadius: 8,
     borderTopRightRadius: 8,
+    borderTopLeftRadius: 8,
+    borderBottomLeftRadius: 8,
+
     backgroundColor: "#fff",
-    justifyContent: "space-between",
+    // justifyContent: "space-between",
     // flexDirection: "row",
   },
 
   cardTitle: {
     fontWeight: "bold",
+    marginTop: 5,
   },
 
   cardDetails: {

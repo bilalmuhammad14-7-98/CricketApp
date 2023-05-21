@@ -35,6 +35,7 @@ import Umpire from "../../screens/playerPanel/Umpire";
 import CreateTeam from "../../screens/teamScreens/CreateTeam";
 import ScheduleMatch from "../../screens/teamScreens/ScheduleMatch";
 import InviteList from "../../screens/teamScreens/InviteList";
+import RecivedInviteList from "../../screens/teamScreens/RecivedInviteList";
 const upper_margin = windowWidth * 0.001;
 const upper_margin1 = windowWidth * 0.01;
 const LOGO_SIZE = windowHeight * 0.06;
@@ -264,6 +265,27 @@ function TeamsScreenNavigationContainer() {
           headerLeft: () => {
             return (
               <NavigationHeader title={"Invite List"} navigation={navigation} />
+            );
+          },
+
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
+
+      <StackTeams.Screen
+        name="RecivedInviteList"
+        component={RecivedInviteList}
+        options={({ navigation }) => ({
+          title: "",
+          headerLeft: () => {
+            return (
+              <NavigationHeader
+                title={"Received Invite List"}
+                navigation={navigation}
+              />
             );
           },
 
