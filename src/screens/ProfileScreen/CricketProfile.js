@@ -48,7 +48,7 @@ const CricketProfile = (props) => {
     setGamesTab(value);
   };
   const { profile } = useContext(profileContext);
-  console.log(profile.payLoad.name);
+  // console.log(profile.payLoad.name);
 
   const [model, setModel] = useState({
     Name: "",
@@ -80,7 +80,7 @@ const CricketProfile = (props) => {
   };
 
   const init = async () => {
-    await fetchPlayerProfile();
+    // await fetchPlayerProfile();
     setIsLoading(false);
   };
 
@@ -110,13 +110,13 @@ const CricketProfile = (props) => {
                   ellipsizeMode="tail"
                   style={styles.profile_text1}
                 >
-                  {model.Name}
+                  {/* {model.Name} */}
                 </Text>
               </View>
             </View>
-            <View style={{marginLeft:sizes.m16}}> 
+            <View style={{ marginLeft: sizes.m16 }}>
               <Text style={styles.profile_text}>
-                {model.PlayingRole}, {model.BattingStyle}, {model.BowlingStyle}
+                {/* {model.PlayingRole}, {model.BattingStyle}, {model.BowlingStyle} */}
               </Text>
             </View>
           </View>
@@ -176,7 +176,7 @@ const styles = StyleSheet.create({
 
   profile_text: {
     fontSize: sizes.m12,
-    width:DATA_WIDTH,
+    width: DATA_WIDTH,
     // marginLeft: sizes.m8,
   },
 

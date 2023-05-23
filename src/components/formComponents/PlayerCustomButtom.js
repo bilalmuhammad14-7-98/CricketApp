@@ -24,12 +24,14 @@ export default function PlayerCustomButtom({
   textColor,
   onPress,
   myStyle,
+  onLongPress,
 }) {
   const a = useTheme();
   const colors = a.colors;
   return (
     <TouchableOpacity
       onPress={onPress}
+      onLongPress={onLongPress}
       style={[
         styles.button,
         {

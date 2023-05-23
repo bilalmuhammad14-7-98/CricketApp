@@ -8,7 +8,9 @@ import {
   TouchableOpacity,
   TextInput,
   FlatList,
+  Modal,
 } from "react-native";
+import { Button } from "react-native-paper";
 import { useState, useEffect } from "react";
 //import icons
 import {
@@ -34,6 +36,8 @@ import { http } from "../../components/http/http";
 import { apiActiveURL } from "../../ApiBaseURL";
 import { useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
+import { LongPressGestureHandler, State } from "react-native-gesture-handler";
+import Toast from "react-native-root-toast";
 
 const LOGO_SIZE = windowHeight * 0.1;
 const CARD_WIDTH = windowWidth * 0.95;
@@ -53,6 +57,8 @@ const PlayersScreen = ({ navigation }) => {
     return state.loginData.data;
   });
   const [players, setPlayers] = useState([]);
+  const [pressedItem, setPressedItem] = useState(null);
+  const [modal, setModal] = useState(false);
 
   useEffect(() => {
     if (isFocused) {
@@ -66,11 +72,11 @@ const PlayersScreen = ({ navigation }) => {
   }, [isFocused]);
 
   const listPlayers = async () => {
-    console.log(userLoginSuccess?.data?.id, "recruiter id");
+    console.log(userLoginSuccess?.data?.team_id, "recruiter id");
     var config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${apiActiveURL}list-players?teamId=${userLoginSuccess?.data?.id}`,
+      url: `${apiActiveURL}list-players?teamId=${userLoginSuccess?.data?.team_id}`,
       headers: {
         Authorization: `Bearer ${userLoginSuccess.token}`,
       },
@@ -91,6 +97,65 @@ const PlayersScreen = ({ navigation }) => {
     console.log(item, "clicked item");
   };
 
+  const handleLongPress = (item) => {
+    console.log(item, "long press item");
+    setPressedItem(item);
+    setModal(true);
+    // Additional actions you want to perform on long press
+  };
+
+  const makeCaptian = async () => {
+    console.log(pressedItem, "final data");
+    var data = new FormData();
+    data.append("playerId", pressedItem?.playerId);
+    data.append("teamId", userLoginSuccess?.data?.team_id);
+
+    var config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: `${apiActiveURL}change-Captain`,
+      headers: {
+        Authorization: `Bearer ${userLoginSuccess.token}`,
+        "Content-Type": "multipart/form-data",
+      },
+      data: data,
+    };
+
+    console.log(config, "config");
+
+    await axios(config)
+      .then(function (response) {
+        console.log(response, "make captain response");
+
+        Toast.show(response.data.message, {
+          duration: 2000,
+          position: Toast.positions.TOP,
+          textColor: "#FFFFFF",
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+          position: 80,
+          backgroundColor: "#32de84",
+          style: {
+            height: 100,
+            padding: 30,
+            borderRadius: 10,
+            paddingLeft: 45,
+            paddingRight: 15,
+          },
+        });
+        listPlayers();
+        setModal(false);
+
+        // props.navigation.goBack();
+        // listTeams();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
   useEffect(() => {
     listPlayers();
   }, []);
@@ -98,7 +163,11 @@ const PlayersScreen = ({ navigation }) => {
   const renderList = (item, index) => {
     console.log(item, "item");
     return (
-      <View style={{ flex: 1 }} key={item.playerId}>
+      <TouchableOpacity
+        style={{ flex: 1 }}
+        key={item.playerId}
+        onLongPress={() => handleLongPress(item)}
+      >
         <View>
           <View style={styles.card}>
             <View style={styles.cardView}>
@@ -127,7 +196,18 @@ const PlayersScreen = ({ navigation }) => {
                 >
                   {item?.playerName}
                 </Text>
-                {/* <Text style={styles.text}>{item.notification}</Text> */}
+
+                {item?.isCaptian == "true" ? (
+                  <>
+                    <Text
+                      numberOfLines={1}
+                      ellipsizeMode="tail"
+                      style={styles.text}
+                    >
+                      Captian
+                    </Text>
+                  </>
+                ) : null}
               </View>
               <View
                 style={{
@@ -140,7 +220,8 @@ const PlayersScreen = ({ navigation }) => {
                   textColor="white"
                   btnLabel="View Profile"
                   onPress={() => {
-                    onPress(item);
+                    // onPress(item);
+                    // navigation.navigate("CricketProfile");
                   }}
                   myStyle={{
                     alignSelf: "flex-end",
@@ -150,7 +231,7 @@ const PlayersScreen = ({ navigation }) => {
             </View>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -208,6 +289,33 @@ const PlayersScreen = ({ navigation }) => {
               borderTopRightRadius: 30,
             }}
           >
+            <Modal
+              //  animationType="slide"
+              transparent={true}
+              visible={modal}
+              onRequestClose={() => {
+                setModal(false);
+              }}
+            >
+              <View style={styles.modalView}>
+                <Text>
+                  Are you sure you want to make {pressedItem?.playerName} a
+                  captian
+                </Text>
+                <View style={styles.modalButtonView}>
+                  <Button onPress={() => setModal(false)}>Cancel</Button>
+                  <Button onPress={() => makeCaptian()}>ok</Button>
+                  {/* <Button
+                    icon="image-area"
+                    mode="contained"
+                    theme={theme}
+                    onPress={() => pickFromGallery()}
+                  >
+                    Gallery
+                  </Button> */}
+                </View>
+              </View>
+            </Modal>
             <PlayerCustomButtom
               textColor="white"
               btnLabel="View Player request"
@@ -281,5 +389,23 @@ const styles = StyleSheet.create({
     width: INPUT_WIDTH,
     height: INPUT_HEIGHT1,
     alignSelf: "center",
+  },
+  modalView: {
+    position: "absolute",
+    bottom: 2,
+    width: "100%",
+    alignItems: "center",
+    backgroundColor: "#f5f5f5",
+    marginBottom: 100,
+    borderRadius: 10,
+    borderWidth: 1,
+
+    borderColor: "#2e8b57",
+  },
+
+  modalButtonView: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    padding: 10,
   },
 });

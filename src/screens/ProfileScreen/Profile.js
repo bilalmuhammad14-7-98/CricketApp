@@ -181,7 +181,7 @@ const Profile = (props) => {
                 >
                   <TouchableOpacity
                     onPress={() => {
-                      // props.navigation.navigate("CricketProfile")
+                      props.navigation.navigate("CricketProfile");
                     }}
                     style={{
                       width: IMAGE_SIZE1,
