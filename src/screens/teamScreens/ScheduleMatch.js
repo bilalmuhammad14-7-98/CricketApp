@@ -48,6 +48,8 @@ const ScheduleMatch = (props) => {
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
   const [loader, setLoader] = useState(false);
+  const [finalDate, setFinalDate] = useState();
+  const [finalTime, setFinalTime] = useState();
 
   const [type, setType] = useState("");
   const [venue, setVenue] = useState("");
@@ -59,11 +61,16 @@ const ScheduleMatch = (props) => {
     { label: "test-match", value: "3" },
   ];
 
+  useEffect(() => {
+    setShowPicker(false);
+  }, []);
+
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
-    console.log(currentDate);
+    console.log(currentDate, "current date");
     setDate(currentDate);
     formatDateTime(currentDate);
+    setShowPicker(false);
     hideDateTimePicker();
   };
   const showDateTimePicker = () => {
@@ -155,6 +162,8 @@ const ScheduleMatch = (props) => {
       .toLocaleDateString("en-GB")
       .replace(/\//g, "-");
     const formattedTime = dateTime.toLocaleTimeString("en-GB");
+    setFinalDate(formattedDate);
+    setFinalTime(formattedTime);
 
     return `${formattedDate} ${formattedTime}`;
   };
@@ -190,25 +199,44 @@ const ScheduleMatch = (props) => {
 
           <Button
             title="Select Date and Time"
-            onPress={showDateTimePicker}
+            onPress={() => {
+              showDateTimePicker();
+            }}
             style={{
               alignSelf: "center",
             }}
           />
 
           {/* {showPicker && ( */}
-          <DateTimePicker
-            value={date}
-            mode="datetime"
-            minimumDate={minimumDate}
-            display={"default"}
-            onChange={handleDateChange}
+          {showPicker && (
+            <DateTimePicker
+              value={date}
+              mode="datetime"
+              minimumDate={minimumDate}
+              display={"default"}
+              onChange={handleDateChange}
+              style={{
+                width: 200,
+                height: 50,
+                alignSelf: "center",
+              }}
+            />
+          )}
+          <Text
             style={{
-              width: 200,
-              height: 50,
-              alignSelf: "center",
+              textAlign: "center",
             }}
-          />
+          >
+            {finalDate ? finalDate : null}
+          </Text>
+          <Text
+            style={{
+              textAlign: "center",
+            }}
+          >
+            {finalTime ? finalTime : null}
+          </Text>
+
           {/* )} */}
           <CustomDropDown
             value={type}

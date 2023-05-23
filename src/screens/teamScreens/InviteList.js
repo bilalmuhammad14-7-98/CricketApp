@@ -42,7 +42,7 @@ import { useIsFocused } from "@react-navigation/native";
 
 const curve_height = windowHeight * 0.2;
 const CARD_WIDTH = windowWidth * 0.93;
-const CARD_HEIGHT = windowHeight * 0.2;
+const CARD_HEIGHT = windowHeight * 0.5;
 const INPUT_WIDTH = windowWidth - 40;
 const INPUT_HEIGHT = windowHeight * 0.07;
 const INPUT_HEIGHT1 = windowHeight * 0.07;
@@ -163,7 +163,7 @@ const InviteList = ({ navigation }) => {
   const renderList = (item) => {
     // console.log(item, "item---");
     return (
-      <View style={styles.cardsWrapper} key={item.value}>
+      <View style={styles.cardsWrapper} key={item.id}>
         <View style={styles.card}>
           {/* <View style={styles.cardImgWrapper}></View> */}
 
@@ -293,7 +293,7 @@ const InviteList = ({ navigation }) => {
                 console.log(item, "item list");
                 return renderList(item);
               }}
-              keyExtractor={(item) => `${item.value}`}
+              keyExtractor={(item) => `${item.id}`}
             />
           </View>
         </View>
@@ -387,15 +387,16 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 8,
     borderTopLeftRadius: 8,
     borderBottomLeftRadius: 8,
-
+    height: "100%",
     backgroundColor: "#fff",
+    flexDirection: "column",
     // justifyContent: "space-between",
     // flexDirection: "row",
   },
 
   cardTitle: {
     fontWeight: "bold",
-    marginTop: 5,
+    marginTop: 0,
   },
 
   cardDetails: {

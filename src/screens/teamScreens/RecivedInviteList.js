@@ -42,7 +42,7 @@ import { useIsFocused } from "@react-navigation/native";
 
 const curve_height = windowHeight * 0.2;
 const CARD_WIDTH = windowWidth * 0.93;
-const CARD_HEIGHT = windowHeight * 0.2;
+const CARD_HEIGHT = windowHeight * 0.5;
 const INPUT_WIDTH = windowWidth - 40;
 const INPUT_HEIGHT = windowHeight * 0.07;
 const INPUT_HEIGHT1 = windowHeight * 0.07;
