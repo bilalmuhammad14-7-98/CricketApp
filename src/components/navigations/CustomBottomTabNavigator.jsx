@@ -36,6 +36,8 @@ import CreateTeam from "../../screens/teamScreens/CreateTeam";
 import ScheduleMatch from "../../screens/teamScreens/ScheduleMatch";
 import InviteList from "../../screens/teamScreens/InviteList";
 import RecivedInviteList from "../../screens/teamScreens/RecivedInviteList";
+import AllPlayer from "../../screens/playerPanel/AllPlayer";
+import PlayerDetail from "../../screens/playerPanel/PlayerDetail";
 const upper_margin = windowWidth * 0.001;
 const upper_margin1 = windowWidth * 0.01;
 const LOGO_SIZE = windowHeight * 0.06;
@@ -93,6 +95,68 @@ function PlayerHomeNavigationContainer() {
             return (
               <NavigationHeader
                 title={"Players List"}
+                navigation={navigation}
+              />
+            );
+          },
+          headerRight: () => {
+            return (
+              <View style={{ marginRight: upper_margin1 }}>
+                <Ionicons
+                  name="notifications"
+                  size={logo_size}
+                  color="#2BB789"
+                />
+              </View>
+            );
+          },
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
+
+      <StackPlayerHome.Screen
+        name="AllPlayersScreen"
+        component={AllPlayer}
+        options={({ navigation }) => ({
+          title: "",
+          headerLeft: () => {
+            return (
+              <NavigationHeader
+                title={"All Players List"}
+                navigation={navigation}
+              />
+            );
+          },
+          headerRight: () => {
+            return (
+              <View style={{ marginRight: upper_margin1 }}>
+                <Ionicons
+                  name="notifications"
+                  size={logo_size}
+                  color="#2BB789"
+                />
+              </View>
+            );
+          },
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
+
+      <StackPlayerHome.Screen
+        name="PlayerDetailsScreen"
+        component={PlayerDetail}
+        options={({ navigation }) => ({
+          title: "",
+          headerLeft: () => {
+            return (
+              <NavigationHeader
+                title={"View Profile Details"}
                 navigation={navigation}
               />
             );

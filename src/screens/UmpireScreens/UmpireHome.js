@@ -103,13 +103,11 @@ const Card = ({ item, navigation }) => {
 };
 
 const UmpireHome = ({ navigation }) => {
-
   const [playinRole, setplayinRole] = useState("");
   const [battingStyle, setbattingStyle] = useState("");
   const [bowlingStyle, setbowlingStyle] = useState("");
   const [searchPhrase, setSearchPhrase] = useState("");
   const [clicked, setClicked] = useState(false);
-
 
   const { colors } = useTheme();
 
@@ -133,21 +131,29 @@ const UmpireHome = ({ navigation }) => {
       name: "Players",
       code: colors.white,
       image: images.cricketerAndfootballer,
-      navigationScreen: () => navigation.navigate('PlayerHomeRoot', { screen: "PlayersScreen" })
+      navigationScreen: () =>
+        navigation.navigate("PlayerHomeRoot", { screen: "PlayersScreen" }),
     },
     {
       name: "Umpire/Referee",
       code: colors.white,
       image: images.UmpireAndReferee,
-      navigationScreen: () => navigation.navigate('PlayerHomeRoot', { screen: "Umpire" })
+      navigationScreen: () =>
+        navigation.navigate("PlayerHomeRoot", { screen: "Umpire" }),
     },
     {
-      name: "Teams", code: colors.white, image: images.Teams,
-      navigationScreen: () => navigation.navigate('TeamsScreenRoot', { screen: "TeamsScreen" })
+      name: "Teams",
+      code: colors.white,
+      image: images.Teams,
+      navigationScreen: () =>
+        navigation.navigate("TeamsScreenRoot", { screen: "TeamsScreen" }),
     },
     {
-      name: "Scorer", code: colors.white, image: images.Scorer,
-      navigationScreen: () => navigation.navigate('TeamsScreenRoot', { screen: "TeamsScreen" })
+      name: "Scorer",
+      code: colors.white,
+      image: images.Scorer,
+      navigationScreen: () =>
+        navigation.navigate("TeamsScreenRoot", { screen: "TeamsScreen" }),
     },
   ];
 
@@ -203,12 +209,12 @@ const UmpireHome = ({ navigation }) => {
         {/* <StatusBar barStyle={theme.dark ? 'light-content' : 'dark-content'} /> */}
         <LinearGradient colors={["rgba(255,255,255,0.6)", "#2BB789"]}>
           <View style={{ height: curve_height }}>
-          <View>
+            <View>
               <SearchBar
-                searchPhrase = {searchPhrase}
-                setSearchPhrase = {setSearchPhrase}
-                clicked = {clicked}
-                setClicked = {setClicked}
+                searchPhrase={searchPhrase}
+                setSearchPhrase={setSearchPhrase}
+                clicked={clicked}
+                setClicked={setClicked}
               />
             </View>
             {/* <View style={[styles.text_input]}>
@@ -289,7 +295,6 @@ const UmpireHome = ({ navigation }) => {
               marginTop: swiper_height,
             }}
           >
-
             <View
               style={{
                 flexDirection: "row",

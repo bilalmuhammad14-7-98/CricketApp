@@ -50,7 +50,9 @@ const ScheduleMatch = (props) => {
   const [loader, setLoader] = useState(false);
   const [finalDate, setFinalDate] = useState();
   const [finalTime, setFinalTime] = useState();
-
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [time, setTime] = useState(new Date());
+  const [showTimePicker, setShowTimePicker] = useState(false);
   const [type, setType] = useState("");
   const [venue, setVenue] = useState("");
   const [description, setDescription] = useState("");
@@ -65,20 +67,43 @@ const ScheduleMatch = (props) => {
     setShowPicker(false);
   }, []);
 
-  const handleDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    console.log(currentDate, "current date");
-    setDate(currentDate);
-    formatDateTime(currentDate);
-    setShowPicker(false);
-    hideDateTimePicker();
-  };
-  const showDateTimePicker = () => {
-    setShowPicker(true);
+  // const handleDateChange = (event, selectedDate) => {
+  //   const currentDate = selectedDate || date;
+  //   console.log(currentDate, "current date");
+  //   setDate(currentDate);
+  //   formatDateTime(currentDate);
+  //   setShowPicker(false);
+  //   hideDateTimePicker();
+  // };
+  // const showDateTimePicker = () => {
+  //   setShowPicker(true);
+  // };
+
+  // const hideDateTimePicker = () => {
+  //   setShowPicker(false);
+  // };
+
+  // const showDatePickerModal = () => {
+  //   setShowDatePicker(true);
+  // };
+  const showDatePickerModal = () => {
+    setShowDatePicker(true);
   };
 
-  const hideDateTimePicker = () => {
-    setShowPicker(false);
+  const handleDateChange = (event, selectedDate) => {
+    const currentDate = selectedDate || date;
+    setShowDatePicker(Platform.OS === "ios");
+    setDate(currentDate);
+  };
+
+  const showTimePickerModal = () => {
+    setShowTimePicker(true);
+  };
+
+  const handleTimeChange = (event, selectedTime) => {
+    const currentTime = selectedTime || time;
+    setShowTimePicker(Platform.OS === "ios");
+    setTime(currentTime);
   };
   const scheduleMatch = async (date) => {
     if (type && venue && description && formatDateTime(date)) {
@@ -197,31 +222,42 @@ const ScheduleMatch = (props) => {
             placeholderText="Description"
           />
 
-          <Button
-            title="Select Date and Time"
-            onPress={() => {
-              showDateTimePicker();
-            }}
-            style={{
-              alignSelf: "center",
-            }}
-          />
+          <View style={styles.container}>
+            {/* Date Picker */}
+            <Button title="Select Date" onPress={showDatePickerModal} />
+            {showDatePicker && (
+              <DateTimePicker
+                testID="datePicker"
+                value={date}
+                mode="date"
+                display="default"
+                style={{
+                  width: 200,
+                  height: 50,
+                  alignSelf: "center",
+                }}
+                minimumDate={minimumDate}
+                onChange={handleDateChange}
+              />
+            )}
 
-          {/* {showPicker && ( */}
-          {showPicker && (
-            <DateTimePicker
-              value={date}
-              mode="datetime"
-              minimumDate={minimumDate}
-              display={"default"}
-              onChange={handleDateChange}
-              style={{
-                width: 200,
-                height: 50,
-                alignSelf: "center",
-              }}
-            />
-          )}
+            {/* Time Picker */}
+            <Button title="Select Time" onPress={showTimePickerModal} />
+            {showTimePicker && (
+              <DateTimePicker
+                testID="timePicker"
+                value={time}
+                mode="time"
+                display="default"
+                onChange={handleTimeChange}
+                style={{
+                  width: 200,
+                  height: 50,
+                  alignSelf: "center",
+                }}
+              />
+            )}
+          </View>
           <Text
             style={{
               textAlign: "center",

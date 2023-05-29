@@ -133,13 +133,27 @@ const PlayerHome = ({ navigation }) => {
 
   const cardItems = [
     {
-      name: "Players",
+      name: "My Players",
       code: colors.white,
       image: images.cricketerAndfootballer,
       navigationScreen: () => {
         {
           userLoginSuccess?.data?.roleId == "recruiter"
             ? navigation.navigate("PlayerHomeRoot", { screen: "PlayersScreen" })
+            : null;
+        }
+      },
+    },
+    {
+      name: "All Players",
+      code: colors.white,
+      image: images.cricketerAndfootballer,
+      navigationScreen: () => {
+        {
+          userLoginSuccess?.data?.roleId == "recruiter"
+            ? navigation.navigate("PlayerHomeRoot", {
+                screen: "AllPlayersScreen",
+              })
             : null;
         }
       },
