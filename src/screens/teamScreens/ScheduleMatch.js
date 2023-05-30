@@ -102,7 +102,7 @@ const ScheduleMatch = (props) => {
 
   const handleTimeChange = (event, selectedTime) => {
     const currentTime = selectedTime || time;
-    setShowTimePicker(Platform.OS === "ios");
+    // setShowTimePicker(Platform.OS === "ios");
     setTime(currentTime);
   };
   const scheduleMatch = async (date) => {
@@ -268,6 +268,7 @@ const ScheduleMatch = (props) => {
           <Text
             style={{
               textAlign: "center",
+              fontSize: 26,
             }}
           >
             {finalTime ? finalTime : null}

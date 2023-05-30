@@ -38,6 +38,8 @@ import InviteList from "../../screens/teamScreens/InviteList";
 import RecivedInviteList from "../../screens/teamScreens/RecivedInviteList";
 import AllPlayer from "../../screens/playerPanel/AllPlayer";
 import PlayerDetail from "../../screens/playerPanel/PlayerDetail";
+import Gallery from "../../screens/playerPanel/Gallery";
+import MyPlayerDetail from "../../screens/playerPanel/MyPlayerDetail";
 const upper_margin = windowWidth * 0.001;
 const upper_margin1 = windowWidth * 0.01;
 const LOGO_SIZE = windowHeight * 0.06;
@@ -159,6 +161,63 @@ function PlayerHomeNavigationContainer() {
                 title={"View Profile Details"}
                 navigation={navigation}
               />
+            );
+          },
+          headerRight: () => {
+            return (
+              <View style={{ marginRight: upper_margin1 }}>
+                <Ionicons
+                  name="notifications"
+                  size={logo_size}
+                  color="#2BB789"
+                />
+              </View>
+            );
+          },
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
+      <StackPlayerHome.Screen
+        name="MyPlayerDetail"
+        component={MyPlayerDetail}
+        options={({ navigation }) => ({
+          title: "",
+          headerLeft: () => {
+            return (
+              <NavigationHeader
+                title={"View Profile Details"}
+                navigation={navigation}
+              />
+            );
+          },
+          headerRight: () => {
+            return (
+              <View style={{ marginRight: upper_margin1 }}>
+                <Ionicons
+                  name="notifications"
+                  size={logo_size}
+                  color="#2BB789"
+                />
+              </View>
+            );
+          },
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
+      <StackPlayerHome.Screen
+        name="Gallery"
+        component={Gallery}
+        options={({ navigation }) => ({
+          title: "",
+          headerLeft: () => {
+            return (
+              <NavigationHeader title={"Gallery"} navigation={navigation} />
             );
           },
           headerRight: () => {

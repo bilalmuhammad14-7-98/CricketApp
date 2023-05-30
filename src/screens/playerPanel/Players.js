@@ -221,7 +221,10 @@ const PlayersScreen = ({ navigation }) => {
                   btnLabel="View Profile"
                   onPress={() => {
                     // onPress(item);
-                    // navigation.navigate("CricketProfile");
+                    navigation.navigate("MyPlayerDetail", {
+                      playerId: item.playerId,
+                      screenName: "myPlayer",
+                    });
                   }}
                   myStyle={{
                     alignSelf: "flex-end",
