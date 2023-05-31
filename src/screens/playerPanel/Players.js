@@ -212,7 +212,11 @@ const PlayersScreen = ({ navigation }) => {
               <View
                 style={{
                   marginRight: sizes.m5,
-                  marginBottom: sizes.m5,
+                  // backgroundColor: "red",
+                  flexDirection: "row",
+                  // marginHorizontal: 13,
+                  width: "100%",
+                  // marginBottom: sizes.m5,
                   justifyContent: "flex-end",
                 }}
               >
@@ -225,6 +229,16 @@ const PlayersScreen = ({ navigation }) => {
                       playerId: item.playerId,
                       screenName: "myPlayer",
                     });
+                  }}
+                  myStyle={{
+                    alignSelf: "flex-end",
+                  }}
+                />
+                <PlayerCustomButtom
+                  textColor="white"
+                  btnLabel="Delete Player"
+                  onPress={() => {
+                    // onPress(item);
                   }}
                   myStyle={{
                     alignSelf: "flex-end",

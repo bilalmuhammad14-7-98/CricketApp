@@ -26,6 +26,10 @@ import { useTheme } from "@react-navigation/native";
 import { Avatar } from "react-native-paper";
 import { sizes } from "../../config/sizes";
 import images from "../../config/images";
+import axios from "axios";
+import { apiActiveURL } from "../../ApiBaseURL";
+import { useSelector } from "react-redux";
+import Toast from "react-native-root-toast";
 
 const CARD_WIDTH = windowWidth * 0.05;
 const CARD_HEIGHT = windowHeight * 0.23;
@@ -46,45 +50,49 @@ const Marketplace = () => {
     description: "",
     contact_info: "",
   });
-
+  const userLoginSuccess = useSelector((state) => {
+    console.log(state, "state");
+    console.log(state.loginData.data, "login data success");
+    return state.loginData.data;
+  });
   const { colors } = useTheme();
 
   const pickFromGallery = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
+      // allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
       allowsMultipleSelection: true,
     });
-
+    let imagesArr = [];
     console.log(result, "selected images");
-    if (!result.canceled) {
-      result.selected.forEach((result) => {
-        let pathParts = result.uri.split("/");
-        console.log(pathParts, "path parts");
-        let typeLength = pathParts[pathParts.length - 1].split(".");
-        let typeimg = typeLength[1];
-        console.log(typeimg, "type----------");
-        const imageObj = {
-          name: pathParts[pathParts.length - 1],
-          type: `image/${typeimg}`,
-          uri: result.uri,
-        };
-        setImgObj(imageObj);
-        console.log(imageObj, "image obj");
-        console.log(pathParts[pathParts.length - 1].split("."), "name");
-        setImageName(pathParts[pathParts.length - 1]);
-        console.log(result.uri, "uriiiiiiii");
-        let imagesArr = [];
-        imagesArr.push(result.uri);
-        console.log(imagesArr, "array");
-        // setImage((prevItems) => [...prevItems, imagesArr]);
-        setImage(imagesArr.push(result.uri));
-      });
+    // if (!result.canceled) {
+    result.selected.map((result) => {
+      let pathParts = result.uri.split("/");
+      console.log(pathParts, "path parts");
+      let typeLength = pathParts[pathParts.length - 1].split(".");
+      let typeimg = typeLength[1];
+      console.log(typeimg, "type----------");
+      const imageObj = {
+        name: pathParts[pathParts.length - 1],
+        type: `image/${typeimg}`,
+        uri: result.uri,
+      };
+      setImgObj(imageObj);
+      console.log(imageObj, "image obj");
+      console.log(pathParts[pathParts.length - 1].split("."), "name");
+      setImageName(pathParts[pathParts.length - 1]);
+      console.log(result.uri, "uriiiiiiii");
 
-      console.log(image, "images arr");
-    }
+      imagesArr.push(result.uri);
+      console.log(imagesArr, "array");
+      // setImage((prevItems) => [...prevItems, imagesArr]);
+      setImage(imagesArr);
+    });
+
+    console.log(image, "images arr");
+    // }
 
     // if (!result.canceled) {
     //   let pathParts = result.uri.split("/");
@@ -106,6 +114,54 @@ const Marketplace = () => {
   };
 
   const handleUpdate = () => {
+    var data = new FormData();
+    data.append("title", "Selling bat");
+    data.append("description", "Hard ball adiddas bat");
+    data.append("contact_info", "03182377444");
+    data.append("images[]", image);
+
+    var config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: `${apiActiveURL}post-market-place`,
+      headers: {
+        Authorization: `Bearer ${userLoginSuccess.token}`,
+        "Content-Type": "multipart/form-data",
+      },
+      data: data,
+    };
+
+    console.log(config, "config");
+
+    axios(config)
+      .then(function (response) {
+        console.log(response.data, "market plce request response");
+
+        Toast.show(response.data.message, {
+          duration: 2000,
+          position: Toast.positions.TOP,
+          textColor: "#FFFFFF",
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+          position: 80,
+          backgroundColor: "#32de84",
+          style: {
+            height: 100,
+            padding: 30,
+            borderRadius: 10,
+            paddingLeft: 45,
+            paddingRight: 15,
+          },
+        });
+
+        // props.navigation.goBack();
+        // listTeams();
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     console.log(image, "images");
   };
   return (
