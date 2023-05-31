@@ -67,6 +67,11 @@ const ScheduleMatch = (props) => {
     setShowPicker(false);
   }, []);
 
+  useEffect(() => {
+    setShowDatePicker(false);
+    setShowTimePicker(false);
+  }, [date, time]);
+
   // const handleDateChange = (event, selectedDate) => {
   //   const currentDate = selectedDate || date;
   //   console.log(currentDate, "current date");
@@ -93,6 +98,13 @@ const ScheduleMatch = (props) => {
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
     setShowDatePicker(Platform.OS === "ios");
+
+    const formattedDate = currentDate
+      .toLocaleDateString("en-GB")
+      .replace(/\//g, "-");
+
+    console.log(formattedDate, "date---");
+    setFinalDate(formattedDate);
     setDate(currentDate);
   };
 
@@ -101,9 +113,15 @@ const ScheduleMatch = (props) => {
   };
 
   const handleTimeChange = (event, selectedTime) => {
+    console.log(event, selectedTime, "data----");
     const currentTime = selectedTime || time;
+    console.log(currentTime, "time");
     // setShowTimePicker(Platform.OS === "ios");
+    const formattedTime = selectedTime.toLocaleTimeString("en-GB");
+    console.log(formattedTime, "time");
+    setFinalTime(formattedTime);
     setTime(currentTime);
+    // setShowTimePicker(false);
   };
   const scheduleMatch = async (date) => {
     if (type && venue && description && formatDateTime(date)) {
@@ -187,8 +205,6 @@ const ScheduleMatch = (props) => {
       .toLocaleDateString("en-GB")
       .replace(/\//g, "-");
     const formattedTime = dateTime.toLocaleTimeString("en-GB");
-    setFinalDate(formattedDate);
-    setFinalTime(formattedTime);
 
     return `${formattedDate} ${formattedTime}`;
   };
