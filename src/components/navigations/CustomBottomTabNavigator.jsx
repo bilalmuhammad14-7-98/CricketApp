@@ -40,6 +40,7 @@ import AllPlayer from "../../screens/playerPanel/AllPlayer";
 import PlayerDetail from "../../screens/playerPanel/PlayerDetail";
 import Gallery from "../../screens/playerPanel/Gallery";
 import MyPlayerDetail from "../../screens/playerPanel/MyPlayerDetail";
+import TeamList from "../../screens/playerPanel/TeamList";
 const upper_margin = windowWidth * 0.001;
 const upper_margin1 = windowWidth * 0.01;
 const LOGO_SIZE = windowHeight * 0.06;
@@ -120,6 +121,36 @@ function PlayerHomeNavigationContainer() {
         })}
       />
 
+      <StackPlayerHome.Screen
+        name="TeamList"
+        component={TeamList}
+        options={({ navigation }) => ({
+          title: "",
+          headerLeft: () => {
+            return (
+              <NavigationHeader
+                title={"Players List"}
+                navigation={navigation}
+              />
+            );
+          },
+          headerRight: () => {
+            return (
+              <View style={{ marginRight: upper_margin1 }}>
+                <Ionicons
+                  name="notifications"
+                  size={logo_size}
+                  color="#2BB789"
+                />
+              </View>
+            );
+          },
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
       <StackPlayerHome.Screen
         name="AllPlayersScreen"
         component={AllPlayer}
@@ -582,7 +613,6 @@ function MarketPlaceNavigationContainer() {
           },
         })}
       />
-     
     </StackMarketPlace.Navigator>
   );
 }

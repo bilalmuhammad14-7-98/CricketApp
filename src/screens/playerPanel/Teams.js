@@ -105,7 +105,7 @@ const TeamsScreen = ({ navigation }) => {
 
     await axios(config)
       .then(function (response) {
-        console.log(response.data, "teams response");
+        console.log(response.data.teams, "teams response ===");
         // setCountry(response.data.countries);
         setTeams(response.data.teams);
       })
@@ -183,30 +183,61 @@ const TeamsScreen = ({ navigation }) => {
             </Text>
 
             {userLoginSuccess?.data?.roleId == "recruiter" ? (
-              <PlayerCustomButtom
-                textColor="white"
-                btnLabel="Schedule Match"
-                onPress={() => {
-                  navigation.navigate("ScheduleMatch", { data: item });
-                }}
-                myStyle={{
-                  alignSelf: "flex-end",
+              <>
+                <PlayerCustomButtom
+                  textColor="white"
+                  btnLabel="Schedule Match"
+                  onPress={() => {
+                    navigation.navigate("ScheduleMatch", { data: item });
+                  }}
+                  myStyle={{
+                    alignSelf: "flex-end",
 
-                  // marginRight: 20,
-                  // paddingVertical: 10,
-                }}
-              />
+                    // marginRight: 20,
+                    // paddingVertical: 10,
+                  }}
+                />
+                <PlayerCustomButtom
+                  textColor="white"
+                  btnLabel="View Players"
+                  onPress={() => {
+                    navigation.navigate("TeamList", { data: item.value });
+                  }}
+                  myStyle={{
+                    alignSelf: "flex-end",
+
+                    // marginRight: 20,
+                    // paddingVertical: 10,
+                  }}
+                />
+              </>
             ) : (
-              <PlayerCustomButtom
-                textColor="white"
-                btnLabel={item.requested_status}
-                onPress={() => {
-                  onPress(item);
-                }}
-                myStyle={{
-                  alignSelf: "flex-end",
-                }}
-              />
+              <>
+                <PlayerCustomButtom
+                  textColor="white"
+                  btnLabel={item.requested_status}
+                  onPress={() => {
+                    onPress(item);
+                  }}
+                  myStyle={{
+                    alignSelf: "flex-end",
+                  }}
+                />
+
+                <PlayerCustomButtom
+                  textColor="white"
+                  btnLabel="View Players"
+                  onPress={() => {
+                    navigation.navigate("TeamList", { data: item.value });
+                  }}
+                  myStyle={{
+                    alignSelf: "flex-end",
+
+                    // marginRight: 20,
+                    // paddingVertical: 10,
+                  }}
+                />
+              </>
             )}
           </View>
         </View>
