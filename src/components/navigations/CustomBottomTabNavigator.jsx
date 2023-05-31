@@ -51,6 +51,7 @@ const Tab = createBottomTabNavigator();
 const StackPlayerHome = createNativeStackNavigator();
 const StackTeams = createNativeStackNavigator();
 const StackUserProfile = createNativeStackNavigator();
+const StackMarketPlace = createNativeStackNavigator();
 
 function PlayerHomeNavigationContainer() {
   return (
@@ -547,6 +548,45 @@ function UserProfileNavigationContainer() {
   );
 }
 
+function MarketPlaceNavigationContainer() {
+  return (
+    <StackMarketPlace.Navigator screenOptions={{ headerShown: true }}>
+      <StackMarketPlace.Screen
+        name="MarketPlace"
+        component={Marketplace}
+        options={({ navigation }) => ({
+          title: "",
+          headerLeft: () => {
+            return (
+              <NavigationHeader
+                title={"Market Place"}
+                navigation={navigation}
+              />
+            );
+          },
+          // headerRight: () => {
+          //   return (
+          //     <View style={{ marginRight: upper_margin1 }}>
+          //       <Ionicons
+          //         name="notifications"
+          //         size={logo_size}
+          //         color="#2BB789"
+          //       />
+          //     </View>
+          //   );
+          // },
+
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
+     
+    </StackMarketPlace.Navigator>
+  );
+}
+
 export default function CustomBottomTabNavigator() {
   return (
     <>
@@ -608,7 +648,7 @@ export default function CustomBottomTabNavigator() {
           }}
         />
 
-        <Tab.Screen
+        {/* <Tab.Screen
           name="MarketPlace"
           component={Marketplace}
           options={{
@@ -677,6 +717,22 @@ export default function CustomBottomTabNavigator() {
               backgroundColor: "#FAF9F6",
               elevation: 0,
             },
+          }}
+        /> */}
+        <Tab.Screen
+          name="MarketPlaceRoot"
+          component={MarketPlaceNavigationContainer}
+          options={{
+            headerShown: false,
+            tabBarIcon: ({ focused }) => (
+              <View style={styles.icon}>
+                <FontAwesome
+                  name="shopping-bag"
+                  size={23}
+                  color={focused ? "#2BB789" : "grey"}
+                />
+              </View>
+            ),
           }}
         />
         <Tab.Screen
