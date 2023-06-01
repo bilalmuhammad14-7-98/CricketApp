@@ -12,6 +12,7 @@ import {
   Alert,
   Platform,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import CustomButton from "../../components/formComponents/CustomButton";
@@ -41,9 +42,11 @@ const LOGO_SIZE = windowHeight * 0.15;
 const Marketplace = () => {
   const [modal, setModal] = useState(false);
   const [image, setImage] = useState([]);
+  const [loader, setLoader] = useState(false);
+
   const [imageName, setImageName] = useState();
   const [imgObj, setImgObj] = useState(null);
-
+  console.log(image, "image");
   const [model, setModel] = useState({
     team_name: "",
     title: "",
@@ -55,6 +58,28 @@ const Marketplace = () => {
     console.log(state.loginData.data, "login data success");
     return state.loginData.data;
   });
+
+  // useEffect(() => {
+  //   Toast.show(",dsaldsadsa", {
+  //     duration: 2000,
+  //     position: Toast.positions.TOP,
+  //     textColor: "#FFFFFF",
+  //     shadow: true,
+  //     animation: true,
+  //     hideOnPress: true,
+  //     delay: 0,
+  //     position: 80,
+  //     backgroundColor: "green",
+  //     style: {
+  //       height: 100,
+  //       padding: 30,
+  //       borderRadius: 10,
+  //       paddingLeft: 45,
+  //       paddingRight: 15,
+  //       zIndex:1
+  //     },
+  //   });
+  // }, []);
   const { colors } = useTheme();
 
   const pickFromGallery = async () => {
@@ -114,11 +139,12 @@ const Marketplace = () => {
   };
 
   const handleUpdate = () => {
+    setLoader(true);
     var data = new FormData();
-    data.append("title", "Selling bat");
-    data.append("description", "Hard ball adiddas bat");
-    data.append("contact_info", "03182377444");
-    data.append("images[]", image);
+    data.append("title", model.title);
+    data.append("description", model.description);
+    data.append("contact_info", model.contact_info);
+    data.append("images[]", imgObj);
 
     var config = {
       method: "post",
@@ -131,8 +157,8 @@ const Marketplace = () => {
       data: data,
     };
 
-    console.log(config, "config");
-
+    console.log(config.data, "config");
+    // return;
     axios(config)
       .then(function (response) {
         console.log(response.data, "market plce request response");
@@ -145,8 +171,8 @@ const Marketplace = () => {
           animation: true,
           hideOnPress: true,
           delay: 0,
-          position: 80,
-          backgroundColor: "#32de84",
+          position: 180,
+          backgroundColor: "green",
           style: {
             height: 100,
             padding: 30,
@@ -155,11 +181,12 @@ const Marketplace = () => {
             paddingRight: 15,
           },
         });
-
+        setLoader(false);
         // props.navigation.goBack();
         // listTeams();
       })
       .catch(function (error) {
+        setLoader(false);
         console.log(error);
       });
     console.log(image, "images");
@@ -277,7 +304,13 @@ const Marketplace = () => {
             <TouchableOpacity>
               <CustomButton
                 textColor="white"
-                btnLabel="Update"
+                btnLabel={
+                  !loader ? (
+                    "Update"
+                  ) : (
+                    <ActivityIndicator animating size={20} color="#fff" />
+                  )
+                }
                 Press={handleUpdate}
               />
             </TouchableOpacity>
