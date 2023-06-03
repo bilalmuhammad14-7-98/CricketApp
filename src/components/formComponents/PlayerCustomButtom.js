@@ -25,6 +25,7 @@ export default function PlayerCustomButtom({
   onPress,
   myStyle,
   onLongPress,
+  icon,
 }) {
   const a = useTheme();
   const colors = a.colors;
@@ -41,9 +42,9 @@ export default function PlayerCustomButtom({
         },
       ]}
     >
-      <View style={{ flexDirection: "row" }}>
+      <View style={{ flexDirection: "row", alignItems: "center" }}>
         <AntDesign
-          name="adduser"
+          name={icon ? icon : "adduser"}
           size={IMAGE_SIZE1}
           color="#fff"
           resizeMode="contain"

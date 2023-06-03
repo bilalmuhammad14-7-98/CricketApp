@@ -187,6 +187,24 @@ const PlayerHome = ({ navigation }) => {
         navigation.navigate("PlayerHomeRoot", { screen: "Gallery" }),
     },
   ];
+  const umpireCardItems = [
+    {
+      name: "Gallery",
+      code: colors.white,
+      image: images.Scorer,
+      navigationScreen: () =>
+        navigation.navigate("PlayerHomeRoot", { screen: "Gallery" }),
+    },
+    {
+      name: "Request",
+      code: colors.white,
+      image: images.cricketerAndfootballer,
+      navigationScreen: () =>
+        navigation.navigate("PlayerHomeRoot", { screen: "Request" }),
+    },
+  ];
+
+  console.log(userLoginSuccess, "user login success");
 
   return (
     <ScrollView
@@ -334,11 +352,25 @@ const PlayerHome = ({ navigation }) => {
                 alignItems: "center",
               }}
             >
-              {cardItems.map((item) => {
-                return (
-                  <Card key={item.name} item={item} navigation={navigation} />
-                );
-              })}
+              {userLoginSuccess?.data?.roleId == "umpire"
+                ? umpireCardItems.map((item) => {
+                    return (
+                      <Card
+                        key={item.name}
+                        item={item}
+                        navigation={navigation}
+                      />
+                    );
+                  })
+                : cardItems.map((item) => {
+                    return (
+                      <Card
+                        key={item.name}
+                        item={item}
+                        navigation={navigation}
+                      />
+                    );
+                  })}
             </View>
           </View>
         </View>

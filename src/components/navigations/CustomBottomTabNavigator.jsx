@@ -41,6 +41,7 @@ import PlayerDetail from "../../screens/playerPanel/PlayerDetail";
 import Gallery from "../../screens/playerPanel/Gallery";
 import MyPlayerDetail from "../../screens/playerPanel/MyPlayerDetail";
 import TeamList from "../../screens/playerPanel/TeamList";
+import Request from "../../screens/UmpireScreens/Request";
 const upper_margin = windowWidth * 0.001;
 const upper_margin1 = windowWidth * 0.01;
 const LOGO_SIZE = windowHeight * 0.06;
@@ -250,6 +251,36 @@ function PlayerHomeNavigationContainer() {
           headerLeft: () => {
             return (
               <NavigationHeader title={"Gallery"} navigation={navigation} />
+            );
+          },
+          headerRight: () => {
+            return (
+              <View style={{ marginRight: upper_margin1 }}>
+                <Ionicons
+                  name="notifications"
+                  size={logo_size}
+                  color="#2BB789"
+                />
+              </View>
+            );
+          },
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
+      <StackPlayerHome.Screen
+        name="Request"
+        component={Request}
+        options={({ navigation }) => ({
+          title: "",
+          headerLeft: () => {
+            return (
+              <NavigationHeader
+                title={"Umpiring Request"}
+                navigation={navigation}
+              />
             );
           },
           headerRight: () => {

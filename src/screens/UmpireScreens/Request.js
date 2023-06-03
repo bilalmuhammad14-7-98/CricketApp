@@ -9,6 +9,7 @@ import {
   TextInput,
   FlatList,
   Dimensions,
+  Alert,
 } from "react-native";
 import { useState, useEffect } from "react";
 //import icons
@@ -53,154 +54,30 @@ const cross_icon = windowHeight * 0.01;
 const Search_Bar = windowHeight * 0.06;
 const INPUT_HEIGHT1 = windowHeight * 0.07;
 
-const UmpireScreen = () => {
+const Request = () => {
   const navigation = useNavigation();
-  const [umpires, setUmpires] = useState([]);
-  const [matches, setMatches] = useState([]);
+  const [recruterRequests, setRecruterRequests] = useState([]);
   const [visible, setVisible] = useState(false);
   const [toast, setToast] = useState({
     show: false,
     message: "",
   });
-  const [currentUmpire, setCurrentUmpire] = useState("");
   const userLoginSuccess = useSelector((state) => {
     return state.loginData.data;
   });
-  const data = [
-    {
-      id: 1,
-      name: "Muhammad hashirhashirhashirhashirhashirhashirhashir",
-      charges: 100,
-      // notification: "accept it"
-    },
 
-    {
-      id: 2,
-      name: "User564",
-      // notification: "follow you"
-    },
-
-    {
-      id: 3,
-      name: "Shaheer",
-      // notification: "accept it"
-    },
-
-    {
-      id: 4,
-      name: "Shan",
-      // notification: "accept it"
-    },
-
-    {
-      id: 5,
-      name: "Uzair",
-      // notification: "accept it"
-    },
-
-    {
-      id: 6,
-      name: "Uzair",
-      // notification: "accept it"
-    },
-
-    {
-      id: 7,
-      name: "Uzair",
-      // notification: "accept it"
-    },
-
-    {
-      id: 8,
-      name: "Uzair",
-      // notification: "accept it"
-    },
-  ];
-
-  const renderList = (item, index) => {
-    return (
-      <View style={{ flex: 1 }}>
-        <View>
-          <View style={styles.card} key={index}>
-            <View style={styles.cardView}>
-              <View style={styles.logo}>
-                <Avatar.Image
-                  size={LOGO_SIZE}
-                  source={{ uri: item.umpire_profile_img }}
-                />
-              </View>
-            </View>
-
-            <View
-              style={{
-                flex: 1,
-                justifyContent: "space-between",
-                padding: sizes.m7,
-              }}
-            >
-              <View
-                style={{
-                  // alignItems: "center",
-                  // margin: sizes.m8,
-                  marginLeft: sizes.m3,
-                }}
-              >
-                <Text
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
-                  style={styles.text}
-                >
-                  {item.umpire_name}
-                </Text>
-
-                <Text
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
-                  style={styles.text}
-                >
-                  Fees:
-                  {item?.fees ? item?.fees : "00.00"}
-                </Text>
-                {/* <Text style={styles.text}>{item.notification}</Text> */}
-              </View>
-              <View
-                style={{
-                  marginRight: sizes.m5,
-                  marginBottom: sizes.m5,
-                  justifyContent: "flex-end",
-                }}
-              >
-                <PlayerCustomButtom
-                  textColor="white"
-                  btnLabel="Send Request"
-                  myStyle={{
-                    alignSelf: "flex-end",
-                  }}
-                  onPress={() => {
-                    setCurrentUmpire(item.id);
-                    getMatchID();
-                  }}
-                />
-              </View>
-            </View>
-          </View>
-        </View>
-      </View>
-    );
-  };
-
-  const matchesList = (item, index) => {
+  const requestList = (item, index) => {
     return (
       <TouchableOpacity
-        style={{ flex: 1, ...styles.matchCard }}
+        style={{ flex: 1, ...styles.card }}
         key={index}
-        onPress={() => sendRequestToUmpire(item.id)}
+        onPress={() => {}}
       >
         <View style={styles.cardView}>
           <View style={styles.logo}>
             <Avatar.Image
               size={LOGO_SIZE}
-              source={{ uri: item.requested_receiver_team_logo }}
+              source={{ uri: item.request_sender_team_logo }}
             />
           </View>
         </View>
@@ -210,6 +87,7 @@ const UmpireScreen = () => {
             flex: 1,
             justifyContent: "space-between",
             padding: sizes.m7,
+            flexDirection: "row",
           }}
         >
           <View
@@ -217,10 +95,11 @@ const UmpireScreen = () => {
               // alignItems: "center",
               // margin: sizes.m8,
               marginLeft: sizes.m3,
+              flex: 1,
             }}
           >
             <Text numberOfLines={1} ellipsizeMode="tail" style={styles.text}>
-              {item.request_receiver_name}
+              {item.request_sender_id}
             </Text>
 
             <Text numberOfLines={1} ellipsizeMode="tail" style={styles.text}>
@@ -238,82 +117,50 @@ const UmpireScreen = () => {
               marginRight: sizes.m5,
               marginBottom: sizes.m5,
               justifyContent: "flex-end",
+              justifyContent: "center",
             }}
-          ></View>
+          >
+            <PlayerCustomButtom
+              textColor="white"
+              btnLabel="Accept"
+              myStyle={{
+                alignSelf: "flex-end",
+                width: windowWidth * 0.22,
+              }}
+              onPress={() => {
+                handleRequest({ matchid: item.id, status: "accept" });
+              }}
+            />
+            <PlayerCustomButtom
+              textColor="white"
+              btnLabel="Decline"
+              myStyle={{
+                alignSelf: "flex-end",
+                width: windowWidth * 0.22,
+                backgroundColor: "red",
+                marginTop: 5,
+              }}
+              icon="delete"
+              onPress={() => {
+                handleRequest({ matchid: item.id, status: "decline" });
+              }}
+            />
+          </View>
         </View>
       </TouchableOpacity>
     );
   };
 
-  useFocusEffect(
-    useCallback(() => {
-      listUmpires();
-    }, [])
-  );
-
-  const listUmpires = () => {
-    let config = {
-      method: "get",
-      maxBodyLength: Infinity,
-      url: `${apiActiveURL}list-all-umpire`,
-      headers: {
-        Authorization: `Bearer ${userLoginSuccess.token}`,
-      },
-    };
-
-    axios
-      .request(config)
-      .then((response) => {
-        if (response?.data?.success) {
-          console.log(response?.data?.umpires, "response?.data?.umpires");
-          setUmpires([...response?.data?.umpires]);
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-  const getMatchID = () => {
-    let config = {
-      method: "get",
-      maxBodyLength: Infinity,
-      url: `${apiActiveURL}sending-list`,
-      headers: {
-        Authorization: `Bearer ${userLoginSuccess.token}`,
-      },
-    };
-
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(JSON.stringify(response.data), "RESPONSE OF MATCH ID");
-        console.log(response?.data?.data);
-        if (response?.data?.data?.length > 0) {
-          setMatches([...response?.data?.data]);
-          showModal();
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
-
-  const showModal = (data) => {
-    setVisible(true);
-  };
-
-  const hideModal = () => setVisible(false);
-
-  const sendRequestToUmpire = (matchid) => {
+  const executeRequest = (matchData) => {
     const FormData = require("form-data");
     let data = new FormData();
-    data.append("matchId", matchid);
-    data.append("umpireId", currentUmpire);
+    data.append("matchId", matchData.matchid);
+    data.append("request_status", matchData.status);
 
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: `${apiActiveURL}send-umpire-request`,
+      url: `${apiActiveURL}umpire-update-status`,
       headers: {
         Authorization: `Bearer ${userLoginSuccess.token}`,
       },
@@ -323,9 +170,8 @@ const UmpireScreen = () => {
     axios
       .request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data), "REQUEST TO UMPIRE");
+        console.log(JSON.stringify(response.data), "UMPIRE REQUEST");
         if (response.data.success) {
-          hideModal();
           Toast.show(response.data.message, {
             duration: Toast.durations.SHORT,
             position: Toast.positions.TOP,
@@ -344,15 +190,98 @@ const UmpireScreen = () => {
               paddingRight: 15,
             },
           });
-          setTimeout(() => {
-            navigation.goBack();
-          }, 2000);
+          navigation.goBack();
+        }
+        if (response.data.success == false && response.data.message == "") {
+          Toast.show("offer declined", {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.TOP,
+            textColor: "#FFFFFF",
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+            position: 80,
+            backgroundColor: "#32de84",
+            style: {
+              height: 100,
+              padding: 30,
+              borderRadius: 10,
+              paddingLeft: 45,
+              paddingRight: 15,
+            },
+          });
+          navigation.goBack();
         }
       })
       .catch((error) => {
         console.log(error);
       });
   };
+  const handleRequest = (matchData) => {
+    if (matchData.status == "decline") {
+      Alert.alert(
+        "Confirm",
+        "are you sure you wnat to decline the request",
+        [
+          {
+            text: "Cancel",
+            onPress: () => console.log("Cancel Pressed"),
+            style: "cancel",
+          },
+          {
+            text: "yes",
+            onPress: async () => {
+              executeRequest(matchData);
+            },
+          },
+          {
+            text: "no",
+            onPress: () => {},
+          },
+        ],
+        {
+          cancelable: true,
+        }
+      );
+    } else {
+      executeRequest(matchData);
+    }
+  };
+  useFocusEffect(
+    useCallback(() => {
+      listRequest();
+    }, [])
+  );
+
+  const listRequest = () => {
+    let config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: `${apiActiveURL}get-Umpiring-list`,
+      headers: {
+        Authorization: `Bearer ${userLoginSuccess.token}`,
+      },
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        if (response.data.data?.length > 0) {
+          setRecruterRequests([...response.data.data]);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+
+  const showModal = (data) => {
+    setVisible(true);
+  };
+
+  const hideModal = () => setVisible(false);
 
   useEffect(() => {
     setTimeout(function hideToast() {
@@ -368,7 +297,7 @@ const UmpireScreen = () => {
       }}
     >
       <View style={styles.root}>
-        <Portal>
+        {/* <Portal>
           <Modal
             visible={visible}
             onDismiss={hideModal}
@@ -392,7 +321,7 @@ const UmpireScreen = () => {
               keyExtractor={(item) => `${item.id}`}
             />
           </Modal>
-        </Portal>
+        </Portal> */}
 
         <View>
           <StatusBar barStyle="dark-content" />
@@ -439,13 +368,21 @@ const UmpireScreen = () => {
               borderTopRightRadius: 30,
             }}
           >
-            <FlatList
-              data={umpires}
-              renderItem={({ item }) => {
-                return renderList(item);
-              }}
-              keyExtractor={(item) => `${item.id}`}
-            />
+            {recruterRequests.length == 0 ? (
+              <View>
+                <Text style={[styles.text, { textAlign: "center" }]}>
+                  No Requests found
+                </Text>
+              </View>
+            ) : (
+              <FlatList
+                data={recruterRequests}
+                renderItem={({ item }) => {
+                  return requestList(item);
+                }}
+                keyExtractor={(item) => `${item.id}`}
+              />
+            )}
           </View>
         </View>
       </View>
@@ -454,7 +391,7 @@ const UmpireScreen = () => {
   );
 };
 
-export default UmpireScreen;
+export default Request;
 
 const styles = StyleSheet.create({
   root: {

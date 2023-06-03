@@ -8,7 +8,7 @@ import { Provider } from "react-redux";
 import MyNavigationContainer from "./src/components/navigations";
 import { store } from "./src/store";
 import ProfileContextProvider from "./src/components/context/context";
-
+import { Provider as PaperProvider } from "react-native-paper";
 
 const Stack = createNativeStackNavigator();
 
@@ -32,7 +32,9 @@ function App() {
   return (
     <ProfileContextProvider>
       <Provider store={store}>
-        <MyNavigationContainer/>
+        <PaperProvider>
+          <MyNavigationContainer />
+        </PaperProvider>
       </Provider>
     </ProfileContextProvider>
   );
