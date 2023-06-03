@@ -9,6 +9,7 @@ import {
   TextInput,
   FlatList,
   Modal,
+  ActivityIndicator,
 } from "react-native";
 import { Button } from "react-native-paper";
 import { useState, useEffect } from "react";
@@ -38,6 +39,8 @@ import { useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { LongPressGestureHandler, State } from "react-native-gesture-handler";
 import Toast from "react-native-root-toast";
+import { colors } from "../../config/colors";
+import CustomButton from "../../components/formComponents/CustomButton";
 
 const LOGO_SIZE = windowHeight * 0.1;
 const CARD_WIDTH = windowWidth * 0.95;
@@ -53,9 +56,11 @@ const PlayersScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
   const userLoginSuccess = useSelector((state) => {
     // console.log(state, "state");
-    console.log(state.loginData.data, "login data success");
+    console.log(state.loginData.data.token, "login data success");
     return state.loginData.data;
   });
+  const [loader, setLoader] = useState(false);
+
   const [players, setPlayers] = useState([]);
   const [pressedItem, setPressedItem] = useState(null);
   const [modal, setModal] = useState(false);
@@ -156,6 +161,57 @@ const PlayersScreen = ({ navigation }) => {
       });
   };
 
+
+  const deletePlayer = async (item) => {
+    console.log(item, "Button pressed!");
+setLoader(true)
+    let data = new FormData();
+
+    data.append("playerId", item);
+
+    var config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: `${apiActiveURL}leave-team`,
+      headers: {
+        Authorization: `Bearer ${userLoginSuccess.token}`,
+      },
+      data: data,
+    };
+    console.log(config.data,'config')
+    // return
+
+    await axios(config)
+      .then(function (response) {
+        // console.log(response.data, "join team response");
+        Toast.show(response.data.message, {
+          duration: 2000,
+          position: Toast.positions.TOP,
+          textColor: "#FFFFFF",
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+          position: 80,
+          backgroundColor: "#32de84",
+          style: {
+            height: 100,
+            padding: 30,
+            borderRadius: 10,
+            paddingLeft: 45,
+            paddingRight: 15,
+          },
+        });
+        listTeams();
+        setLoader(false)
+      })
+      .catch(function (error) {
+        setLoader(false)
+        console.log(error);
+      });
+  };
+
+
   useEffect(() => {
     listPlayers();
   }, []);
@@ -220,10 +276,10 @@ const PlayersScreen = ({ navigation }) => {
                   justifyContent: "flex-end",
                 }}
               >
-                <PlayerCustomButtom
+                <CustomButton
                   textColor="white"
                   btnLabel="View Profile"
-                  onPress={() => {
+                  Press={() => {
                     // onPress(item);
                     navigation.navigate("MyPlayerDetail", {
                       playerId: item.playerId,
@@ -231,17 +287,27 @@ const PlayersScreen = ({ navigation }) => {
                     });
                   }}
                   myStyle={{
-                    alignSelf: "flex-end",
+                    // alignSelf: "flex-end",
+
+                    width:100
                   }}
+                  txtStyle={{fontSize:12}}
                 />
-                <PlayerCustomButtom
+                <CustomButton
                   textColor="white"
-                  btnLabel="Delete Player"
-                  onPress={() => {
+                  btnLabel={!loader ? "Delete Player" : 
+                  <ActivityIndicator animating size={12} color={colors.white} />
+                
+                }
+                Press={() => {
+                    deletePlayer(item.playerId)
                     // onPress(item);
                   }}
+                  txtStyle={{fontSize:12}}
+
                   myStyle={{
                     alignSelf: "flex-end",
+                    width:100,
                   }}
                 />
               </View>
