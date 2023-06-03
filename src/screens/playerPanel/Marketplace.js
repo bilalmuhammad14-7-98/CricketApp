@@ -55,8 +55,7 @@ const Marketplace = ({ navigation }) => {
     contact_info: "",
   });
   const userLoginSuccess = useSelector((state) => {
-    console.log(state, "state");
-    console.log(state.loginData.data, "login data success");
+
     return state.loginData.data;
   });
 
@@ -82,7 +81,6 @@ const Marketplace = ({ navigation }) => {
   //   });
   // }, []);
   const { colors } = useTheme();
-
   const pickFromGallery = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
@@ -91,36 +89,37 @@ const Marketplace = ({ navigation }) => {
       quality: 1,
       allowsMultipleSelection: true,
     });
-    let imagesArr = [];
+    // let imagesArr = [];
     console.log(result, "selected images");
+    if (!result?.cancelled) {
+      handleUpdate(result.selected);
+      setImage([...image, ...result.selected]);
+    }
     // if (!result.canceled) {
-    result.selected.map((result) => {
-      let pathParts = result.uri.split("/");
-      console.log(pathParts, "path parts");
-      let typeLength = pathParts[pathParts.length - 1].split(".");
-      let typeimg = typeLength[1];
-      console.log(typeimg, "type----------");
-      const imageObj = {
-        name: pathParts[pathParts.length - 1],
-        type: `image/${typeimg}`,
-        uri: result.uri,
-      };
-      let myimage = [];
-      console.log(imageObj, "imageObj imageObj");
-      myimage.push(imageObj);
-      setImgObj(imageObj);
-      console.log(myimage, "image obj");
-      console.log(pathParts[pathParts.length - 1].split("."), "name");
-      setImageName(pathParts[pathParts.length - 1]);
-      console.log(result.uri, "uriiiiiiii");
+    // result.selected.forEach((result, index) => {
+    //   // let pathParts = result.uri.split("/");
+    //   const fileParts = image.uri.split(".");
 
-      imagesArr.push(result.uri);
-      console.log(imagesArr, "array");
-      // setImage((prevItems) => [...prevItems, imagesArr]);
-      setImage(imagesArr);
-    });
+    //   const fileExtension = fileParts[fileParts.length - 1];
 
-    console.log(image, "images arr");
+    //   console.log(result.uri.split("."))
+    //   console.log(pathParts, "path parts");
+    //   let typeLength = pathParts[pathParts.length - 1].split(".");
+    //   let typeimg = typeLength[1];
+    //   console.log(typeimg, "type----------");
+    
+    //   imageObj.push({
+    //     name: pathParts[pathParts.length - 1],
+    //     type: `image/${typeimg}`,
+    //     uri: Platform.OS === 'android'
+    //                   ? result.uri
+    //                   : result.uri.replace('file://', ''),
+    //                 })
+    //   setImgObj(imageObj)
+   
+    // });
+
+    // console.log(image, "images arr");
     // }
 
     // if (!result.canceled) {
@@ -142,13 +141,24 @@ const Marketplace = ({ navigation }) => {
     // }
   };
 
-  const handleUpdate = () => {
+  const handleUpdate = (images) => {
     setLoader(true);
     var data = new FormData();
     data.append("title", model.title);
     data.append("description", model.description);
     data.append("contact_info", model.contact_info);
-    data.append("images[]", imgObj);
+
+    images.forEach((image, index) => {
+      const fileParts = image.uri.split(".");
+      // Get the last part of the split array, which represents the file extension
+      const fileExtension = fileParts[fileParts.length - 1];
+      data.append(`images[${index}]`, {
+        uri: image.uri,
+        name: image.uri.substring(image.uri.lastIndexOf("/") + 1),
+        type: `image/${fileExtension}`,
+      });
+    });
+    // data.append("images[]", imgObj);
     // console.log();
     var config = {
       method: "post",
@@ -160,10 +170,9 @@ const Marketplace = ({ navigation }) => {
       },
       data: data,
     };
-
+    console.log(imgObj,'imgObj')
     console.log(config.data, "config");
-    // return;
-    // return;
+// return 
     axios(config)
       .then(function (response) {
         console.log(response.data, "market plce request response");

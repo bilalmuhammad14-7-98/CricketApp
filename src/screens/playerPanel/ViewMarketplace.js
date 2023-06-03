@@ -19,7 +19,6 @@ import { colors } from "../../config/colors";
 import { useIsFocused } from "@react-navigation/native";
 
 const ViewMarketplace = (props) => {
-  console.log(props.route, "marketplace property changed");
   const [marketplace, setMarketplace] = useState([]);
   const [imageData, setImageData] = useState([]);
   const [loader, setLoader] = useState(true);
@@ -48,7 +47,6 @@ const ViewMarketplace = (props) => {
         Authorization: `Bearer ${userLoginSuccess.token}`,
       },
     };
-
     await axios(config)
       .then(function (response) {
         console.log(response.data, "get market response");

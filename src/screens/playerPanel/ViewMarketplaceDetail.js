@@ -33,7 +33,7 @@ const cross_icon = windowHeight * 0.01;
 const curve_height = windowHeight * 0.2;
 const swiper_height = windowHeight * 0.04;
 const ViewMarketplaceDetail = (props) => {
-  console.log(props.route.para, "marketplace property detail");
+  console.log(props.route,"marketplace property detail");
   const [marketplace, setMarketplace] = useState([]);
   const [imageData, setImageData] = useState([]);
   const [loader, setLoader] = useState(true);
@@ -45,15 +45,18 @@ const ViewMarketplaceDetail = (props) => {
         <View style={{ width: "90%", alignSelf: "center" }}>
           <View style={styles.sliderContainer}>
             <Swiper autoplay activeDotColor="#2BB789">
-              <View style={styles.slide}>
-                <Image
-                  source={require("../../../assets/Images/Scorer.jpg")}
-                  resizeMode="cover"
-                  style={styles.sliderImage}
-                />
-              </View>
+                {props.route.params.data.images.map((item)=>
+                 <View style={styles.slide}>
+                 <Image
+                   source={{uri: `https://cricketapp.gulfresource.org/public/storage/${item.image_path}`}}
+                   resizeMode="cover"
+                   style={styles.sliderImage}
+                 />
+               </View>
+                )}
+             
 
-              <View style={styles.slide}>
+              {/* <View style={styles.slide}>
                 <Image
                   source={require("../../../assets/Images/cricketerAndfootballer.jpg")}
                   resizeMode="cover"
@@ -67,18 +70,20 @@ const ViewMarketplaceDetail = (props) => {
                   resizeMode="cover"
                   style={styles.sliderImage}
                 />
-              </View>
+              </View> */}
             </Swiper>
           </View>
 
-          <Text style={{ marginTop: 10, fontSize: 16, fontWeight: "bold" }}>
+<Text style={{fontSize: 16, fontWeight: "bold", marginTop:10}}>Title</Text>
+          <Text style={{ marginVertical:5, fontSize: 16, }}>
             {props.route.params.data.title}
           </Text>
-
-          <Text style={{ marginTop: 10, fontSize: 14 }}>
+          <Text style={{fontSize: 16, fontWeight: "bold"}}>Description</Text>
+          <Text style={{ marginVertical:5, fontSize: 14 }}>
             {props.route.params.data.description}
           </Text>
-          <Text style={{ marginTop: 10, fontSize: 14 }}>
+          <Text style={{fontSize: 16, fontWeight: "bold"}}>Contact No</Text>
+          <Text style={{ marginVertical:5, fontSize: 14 }}>
             {props.route.params.data.contact}
           </Text>
           {/* <Text>{item.description}</Text> */}
@@ -90,30 +95,7 @@ const ViewMarketplaceDetail = (props) => {
 
 export default ViewMarketplaceDetail;
 const styles = StyleSheet.create({
-  //card
-  // gridView: {
-  //   marginTop: 300,
-  //   flex: 1,
-  // },
-
-  // itemContainer: {
-  //   justifyContent: "flex-end",
-  //   borderRadius: 20,
-  //   padding: 10,
-  //   // height: 170,
-  // },
-
-  // itemName: {
-  //   fontSize: 16,
-  //   color: "#fff",
-  //   fontWeight: "600",
-  // },
-
-  // itemCode: {
-  //   fontWeight: "600",
-  //   fontSize: 12,
-  //   color: "#fff",
-  // },
+ 
 
   //slider
   sliderContainer: {
