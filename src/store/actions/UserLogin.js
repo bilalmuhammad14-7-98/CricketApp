@@ -34,7 +34,6 @@ export const UserLogin = (data) => {
     axios(config)
       .then((res) => {
         console.log(res.data, "login response");
-
         if (res.data.success) {
           LoginSuccess(dispatch, res.data);
         } else {

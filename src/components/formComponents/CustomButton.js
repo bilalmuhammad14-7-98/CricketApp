@@ -12,6 +12,7 @@ export default function CustomButton({
   Press,
   myStyle,
   txtStyle,
+  style,
 }) {
   const a = useTheme();
   const colors = a.colors;
@@ -23,7 +24,10 @@ export default function CustomButton({
         {
           backgroundColor: bgColor !== undefined ? bgColor : colors.primary,
           ...myStyle,
+          ...style,
         },
+        // { backgroundColor: bgColor !== undefined ? bgColor : colors.primary },
+        // style,
       ]}
     >
       <Text
