@@ -195,13 +195,6 @@ const PlayerHome = ({ navigation }) => {
       },
     },
     {
-      name: "Umpire/Referee",
-      code: colors.white,
-      image: images.UmpireAndReferee,
-      navigationScreen: () =>
-        navigation.navigate("PlayerHomeRoot", { screen: "Umpire" }),
-    },
-    {
       name: "Teams",
       code: colors.white,
       image: images.Teams,
