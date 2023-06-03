@@ -28,6 +28,7 @@ import { SetUser } from "../../../store/actions/authAction";
 import { profileContext } from "../../../components/context/context";
 import { ScrollView } from "react-native-gesture-handler";
 import { UserLogin } from "../../../store/actions/UserLogin";
+import { showToast, validateEmail } from "../../../util";
 
 const curve_height = windowHeight * 0.25;
 const input_width = windowHeight * 0.48;
@@ -110,6 +111,21 @@ const Login = (props) => {
   }, [userLoginSuccess, userLoginError]);
 
   const handleSubmit = async () => {
+    if (!username.trim()) {
+      showToast("Please enter your email address", "error");
+      return;
+    }
+
+    if (!validateEmail(username)) {
+      showToast("Invalid email address", "error");
+      return;
+    }
+
+    if (!password) {
+      showToast("Please enter a password", "error");
+      return;
+    }
+
     const data = {
       username,
       password,

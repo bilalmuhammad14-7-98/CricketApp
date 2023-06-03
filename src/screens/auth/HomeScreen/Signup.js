@@ -15,7 +15,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { sizes } from "../../../config/sizes";
 import CustomDropDown from "../../../components/formComponents/CustomDropDown";
 // import Field from "../../components/formComponents/Field";
-import { useTheme } from "@react-navigation/native";
+import { useNavigation, useTheme } from "@react-navigation/native";
 // import { signUpRequest } from "../../services/authService";
 import Toast from "react-native-root-toast";
 import { set } from "react-native-reanimated";
@@ -26,12 +26,14 @@ import { useRef } from "react";
 import { ScrollView } from "react-native-gesture-handler";
 // import { apiActiveURL } from "../../ApiBaseURL";
 import { apiActiveURL } from "../../../ApiBaseURL";
+import { showToast, validateEmail } from "../../../util";
 
 const curve_height = windowHeight * 0.25;
 const input_width = windowHeight * 0.48;
 const button_height = windowHeight * 0.1;
 
 const Signup = (props) => {
+  const navigation = useNavigation();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -115,6 +117,67 @@ const Signup = (props) => {
   };
 
   const onClick = async (event) => {
+    if (!name.trim()) {
+      showToast("Please enter your name", "error");
+      return;
+    }
+    if (!email) {
+      showToast("Please enter a email address", "error");
+      return;
+    }
+    if (!validateEmail(email)) {
+      showToast("Invalid email address", "error");
+      return;
+    }
+
+    if (!password.trim()) {
+      showToast("Please enter a password", "error");
+      return;
+    }
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      showToast(
+        "password must be 8 character long, it must have at least 1 upper case and lower case character and a symbol",
+        "error",
+        "long"
+      );
+      return;
+    }
+    if (!phone) {
+      showToast("Please enter a phone number", "error");
+      return;
+    }
+
+    if (phone.length != 11) {
+      showToast("Invalid phone number", "error");
+      return;
+    }
+
+    if (phone.length != 11) {
+      showToast("Invalid phone number", "error");
+      return;
+    }
+
+    if (phone.length != 11) {
+      showToast("Invalid phone number", "error");
+      return;
+    }
+
+    if (!selectedCountry) {
+      showToast("select a country", "error");
+      return;
+    }
+
+    if (!selectedCity) {
+      showToast("select a city", "error");
+      return;
+    }
+
+    if (!selectedRole) {
+      showToast("select a role", "error");
+      return;
+    }
+
     const Signupdata = {
       name: name,
       password: password,
@@ -144,44 +207,11 @@ const Signup = (props) => {
 
     await axios(config)
       .then(function (response) {
-        Toast.show(response.data.message, {
-          duration: Toast.durations.SHORT,
-          position: Toast.positions.TOP,
-          textColor: "#FFFFFF",
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-          position: 80,
-          backgroundColor: "#32de84",
-          style: {
-            height: 100,
-            padding: 30,
-            borderRadius: 10,
-            paddingLeft: 45,
-            paddingRight: 15,
-          },
-        });
+        showToast("sign up successfully", "success");
+        navigation.navigate("LoginScreen");
       })
       .catch(function (error) {
-        Toast.show("Something went wrong", {
-          duration: Toast.durations.SHORT,
-          position: Toast.positions.TOP,
-          textColor: "#FFFFFF",
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-          position: 80,
-          backgroundColor: "#32de84",
-          style: {
-            height: 100,
-            padding: 30,
-            borderRadius: 10,
-            paddingLeft: 45,
-            paddingRight: 15,
-          },
-        });
+        showToast("Something went wrong", "error");
       });
   };
 
