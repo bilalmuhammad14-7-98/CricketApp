@@ -14,7 +14,8 @@
     "@react-navigation/bottom-tabs": "^6.4.1",
     "@react-navigation/native": "^6.0.13",
     "@react-navigation/native-stack": "^6.9.1",
-    "axios": "^1.2.3",
+    "axios": "^0.24.0",
+    "prettier": "^2.8.8",
     "expo": "~46.0.16",
     "expo-asset": "^8.7.0",
     "expo-image-picker": "~13.3.1",
@@ -37,7 +38,8 @@
     "react-redux": "^8.0.5",
     "reanimated-bottom-sheet": "^1.0.0-alpha.22",
     "redux": "^4.2.0",
-    "redux-thunk": "^2.4.2"
+    "redux-thunk": "^2.4.2",
+    "expo-file-system": "~14.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"
