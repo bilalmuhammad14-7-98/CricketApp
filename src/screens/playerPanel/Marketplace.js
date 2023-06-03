@@ -142,6 +142,7 @@ const Marketplace = ({ navigation }) => {
   };
 
   const handleUpdate = (images) => {
+    if(images.length > 0 && model.title && model.description && model){
     setLoader(true);
     var data = new FormData();
     data.append("title", model.title);
@@ -176,7 +177,7 @@ const Marketplace = ({ navigation }) => {
     axios(config)
       .then(function (response) {
         console.log(response.data, "market plce request response");
-
+        // if(response.status === 'Posted in market successfully!')
         Toast.show(response.data.message, {
           duration: 2000,
           position: Toast.positions.TOP,
@@ -202,7 +203,28 @@ const Marketplace = ({ navigation }) => {
       .catch(function (error) {
         setLoader(false);
         console.log(error);
-      });
+      });}
+      else{
+        setLoader(false)
+        Toast.show('All fields are required', {
+          duration: 2000,
+          position: Toast.positions.TOP,
+          textColor: "#FFFFFF",
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+          position: 180,
+          backgroundColor: "red",
+          style: {
+            height: 100,
+            padding: 30,
+            borderRadius: 10,
+            paddingLeft: 45,
+            paddingRight: 15,
+          },
+        });
+      }
     console.log(image, "images");
   };
   return (
@@ -327,7 +349,7 @@ const Marketplace = ({ navigation }) => {
               placeholderText="Please enter contact info"
             />
 
-            <Button
+            {/* <Button
               style={styles.inputStyle}
               // icon={picture == "" ? "upload" : "check"}
               icon={"upload"}
@@ -335,34 +357,32 @@ const Marketplace = ({ navigation }) => {
               theme={theme}
               onPress={() => setModal(true)}
             >
-              Upload Image
-            </Button>
+                {!loader ? (
+             Upload Image and Post in Marketplace
+                ):(
+                  <ActivityIndicator animating size={30} color="#fff" />
 
-            {/* {image &&
-              image.map(
-                (image) => console.log(image, "image")(<>bilal</>)
+                )
+            </Button> */}
 
-                // <Image
-                //   key={image.path}
-                //   source={{ uri: image.path }}
-                //   style={{ width: 200, height: 200 }}
-                // />
-              )} */}
+               <CustomButton
+                 textColor="white"
 
-            <TouchableOpacity>
-              <CustomButton
-                textColor="white"
-                btnLabel={
-                  !loader ? (
-                    "Post in Marketplace"
-                  ) : (
-                    <ActivityIndicator animating size={30} color="#fff" />
-                  )
-                }
-                Press={handleUpdate}
-              />
-            </TouchableOpacity>
-          </View>
+                 txtStyle={{fontSize:16}}
+                 btnLabel={
+                   !loader ? (
+                     "Upload Image and Post in Marketplace"
+                     ):(
+                      <ActivityIndicator animating size={30} color="#fff" />
+    
+                    )
+                 }
+                 Press={() => setModal(true)}
+               />
+          
+          
+</View>
+   
         </View>
       </View>
     </ScrollView>
