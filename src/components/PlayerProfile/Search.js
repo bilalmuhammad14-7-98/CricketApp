@@ -26,34 +26,12 @@ const Search = ({ searchArray, searchField, results }) => {
   const [search, setSearch] = useState("");
 
   const searchFilterFunction = (text) => {
-    // Check if searched text is not blank
     if (text) {
       var newData = "";
-      //   if (userLoginSuccess?.data?.roleId == "umpire") {
       newData = getSearchResult({ searchArray, searchField, text });
-      //   }
-      //   else if (userLoginSuccess?.data?.roleId == "recruiter") {
-      //     newData = cardItems.filter(function (item) {
-      //       const itemData = item.name
-      //         ? item.name.toUpperCase()
-      //         : "".toUpperCase();
-      //       const textData = text.toUpperCase();
-      //       return itemData.indexOf(textData) > -1;
-      //     });
-      //   } else {
-      //     newData = playerCardItems.filter(function (item) {
-      //       const itemData = item.name
-      //         ? item.name.toUpperCase()
-      //         : "".toUpperCase();
-      //       const textData = text.toUpperCase();
-      //       return itemData.indexOf(textData) > -1;
-      //     });
-      //   }
-      //   setSearchedBlock(newData);
       results(newData);
       setSearch(text);
     } else {
-      //   setSearchedBlock([...playerCardItems]);
       results(searchArray);
       setSearch(text);
     }
@@ -100,6 +78,10 @@ const Search = ({ searchArray, searchField, results }) => {
             style={{
               alignSelf: "center",
               marginLeft: cross_icon,
+            }}
+            onPress={() => {
+              setSearch("");
+              results(searchArray);
             }}
           />
         </View>
