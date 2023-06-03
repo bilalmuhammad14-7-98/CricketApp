@@ -1,4 +1,4 @@
-import React, { useEffect, useState , useContext} from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   View,
   Text,
@@ -11,28 +11,24 @@ import { useTheme } from "@react-navigation/native";
 import Toast from "react-native-root-toast";
 // import Logo from '../../../assets/Images/Fyp_Logo.jpg';
 
-
 //imports
 import { LinearGradient } from "expo-linear-gradient";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { http } from "../../../components/http/http";
 
-
-
-
 // imports
 import AuthCustomFormInput from "../../../components/formComponents/AuthCustomFormInput";
-import { sizes } from "../../../config/sizes"; 
+import { sizes } from "../../../config/sizes";
 import CustomButton from "../../../components/formComponents/CustomButton";
-import ForgotPassword  from "./ForgotPassword";
-import { signInRequest } from "../../../services/authService"; 
+import ForgotPassword from "./ForgotPassword";
+import { signInRequest } from "../../../services/authService";
 import CustomToast from "../../../components/formComponents/CustomToast";
 import { windowHeight, windowWidth } from "../../../config/dimensions";
-import { colors } from "../../../config/colors"; 
-import { SetUser } from "../../../store/actions/authAction"; 
-import {AsyncStorage} from 'react-native';
+import { colors } from "../../../config/colors";
+import { SetUser } from "../../../store/actions/authAction";
 import { profileContext } from "../../../components/context/context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const curve_height = windowHeight * 0.25;
 const input_width = windowHeight * 0.48;
@@ -43,7 +39,7 @@ const RecruiterLogin = (props) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState();
-  const {profile} = useContext(profileContext)
+  const { profile } = useContext(profileContext);
   const [toast, setToast] = useState({
     show: false,
     message: "",
@@ -51,36 +47,28 @@ const RecruiterLogin = (props) => {
   const { colors } = useTheme();
 
   useEffect(() => {
-   if(profile) {
-    props.navigation.navigate("PlayerHome")
-   }
-  }, [])
-  
+    if (profile) {
+      props.navigation.navigate("PlayerHome");
+    }
+  }, []);
 
   const handleSubmit = async () => {
     try {
       const response = await axios.post(`${http}/api/signin`, {
         email: username,
-        password: password 
-    })
-    
+        password: password,
+      });
 
       if (response.data.isOk == false) {
-        alert(response.data.message)
+        alert(response.data.message);
+      } else if (response.data.isOk == true) {
+        await AsyncStorage.setItem("Profile", JSON.stringify(response.data));
+        alert("Login Successfully !!!");
+        props.navigation.navigate("PlayerHome");
       }
-      else if (response.data.isOk == true) {
-        await AsyncStorage.setItem(
-          "Profile" , 
-          JSON.stringify(response.data))
-        alert("Login Successfully !!!")
-        props.navigation.navigate("PlayerHome") 
-      }
-
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-
-
   };
 
   const handleUsernameChange = (text) => {
@@ -102,7 +90,6 @@ const RecruiterLogin = (props) => {
           <Image source={Logo} style= {styles.logo} 
           />
         </View> */}
-
         </View>
         {/* <View style={{ height: curve_height }}>
           <Text style={styles.text1}>Login</Text>
@@ -116,15 +103,14 @@ const RecruiterLogin = (props) => {
           backgroundColor: "white",
           borderTopLeftRadius: 30,
           borderTopRightRadius: 30,
-          flex: 1
-
+          flex: 1,
         }}
       >
         <View style={{ alignItems: "center" }}>
           <Text style={styles.text3}>Login to your Account</Text>
         </View>
 
-        <View style={{ width: input_width, padding: sizes.m10}}>
+        <View style={{ width: input_width, padding: sizes.m10 }}>
           <AuthCustomFormInput
             autoComplete="name"
             placeholderText="Email-Address"
@@ -151,8 +137,8 @@ const RecruiterLogin = (props) => {
           />
 
           <TouchableOpacity
-            onPress={() => props.navigation.navigate("ForgotPassword")}>
-
+            onPress={() => props.navigation.navigate("ForgotPassword")}
+          >
             <View style={styles.a1}>
               <Text style={[styles.text4, { color: colors.primary }]}>
                 Forgot Password ?
@@ -182,7 +168,6 @@ const RecruiterLogin = (props) => {
         </View>
         {/* </View> */}
       </View>
-
     </View>
   );
 };
@@ -198,7 +183,7 @@ const styles = StyleSheet.create({
     // marginVertical: 50,
     textAlign: "center",
     marginTop: 85,
-    color: colors.heading
+    color: colors.heading,
   },
 
   text2: {

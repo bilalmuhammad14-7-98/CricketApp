@@ -1,4 +1,11 @@
-import { View, Text, FlatList, TouchableOpacity, Image } from "react-native";
+import {
+  View,
+  Text,
+  FlatList,
+  TouchableOpacity,
+  Image,
+  ScrollView,
+} from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { windowWidth } from "../../config/dimensions";
 import Feather from "react-native-vector-icons/Feather";
@@ -6,7 +13,7 @@ import Feather from "react-native-vector-icons/Feather";
 import images from "../../config/images";
 import * as ImagePicker from "expo-image-picker";
 import Entypo from "react-native-vector-icons/Entypo";
-import { apiActiveURL, imageURL } from "../../ApiBaseURL";
+import { apiActiveURL, imageURL, SCREEN_HEIGHT } from "../../ApiBaseURL";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import * as FileSystem from "expo-file-system";
@@ -24,35 +31,6 @@ const Gallery = () => {
   const userLoginSuccess = useSelector((state) => {
     return state.loginData.data;
   });
-  const cardItems = [
-    {
-      image: images.UmpireAndReferee,
-    },
-    {
-      image: images.Teams,
-    },
-    {
-      image: images.Scorer,
-    },
-    {
-      image: images.Scorer,
-    },
-    {
-      image: images.Scorer,
-    },
-    {
-      image: images.Scorer,
-    },
-    {
-      image: images.Scorer,
-    },
-    {
-      image: images.Scorer,
-    },
-    {
-      image: images.Scorer,
-    },
-  ];
 
   const [image, setImage] = useState([]);
 
@@ -65,11 +43,18 @@ const Gallery = () => {
       allowsMultipleSelection: true,
     });
     // const test = [1, 2, 3];
-    // return console.log(result.selected, "result.selected");
     // image.length = 0;
     if (!result?.cancelled) {
-      uploadImages(result.selected);
-      setImage([...image, ...result.selected]);
+      if (result?.selected) {
+        uploadImages(result.selected);
+        setImage([...image, ...result.selected]);
+      } else {
+        const temp = [];
+        temp.push({ uri: result.uri });
+
+        uploadImages(temp);
+        setImage([...image, ...temp]);
+      }
     }
   };
 
@@ -101,7 +86,6 @@ const Gallery = () => {
     axios
       .request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
         if (response.data.success) {
           Toast.show(response.data.message, {
             duration: Toast.durations.SHORT,
@@ -124,10 +108,27 @@ const Gallery = () => {
         }
       })
       .catch((error) => {
-        console.log(error);
+        Toast.show(error.message, {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.TOP,
+          textColor: "#FFFFFF",
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+          position: 80,
+          backgroundColor: "#FF033E",
+          style: {
+            height: 100,
+            padding: 30,
+            borderRadius: 10,
+            paddingLeft: 45,
+            paddingRight: 15,
+          },
+        });
       });
   };
-  console.log(userLoginSuccess);
+
   const getuserGallery = () => {
     let config = {
       method: "get",
@@ -141,24 +142,32 @@ const Gallery = () => {
     axios
       .request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
         response?.data?.teams?.map((team) => {
           team.images?.map((img) => {
             image.push({ uri: `${imageURL}${img.profile_img}` });
           });
         });
         setImage([...image]);
-        // const team = response?.data?.teams?.filter(
-        //   (team) => team.id == userLoginSuccess.data.team_id
-        // );
-        // team[0].images?.map((img) => {
-        //   image.push({ uri: `${imageURL}${img.profile_img}` });
-        // });
-        // setImage([...image]);
-        // console.log(team[0].images, "TEAM IMAGES");
       })
       .catch((error) => {
-        console.log(error);
+        Toast.show(error.message, {
+          duration: Toast.durations.SHORT,
+          position: Toast.positions.TOP,
+          textColor: "#FFFFFF",
+          shadow: true,
+          animation: true,
+          hideOnPress: true,
+          delay: 0,
+          position: 80,
+          backgroundColor: "#FF033E",
+          style: {
+            height: 100,
+            padding: 30,
+            borderRadius: 10,
+            paddingLeft: 45,
+            paddingRight: 15,
+          },
+        });
       });
   };
   useEffect(() => {
@@ -196,20 +205,20 @@ const Gallery = () => {
             Upload Images
           </Text>
         </TouchableOpacity>
-        <View
-          style={{
-            flexDirection: "row",
-            flexWrap: "wrap",
-            justifyContent: "center",
-          }}
-        >
-          {console.log(image, "image")}
-          {image &&
-            image?.length > 0 &&
-            image?.map((c, index) => {
-              return (
-                <>
+        <View style={{ height: SCREEN_HEIGHT - 200 }}>
+          {image && image.length > 0 && (
+            <FlatList
+              data={image}
+              numColumns={3}
+              showsVerticalScrollIndicator={false}
+              contentContainerStyle={{
+                alignItems: "center",
+              }}
+              renderItem={({ item, index }) => {
+                console.log("object");
+                return (
                   <Image
+                    key={index}
                     style={{
                       height: 70,
                       width: 70,
@@ -217,47 +226,13 @@ const Gallery = () => {
                       borderRadius: 10,
                       margin: 10,
                     }}
-                    source={{ uri: c.uri }}
+                    source={{ uri: item.uri }}
                   />
-                  {/* <Entypo
-                    name={"squared-cross"}
-                    size={25}
-                    color="red"
-                    style={{ marginLeft: -22, marginTop: -3 }}
-                    onPress={() => {
-                      image.splice(index, 1);
-                      setImage([...image]);
-                    }}
-                  /> */}
-                </>
-              );
-            })}
+                );
+              }}
+            />
+          )}
         </View>
-        {/* <FlatList
-          data={image}
-          contentContainerStyle={{
-            // alignItems: "flex-start",
-            // flexWrap: "wrap",
-            flex: 1,
-          }}
-          // style={{ flexWrap: "wrap", flexDirection: "row" }}
-          horizontal
-          renderItem={({ item }) => {
-            console.log(item, "item");
-            return (
-              <Image
-                style={{
-                  height: 70,
-                  width: 70,
-                  resizeMode: "cover",
-                  borderRadius: 10,
-                  margin: 10,
-                }}
-                source={{ uri: item.uri }}
-              />
-            );
-          }}
-        /> */}
       </View>
     </View>
   );
