@@ -65,7 +65,7 @@ const Gallery = () => {
       allowsMultipleSelection: true,
     });
     // const test = [1, 2, 3];
-    // console.log(typeof test);
+    // return console.log(result.selected, "result.selected");
     // image.length = 0;
     if (!result?.cancelled) {
       uploadImages(result.selected);
@@ -74,55 +74,58 @@ const Gallery = () => {
   };
 
   const uploadImages = async (images) => {
-    const formData = new FormData();
-    formData.append("title", "hello");
-    formData.append("description", "test");
-    images.map(async (img) => {
-      console.log(img.uri, "IMAGE URI");
-      const image1Info = await FileSystem.getInfoAsync(img.uri);
-      formData.append("images[]", {
-        uri: img.uri,
-        name: image1Info.uri.split("/").pop(),
-        type: "image/png", // Adjust the type accordingly
+    const data = new FormData();
+    data.append("title", "hello");
+    data.append("description", "test");
+
+    images.forEach((image, index) => {
+      const fileParts = image.uri.split(".");
+      // Get the last part of the split array, which represents the file extension
+      const fileExtension = fileParts[fileParts.length - 1];
+      data.append(`images[${index}]`, {
+        uri: image.uri,
+        name: image.uri.substring(image.uri.lastIndexOf("/") + 1),
+        type: `image/${fileExtension}`,
       });
     });
 
     const config = {
       method: "post",
-      maxBodyLength: Infinity,
       url: `${apiActiveURL}add-Player-Gallery`,
       headers: {
         Authorization: `Bearer ${userLoginSuccess.token}`,
       },
-      data: formData,
+      data: data,
     };
 
-    try {
-      const response = await axios.request(config);
-      console.log(JSON.stringify(response.data));
-      if (response.data.message == "The images field is required.") {
-        Toast.show(response.data.message, {
-          duration: Toast.durations.SHORT,
-          position: Toast.positions.TOP,
-          textColor: "#FFFFFF",
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-          position: 80,
-          backgroundColor: "#32de84",
-          style: {
-            height: 100,
-            padding: 30,
-            borderRadius: 10,
-            paddingLeft: 45,
-            paddingRight: 15,
-          },
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        if (response.data.success) {
+          Toast.show(response.data.message, {
+            duration: Toast.durations.SHORT,
+            position: Toast.positions.TOP,
+            textColor: "#FFFFFF",
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+            position: 80,
+            backgroundColor: "#32de84",
+            style: {
+              height: 100,
+              padding: 30,
+              borderRadius: 10,
+              paddingLeft: 45,
+              paddingRight: 15,
+            },
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
   console.log(userLoginSuccess);
   const getuserGallery = () => {
@@ -139,14 +142,20 @@ const Gallery = () => {
       .request(config)
       .then((response) => {
         console.log(JSON.stringify(response.data));
-        const team = response?.data?.teams?.filter(
-          (team) => team.id == userLoginSuccess.data.team_id
-        );
-        team[0].images?.map((img) => {
-          image.push({ uri: `${imageURL}${img.profile_img}` });
+        response?.data?.teams?.map((team) => {
+          team.images?.map((img) => {
+            image.push({ uri: `${imageURL}${img.profile_img}` });
+          });
         });
         setImage([...image]);
-        console.log(team[0].images, "TEAM IMAGES");
+        // const team = response?.data?.teams?.filter(
+        //   (team) => team.id == userLoginSuccess.data.team_id
+        // );
+        // team[0].images?.map((img) => {
+        //   image.push({ uri: `${imageURL}${img.profile_img}` });
+        // });
+        // setImage([...image]);
+        // console.log(team[0].images, "TEAM IMAGES");
       })
       .catch((error) => {
         console.log(error);
@@ -210,7 +219,7 @@ const Gallery = () => {
                     }}
                     source={{ uri: c.uri }}
                   />
-                  <Entypo
+                  {/* <Entypo
                     name={"squared-cross"}
                     size={25}
                     color="red"
@@ -219,7 +228,7 @@ const Gallery = () => {
                       image.splice(index, 1);
                       setImage([...image]);
                     }}
-                  />
+                  /> */}
                 </>
               );
             })}
