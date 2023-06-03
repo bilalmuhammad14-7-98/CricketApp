@@ -79,14 +79,14 @@ const CricketProfile = (props) => {
     }
   };
 
-  const init = async () => {
-    // await fetchPlayerProfile();
-    setIsLoading(false);
-  };
+  // const init = async () => {
+  //   // await fetchPlayerProfile();
+  //   setIsLoading(false);
+  // };
 
-  useEffect(() => {
-    init();
-  }, []);
+  // useEffect(() => {
+  //   init();
+  // }, []);
 
   return (
     <ScrollView

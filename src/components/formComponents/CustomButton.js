@@ -3,10 +3,16 @@ import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { windowHeight, windowWidth } from "../../config/dimensions";
 
-
 const button_width = windowWidth * 0.96;
 
-export default function CustomButton({ bgColor, btnLabel, textColor, Press }) {
+export default function CustomButton({
+  bgColor,
+  btnLabel,
+  textColor,
+  Press,
+  myStyle,
+  txtStyle,
+}) {
   const a = useTheme();
   const colors = a.colors;
   return (
@@ -14,7 +20,10 @@ export default function CustomButton({ bgColor, btnLabel, textColor, Press }) {
       onPress={Press}
       style={[
         styles.button,
-        { backgroundColor: bgColor !== undefined ? bgColor : colors.primary },
+        {
+          backgroundColor: bgColor !== undefined ? bgColor : colors.primary,
+          ...myStyle,
+        },
       ]}
     >
       <Text
@@ -22,6 +31,7 @@ export default function CustomButton({ bgColor, btnLabel, textColor, Press }) {
           styles.text,
           {
             color: textColor,
+            ...txtStyle,
           },
         ]}
       >

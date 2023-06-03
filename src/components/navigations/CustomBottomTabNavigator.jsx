@@ -41,6 +41,8 @@ import PlayerDetail from "../../screens/playerPanel/PlayerDetail";
 import Gallery from "../../screens/playerPanel/Gallery";
 import MyPlayerDetail from "../../screens/playerPanel/MyPlayerDetail";
 import TeamList from "../../screens/playerPanel/TeamList";
+import ViewMarketplace from "../../screens/playerPanel/ViewMarketplace";
+import ViewMarketplaceDetail from "../../screens/playerPanel/ViewMarketplaceDetail";
 const upper_margin = windowWidth * 0.001;
 const upper_margin1 = windowWidth * 0.01;
 const LOGO_SIZE = windowHeight * 0.06;
@@ -595,17 +597,48 @@ function MarketPlaceNavigationContainer() {
               />
             );
           },
-          // headerRight: () => {
+
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
+
+      <StackMarketPlace.Screen
+        name="ViewMarketplace"
+        component={ViewMarketplace}
+        options={({ navigation }) => ({
+          // title: "All Marketplaces",
+          // headerLeft: () => {
           //   return (
-          //     <View style={{ marginRight: upper_margin1 }}>
-          //       <Ionicons
-          //         name="notifications"
-          //         size={logo_size}
-          //         color="#2BB789"
-          //       />
-          //     </View>
+          //     <NavigationHeader
+          //       title={"View Market Place"}
+          //       navigation={navigation}
+          //     />
           //   );
           // },
+
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
+
+      <StackMarketPlace.Screen
+        name="ViewMarketplaceDetail"
+        component={ViewMarketplaceDetail}
+        options={({ navigation }) => ({
+          title: "All Marketplaces",
+          headerLeft: () => {
+            return (
+              <NavigationHeader
+                title={"View Market Place"}
+                navigation={navigation}
+              />
+            );
+          },
 
           headerStyle: {
             backgroundColor: "#FAF9F6",

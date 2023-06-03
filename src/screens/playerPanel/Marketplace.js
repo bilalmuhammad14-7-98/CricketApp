@@ -31,6 +31,7 @@ import axios from "axios";
 import { apiActiveURL } from "../../ApiBaseURL";
 import { useSelector } from "react-redux";
 import Toast from "react-native-root-toast";
+import PlayerCustomButtom from "../../components/formComponents/PlayerCustomButtom";
 
 const CARD_WIDTH = windowWidth * 0.05;
 const CARD_HEIGHT = windowHeight * 0.23;
@@ -39,7 +40,7 @@ const IMAGE_SIZE = windowHeight * 0.13;
 const IMAGE_SIZE1 = windowHeight * 0.025;
 const LOGO_SIZE = windowHeight * 0.15;
 
-const Marketplace = () => {
+const Marketplace = ({ navigation }) => {
   const [modal, setModal] = useState(false);
   const [image, setImage] = useState([]);
   const [loader, setLoader] = useState(false);
@@ -104,8 +105,11 @@ const Marketplace = () => {
         type: `image/${typeimg}`,
         uri: result.uri,
       };
+      let myimage = [];
+      console.log(imageObj, "imageObj imageObj");
+      myimage.push(imageObj);
       setImgObj(imageObj);
-      console.log(imageObj, "image obj");
+      console.log(myimage, "image obj");
       console.log(pathParts[pathParts.length - 1].split("."), "name");
       setImageName(pathParts[pathParts.length - 1]);
       console.log(result.uri, "uriiiiiiii");
@@ -145,7 +149,7 @@ const Marketplace = () => {
     data.append("description", model.description);
     data.append("contact_info", model.contact_info);
     data.append("images[]", imgObj);
-
+    // console.log();
     var config = {
       method: "post",
       maxBodyLength: Infinity,
@@ -158,6 +162,7 @@ const Marketplace = () => {
     };
 
     console.log(config.data, "config");
+    // return;
     // return;
     axios(config)
       .then(function (response) {
@@ -172,7 +177,7 @@ const Marketplace = () => {
           hideOnPress: true,
           delay: 0,
           position: 180,
-          backgroundColor: "green",
+          backgroundColor: "#32de84",
           style: {
             height: 100,
             padding: 30,
@@ -207,7 +212,7 @@ const Marketplace = () => {
           }}
         >
           <View style={styles.profile}>
-            <Avatar.Image
+            {/* <Avatar.Image
               size={LOGO_SIZE}
               // onPress={() => props.navigation.navigate("Profile")}
               // source={{ uri: image ? image : null }}
@@ -218,19 +223,53 @@ const Marketplace = () => {
                 // borderColor: colors.primary,
                 // borderWidth: 5
               }}
-            />
+            /> */}
+            <View style={{ alignItems: "center", justifyContent: "center" }}>
+              <CustomButton
+                textColor="white"
+                btnLabel="View All Post"
+                Press={() => {
+                  navigation.navigate("ViewMarketplace", { type: "all-post" });
+                }}
+                myStyle={{
+                  // marginTop: 10,
+                  width: 150,
+                  alignSelf: "flex-start",
+                  marginRight: 20,
+                  // paddingVertical: 15,
+                  paddingHorizontal: 20,
+                }}
+                txtStyle={{ fontSize: 14 }}
+              />
+              <CustomButton
+                textColor="white"
+                btnLabel="View My Post"
+                Press={() => {
+                  navigation.navigate("ViewMarketplace", { type: "my-post" });
+                }}
+                myStyle={{
+                  // marginTop: 10,
+                  width: 150,
+                  alignSelf: "flex-end",
+                  marginRight: 20,
+                  // paddingVertical: 15,
+                  paddingHorizontal: 20,
+                }}
+                txtStyle={{ fontSize: 14 }}
+              />
+            </View>
             {/* <Image
           source={{ uri: image }}
           style={{ width: 200, height: 200 }}
         /> */}
-            <Text
+            {/* <Text
               style={styles.image_text}
               mode="contained"
               theme={theme}
               onPress={() => setModal(true)}
             >
               Upload Image
-            </Text>
+            </Text> */}
 
             <Modal
               //  animationType="slide"
@@ -306,9 +345,9 @@ const Marketplace = () => {
                 textColor="white"
                 btnLabel={
                   !loader ? (
-                    "Update"
+                    "Post in Marketplace"
                   ) : (
-                    <ActivityIndicator animating size={20} color="#fff" />
+                    <ActivityIndicator animating size={30} color="#fff" />
                   )
                 }
                 Press={handleUpdate}
