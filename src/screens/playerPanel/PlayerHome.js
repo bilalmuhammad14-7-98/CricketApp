@@ -38,6 +38,7 @@ import UserProfile from "./UserProfile";
 import { ScrollView } from "react-native-gesture-handler";
 import SearchBar from "../../components/formComponents/SearchBar";
 import { useSelector } from "react-redux";
+import Search from "../../components/PlayerProfile/Search";
 const CARD_WIDTH1 = windowWidth * 0.93;
 const CARD_HEIGHT1 = windowWidth * 0.5;
 const CARD_WIDTH = windowWidth * 0.44;
@@ -83,13 +84,9 @@ const Card = ({ item, navigation }) => {
 
       <View
         style={{
-          // backgroundColor: colors.white,
           width: CARD_WIDTH,
           height: CARD_HEIGHT * 0.15,
           borderRadius: sizes.m15,
-
-          //   justifyContent: "center",
-          //   alignItems: "center",
         }}
       >
         <Text
@@ -103,7 +100,6 @@ const Card = ({ item, navigation }) => {
 };
 
 const PlayerHome = ({ navigation }) => {
-  // console.log(props, "props");
   const userLoginSuccess = useSelector((state) => {
     console.log(state.loginData.data, "login data ");
     return state.loginData.data;
@@ -113,6 +109,7 @@ const PlayerHome = ({ navigation }) => {
   const [bowlingStyle, setbowlingStyle] = useState("");
   const [searchPhrase, setSearchPhrase] = useState("");
   const [clicked, setClicked] = useState(true);
+  const [searchedBlock, setSearchedBlock] = useState([]);
 
   const { colors } = useTheme();
 
@@ -138,9 +135,7 @@ const PlayerHome = ({ navigation }) => {
       image: images.cricketerAndfootballer,
       navigationScreen: () => {
         {
-          userLoginSuccess?.data?.roleId == "recruiter"
-            ? navigation.navigate("PlayerHomeRoot", { screen: "PlayersScreen" })
-            : null;
+          navigation.navigate("PlayerHomeRoot", { screen: "PlayersScreen" });
         }
       },
     },
@@ -150,11 +145,9 @@ const PlayerHome = ({ navigation }) => {
       image: images.cricketerAndfootballer,
       navigationScreen: () => {
         {
-          userLoginSuccess?.data?.roleId == "recruiter"
-            ? navigation.navigate("PlayerHomeRoot", {
-                screen: "AllPlayersScreen",
-              })
-            : null;
+          navigation.navigate("PlayerHomeRoot", {
+            screen: "AllPlayersScreen",
+          });
         }
       },
     },
@@ -187,6 +180,50 @@ const PlayerHome = ({ navigation }) => {
         navigation.navigate("PlayerHomeRoot", { screen: "Gallery" }),
     },
   ];
+
+  const playerCardItems = [
+    {
+      name: "All Players",
+      code: colors.white,
+      image: images.cricketerAndfootballer,
+      navigationScreen: () => {
+        {
+          navigation.navigate("PlayerHomeRoot", {
+            screen: "AllPlayersScreen",
+          });
+        }
+      },
+    },
+    {
+      name: "Umpire/Referee",
+      code: colors.white,
+      image: images.UmpireAndReferee,
+      navigationScreen: () =>
+        navigation.navigate("PlayerHomeRoot", { screen: "Umpire" }),
+    },
+    {
+      name: "Teams",
+      code: colors.white,
+      image: images.Teams,
+      navigationScreen: () =>
+        navigation.navigate("TeamsScreenRoot", { screen: "TeamsScreen" }),
+    },
+    {
+      name: "Scorer",
+      code: colors.white,
+      image: images.Scorer,
+      navigationScreen: () =>
+        navigation.navigate("TeamsScreenRoot", { screen: "TeamsScreen" }),
+    },
+    {
+      name: "Gallery",
+      code: colors.white,
+      image: images.Scorer,
+      navigationScreen: () =>
+        navigation.navigate("PlayerHomeRoot", { screen: "Gallery" }),
+    },
+  ];
+
   const umpireCardItems = [
     {
       name: "Gallery",
@@ -204,8 +241,6 @@ const PlayerHome = ({ navigation }) => {
     },
   ];
 
-  console.log(userLoginSuccess, "user login success");
-
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -214,91 +249,21 @@ const PlayerHome = ({ navigation }) => {
         marginBottom: sizes.bottomTabHeight,
       }}
     >
-      {/* <View style={styles.logo}>
-        <Avatar.Image size={80} source={images.logo} />
-        <Ionicons name="notifications" size={35} color="#000" />
-      </View> */}
-
-      {/* <View style={[styles.text_input]}>
-        <Feather
-          name="search"
-          size={INPUT_HEIGHT * 0.5}
-          color="#C6C6C6"
-          style={{
-            alignSelf: "center",
-          }}
-        />
-
-        <TextInput
-          placeholder="Search"
-          style={{
-            paddingLeft: sizes.m8,
-            fontWeight: "bold",
-            fontSize: sizes.m15,
-            // flex: 1,
-            // backgroundColor: '#000',
-            width: INPUT_WIDTH * 0.75
-          }}
-        />
-
-        <Entypo
-          name="cross"
-          size={INPUT_HEIGHT * 0.5}
-          color="#C6C6C6"
-          style={{
-            alignSelf: "center",
-            // justifyContent: "space-between",
-            // paddingLeft: 210,
-            // flexDirection: 'row'
-          }}
-        />
-      </View> */}
       <View>
         <StatusBar barStyle="dark-content" />
-        {/* <StatusBar barStyle={theme.dark ? 'light-content' : 'dark-content'} /> */}
-        <LinearGradient colors={["rgba(255,255,255,0.6)", "#2BB789"]}>
-          <View style={{ height: curve_height }}>
-            {/* <View>
-              <SearchBar
-                searchPhrase = {searchPhrase}
-                setSearchPhrase = {setSearchPhrase}
-                clicked = {clicked}
-                setClicked = {setClicked}
-              />
-            </View> */}
-            <View style={[styles.text_input]}>
-              <Ionicons
-                name="search-outline"
-                size={INPUT_HEIGHT * 0.5}
-                color="#2BB789"
-                style={{
-                  alignSelf: "center",
-                }}
-              />
-
-              <TextInput
-                placeholder="Search"
-                placeholderTextColor="#2BB789"
-                style={{
-                  paddingLeft: sizes.m8,
-                  fontWeight: "bold",
-                  fontSize: sizes.m16,
-                  width: input_width * 0.75,
-                }}
-              />
-
-              <Entypo
-                name="cross"
-                size={INPUT_HEIGHT * 0.5}
-                color="#2BB789"
-                style={{
-                  alignSelf: "center",
-                  marginLeft: cross_icon,
-                }}
-              />
-            </View>
-          </View>
-        </LinearGradient>
+        <Search
+          searchArray={
+            userLoginSuccess?.data?.roleId == "umpire"
+              ? umpireCardItems
+              : userLoginSuccess?.data?.roleId == "recruiter"
+              ? cardItems
+              : playerCardItems
+          }
+          searchField="name"
+          results={(data) => {
+            setSearchedBlock([...data]);
+          }}
+        />
 
         <View
           style={{
@@ -352,7 +317,17 @@ const PlayerHome = ({ navigation }) => {
                 alignItems: "center",
               }}
             >
-              {userLoginSuccess?.data?.roleId == "umpire"
+              {searchedBlock && searchedBlock?.length > 0
+                ? searchedBlock.map((item) => {
+                    return (
+                      <Card
+                        key={item.name}
+                        item={item}
+                        navigation={navigation}
+                      />
+                    );
+                  })
+                : userLoginSuccess?.data?.roleId == "umpire"
                 ? umpireCardItems.map((item) => {
                     return (
                       <Card
@@ -362,7 +337,17 @@ const PlayerHome = ({ navigation }) => {
                       />
                     );
                   })
-                : cardItems.map((item) => {
+                : userLoginSuccess?.data?.roleId == "recruiter"
+                ? cardItems.map((item) => {
+                    return (
+                      <Card
+                        key={item.name}
+                        item={item}
+                        navigation={navigation}
+                      />
+                    );
+                  })
+                : playerCardItems.map((item) => {
                     return (
                       <Card
                         key={item.name}
@@ -382,32 +367,6 @@ const PlayerHome = ({ navigation }) => {
 export default PlayerHome;
 
 const styles = StyleSheet.create({
-  //card
-  // gridView: {
-  //   marginTop: 300,
-  //   flex: 1,
-  // },
-
-  // itemContainer: {
-  //   justifyContent: "flex-end",
-  //   borderRadius: 20,
-  //   padding: 10,
-  //   // height: 170,
-  // },
-
-  // itemName: {
-  //   fontSize: 16,
-  //   color: "#fff",
-  //   fontWeight: "600",
-  // },
-
-  // itemCode: {
-  //   fontWeight: "600",
-  //   fontSize: 12,
-  //   color: "#fff",
-  // },
-
-  //slider
   sliderContainer: {
     height: CARD_HEIGHT1,
     width: CARD_WIDTH1,
@@ -428,26 +387,7 @@ const styles = StyleSheet.create({
     width: CARD_WIDTH1,
     alignSelf: "center",
     borderRadius: sizes.m20,
-    // backgroundColor: 'yellow'
   },
-
-  //search bar
-  // text_input: {
-  //   flex: 1,
-  //   // position: "absolute",
-  //   justifyContent: 'space-between',
-  //   alignItems: 'center',
-  //   marginTop: sizes.m10,
-  //   flexDirection: "row",
-  //   borderWidth: 2,
-  //   borderRadius: sizes.m12,
-  //   padding: sizes.m10,
-  //   borderColor: "#C6C6C6",
-  //   width: INPUT_WIDTH,
-  //   height: INPUT_HEIGHT,
-  //   alignSelf: "center",
-  // },
-
   text_input: {
     marginTop: Search_Bar,
     flexDirection: "row",

@@ -121,6 +121,10 @@ const Signup = (props) => {
       showToast("Please enter your name", "error");
       return;
     }
+    if (name.trim() <= 4) {
+      showToast("name must be greater than 4 characters", "error");
+      return;
+    }
     if (!email) {
       showToast("Please enter a email address", "error");
       return;
