@@ -42,6 +42,7 @@ import CustomButton from "../../components/formComponents/CustomButton";
 import { colors } from "../../config/colors";
 import Toast from "react-native-root-toast";
 import CustomToast from "../../components/formComponents/CustomToast";
+import Search from "../../components/PlayerProfile/Search";
 
 const LOGO_SIZE = windowHeight * 0.1;
 const CARD_WIDTH = windowWidth * 0.95;
@@ -62,6 +63,8 @@ const UmpireScreen = () => {
     show: false,
     message: "",
   });
+  const [searchedBlock, setSearchedBlock] = useState([]);
+
   const [currentUmpire, setCurrentUmpire] = useState("");
   const userLoginSuccess = useSelector((state) => {
     return state.loginData.data;
@@ -396,41 +399,13 @@ const UmpireScreen = () => {
 
         <View>
           <StatusBar barStyle="dark-content" />
-          <LinearGradient colors={["rgba(255,255,255,0.6)", "#2BB789"]}>
-            <View style={{ height: curve_height }}>
-              <View style={[styles.text_input]}>
-                <Ionicons
-                  name="search-outline"
-                  size={INPUT_HEIGHT * 0.5}
-                  color="#2BB789"
-                  style={{
-                    alignSelf: "center",
-                  }}
-                />
-
-                <TextInput
-                  placeholder="Search"
-                  placeholderTextColor="#2BB789"
-                  style={{
-                    paddingLeft: sizes.m8,
-                    fontWeight: "bold",
-                    fontSize: sizes.m16,
-                    width: INPUT_WIDTH * 0.75,
-                  }}
-                />
-
-                <Entypo
-                  name="cross"
-                  size={INPUT_HEIGHT * 0.5}
-                  color="#2BB789"
-                  style={{
-                    alignSelf: "center",
-                    marginLeft: cross_icon,
-                  }}
-                />
-              </View>
-            </View>
-          </LinearGradient>
+          <Search
+            searchArray={umpires}
+            searchField="umpire_name"
+            results={(data) => {
+              setSearchedBlock([...data]);
+            }}
+          />
           <View
             style={{
               marginTop: -35,
@@ -440,7 +415,7 @@ const UmpireScreen = () => {
             }}
           >
             <FlatList
-              data={umpires}
+              data={searchedBlock.length > 0 ? searchedBlock : umpires}
               renderItem={({ item }) => {
                 return renderList(item);
               }}

@@ -39,6 +39,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { useIsFocused } from "@react-navigation/native";
+import Search from "../../components/PlayerProfile/Search";
 
 const curve_height = windowHeight * 0.2;
 const CARD_WIDTH = windowWidth * 0.93;
@@ -58,23 +59,13 @@ const TeamsScreen = ({ navigation }) => {
   // const [filter, setFilter] = useState("");
 
   const [clicked, setClicked] = useState(false);
+  const [searchedBlock, setSearchedBlock] = useState([]);
 
   const userLoginSuccess = useSelector((state) => {
     // console.log(state, "state");
     console.log(state.loginData.data, "login data success");
     return state.loginData.data;
   });
-
-  const onSearch = (text) => {
-    if (text == "") {
-      setData(data);
-    } else {
-      let templist = data.filter((item) => {
-        return item.title.toLowerCase().indexOf(text.toLowerCase()) > -1;
-      });
-      setData(templist);
-    }
-  };
 
   useEffect(() => {
     if (isFocused) {
@@ -256,90 +247,13 @@ const TeamsScreen = ({ navigation }) => {
       <View style={styles.root}>
         <View>
           <StatusBar barStyle="dark-content" />
-          <LinearGradient colors={["rgba(255,255,255,0.6)", "#2BB789"]}>
-            <View style={{ height: curve_height }}>
-              {/* <View style={styles.header}>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <TouchableOpacity
-                  style={{
-                    width: 30,
-                    height: 30,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: 20,
-                    backgroundColor: "rgba(255,255,255,0.6)",
-                  }}
-                >
-                  <Ionicons
-                    name="ios-chevron-back"
-                    size={28}
-                    color="#2BB789"
-                    resizeMode="contain"
-                  />
-                </TouchableOpacity>
-
-                <Text
-                  style={{
-                    fontSize: 22,
-                    marginLeft: sizes.m5,
-                    color: "#2BB789",
-                  }}
-                >
-                  Teams
-                </Text>
-              </View>
-
-              
-            </View> */}
-              {/* <View>
-              <SearchBar
-                searchPhrase = {searchPhrase}
-                setSearchPhrase = {setSearchPhrase}
-                clicked = {clicked}
-                setClicked = {setClicked}
-              />
-            </View> */}
-
-              <View style={[styles.text_input]}>
-                <Ionicons
-                  name="search-outline"
-                  size={INPUT_HEIGHT * 0.5}
-                  color="#2BB789"
-                  style={{
-                    alignSelf: "center",
-                  }}
-                />
-
-                <TextInput
-                  style={styles.input}
-                  ref={searchRef}
-                  placeholder="Search"
-                  placeholderTextColor="#2BB789"
-                  value={search}
-                  onChangeText={(txt) => {
-                    onSearch(txt);
-                    setSearch(txt);
-                  }}
-                />
-
-                <Entypo
-                  name="cross"
-                  size={INPUT_HEIGHT * 0.5}
-                  color="#2BB789"
-                  style={{
-                    alignSelf: "center",
-                    marginLeft: cross_icon,
-                  }}
-                />
-              </View>
-            </View>
-          </LinearGradient>
+          <Search
+            searchArray={teams}
+            searchField="label"
+            results={(data) => {
+              setSearchedBlock([...data]);
+            }}
+          />
 
           <View
             style={{
@@ -403,7 +317,7 @@ const TeamsScreen = ({ navigation }) => {
               </View>
             ) : null}
             <FlatList
-              data={teams}
+              data={searchedBlock.length > 0 ? searchedBlock : teams}
               renderItem={({ item }) => {
                 console.log(item, "item list");
                 return renderList(item);

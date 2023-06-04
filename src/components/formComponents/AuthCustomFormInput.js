@@ -13,41 +13,39 @@ import {
   FontAwesome,
   Entypo,
   MaterialCommunityIcons,
-  SimpleLineIcons
+  SimpleLineIcons,
 } from "react-native-vector-icons";
-
-
 
 export default function FormInput({ placeholderText, mystyle, ...rest }) {
   const { colors } = useTheme();
   // const theme = useTheme();
 
   const [isFocus, setIsFocus] = useState(false);
-  
-  
+
   return (
     <View>
-    <View
-      style={[
-        styles.formWarapper,
-        { borderColor: isFocus ? '#2BB789' : '#B2BEB5' },
-      ]}
-    >
-      <TextInput
+      <View
         style={[
-          styles.textBox,
-          { color: isFocus ? '#000' : '#B2BEB5', ...mystyle },
+          styles.formWarapper,
+          { borderColor: isFocus ? "#2BB789" : "#B2BEB5" },
         ]}
-        placeholder={placeholderText}
-        onFocus={() => setIsFocus(true)}
-        onBlur={() => setIsFocus(false)}
-        placeholderTextColor= '#2BB789'
-        {...rest}
-      />
-    </View>
-
-   
+      >
+        <TextInput
+          style={[
+            styles.textBox,
+            {
+              color: isFocus ? "#000" : "#B2BEB5",
+              ...mystyle,
+            },
+          ]}
+          placeholder={placeholderText}
+          onFocus={() => setIsFocus(true)}
+          onBlur={() => setIsFocus(false)}
+          placeholderTextColor="#2BB789"
+          {...rest}
+        />
       </View>
+    </View>
   );
 }
 
@@ -63,11 +61,10 @@ const styles = StyleSheet.create({
     // alignItems: "center",
   },
 
-
   textBox: {
     // fontFamily: "PoppinsMedium",
     fontSize: sizes.h3,
-    // flex: 1,
+    flex: 1,
     textAlign: I18nManager.isRTL ? "right" : "left",
   },
 });

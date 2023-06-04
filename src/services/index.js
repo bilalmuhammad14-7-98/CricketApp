@@ -1,7 +1,7 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 // imports
 import { methodType } from "../config/methodType";
-import { AsyncStorage } from "react-native";
 import { domain } from "./_domain";
 
 const apiClient = axios.create({

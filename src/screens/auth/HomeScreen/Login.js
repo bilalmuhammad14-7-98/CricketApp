@@ -14,7 +14,6 @@ import Toast from "react-native-root-toast";
 import { LinearGradient } from "expo-linear-gradient";
 import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
-import { http } from "../../../components/http/http";
 
 // imports
 import AuthCustomFormInput from "../../../components/formComponents/AuthCustomFormInput";
@@ -26,10 +25,10 @@ import CustomToast from "../../../components/formComponents/CustomToast";
 import { windowHeight, windowWidth } from "../../../config/dimensions";
 import { colors } from "../../../config/colors";
 import { SetUser } from "../../../store/actions/authAction";
-import { AsyncStorage } from "react-native";
 import { profileContext } from "../../../components/context/context";
 import { ScrollView } from "react-native-gesture-handler";
 import { UserLogin } from "../../../store/actions/UserLogin";
+import { showToast, validateEmail } from "../../../util";
 
 const curve_height = windowHeight * 0.25;
 const input_width = windowHeight * 0.48;
@@ -37,7 +36,7 @@ const button_height = windowHeight * 0.36;
 
 const Login = (props) => {
   const dispatch = useDispatch();
-  const [username, setUsername] = useState("usman@gmail.com");
+  const [username, setUsername] = useState("Ambani@gmail.com");
   const [password, setPassword] = useState("Bilal12345$");
   const [isLoading, setIsLoading] = useState();
   const { profile } = useContext(profileContext);
@@ -112,6 +111,21 @@ const Login = (props) => {
   }, [userLoginSuccess, userLoginError]);
 
   const handleSubmit = async () => {
+    if (!username.trim()) {
+      showToast("Please enter your email address", "error");
+      return;
+    }
+
+    if (!validateEmail(username)) {
+      showToast("Invalid email address", "error");
+      return;
+    }
+
+    if (!password) {
+      showToast("Please enter a password", "error");
+      return;
+    }
+
     const data = {
       username,
       password,

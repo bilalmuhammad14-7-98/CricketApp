@@ -29,7 +29,6 @@ import { Avatar } from "react-native-paper";
 import { useTheme } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
 import CustomButton1 from "../../components/formComponents/CustomButton1";
-import { AsyncStorage } from "react-native";
 import { profileContext } from "../../components/context/context";
 import Toast from "react-native-root-toast";
 import { apiActiveURL } from "../../ApiBaseURL";
