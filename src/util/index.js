@@ -26,3 +26,34 @@ export const validateEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 };
+
+export const Days = [
+  {
+    name: "Monday",
+    id: 1,
+  },
+  {
+    name: "Tuesday",
+    id: 2,
+  },
+  {
+    name: "Wednesday",
+    id: 3,
+  },
+  {
+    name: "Thursday",
+    id: 4,
+  },
+  {
+    name: "Friday",
+    id: 5,
+  },
+  {
+    name: "Satuarday",
+    id: 6,
+  },
+  {
+    name: "Sunday",
+    id: 7,
+  },
+];

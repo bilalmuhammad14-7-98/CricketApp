@@ -36,7 +36,7 @@ import {
 // imports
 import { LinearGradient } from "expo-linear-gradient";
 import { Avatar } from "react-native-paper";
-import { useTheme } from "@react-navigation/native";
+import { useFocusEffect, useTheme } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Asset } from "expo-asset";
 
@@ -62,6 +62,10 @@ import { callApi } from "../../services";
 import { methodType } from "../../config/methodType";
 import { searchPlayer } from "../../services/playerService";
 import { useSelector } from "react-redux";
+import { Days } from "../../util";
+import Icon from "react-native-vector-icons/MaterialIcons";
+import SectionedMultiSelect from "react-native-sectioned-multi-select";
+import { useCallback } from "react";
 
 const CARD_WIDTH = windowWidth * 0.05;
 const CARD_HEIGHT = windowHeight * 0.23;
@@ -84,7 +88,7 @@ const EditProfile = (props) => {
   const { profile } = useContext(profileContext);
   const [picture, setPicture] = useState("");
   const [modal, setModal] = useState(false);
-
+  const [selectedDays, setSelectedDays] = useState([]);
   const { route } = props;
   const { item } = route.params;
   const [userData, setUserData] = useState();
@@ -159,6 +163,8 @@ const EditProfile = (props) => {
     player_ratings: item ? item?.player[0]?.player_ratings : "",
     password: "",
     phone: item ? item?.phone : "",
+    fees: item ? item?.fees : "",
+    description: item ? item?.description : "",
   });
 
   const getUserData = async () => {
@@ -180,6 +186,10 @@ const EditProfile = (props) => {
       .catch(function (error) {
         // console.log(error, "error");
       });
+  };
+
+  onDaySelect = (selectedItems) => {
+    setSelectedDays(selectedItems);
   };
 
   const handleUpdate = async () => {
@@ -240,6 +250,14 @@ const EditProfile = (props) => {
     data.append("phone", model.phone);
     data.append("city", selectedCity && selectedCity.value);
     data.append("country", selectedCountry && selectedCountry.value);
+    data.append("fees", model.fees ? model.fees : "");
+    data.append("description", model.description ? model.description : "");
+    data.append(
+      "available_days",
+      selectedDays && selectedDays?.length > 0
+        ? JSON.stringify(selectedDays)
+        : []
+    );
 
     var config = {
       method: "post",
@@ -463,6 +481,26 @@ const EditProfile = (props) => {
       .catch(function (error) {});
   };
 
+  useFocusEffect(
+    useCallback(() => {
+      if (item) {
+        const splittedDays = item?.available_days?.split(",");
+        console.log(item.available_days, "item.available_days");
+        console.log(splittedDays, "splittedDays");
+        const temp = [];
+        Days.map((d) => {
+          if (
+            splittedDays.some((s) => s.toLowerCase() == d.name.toLowerCase())
+          ) {
+            temp.push(d.id);
+          }
+        });
+        console.log(temp, "TEMP -==================> ");
+        setSelectedDays(temp);
+      }
+    }, [userLoginSuccess])
+  );
+
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={{ flex: 1, marginBottom: sizes.bottomTabHeight + 1 }}>
@@ -609,7 +647,8 @@ const EditProfile = (props) => {
               placeholderText="Age"
             />
 
-            {userLoginSuccess?.data?.roleId == "recruiter" ? null : (
+            {userLoginSuccess?.data?.roleId == "recruiter" ||
+            userLoginSuccess?.data?.roleId == "umpire" ? null : (
               <>
                 <CustomFormInput
                   // autoComplete="name"
@@ -672,7 +711,39 @@ const EditProfile = (props) => {
               placeholderText="Phone"
             />
 
-            <View>
+            {userLoginSuccess?.data?.roleId == "umpire" && (
+              <>
+                <CustomFormInput
+                  // autoComplete="name"
+                  onChangeText={(val) => setModel({ ...model, fees: val })}
+                  value={model.fees}
+                  placeholderText="Fees"
+                  keyboardType="number-pad"
+                />
+
+                <CustomFormInput
+                  // autoComplete="name"
+                  onChangeText={(val) =>
+                    setModel({ ...model, description: val })
+                  }
+                  value={model.description}
+                  placeholderText="Description"
+                />
+
+                <View>
+                  <SectionedMultiSelect
+                    items={Days}
+                    IconRenderer={Icon}
+                    uniqueKey="id"
+                    selectText="Choose availible days"
+                    showDropDowns={true}
+                    onSelectedItemsChange={onDaySelect}
+                    selectedItems={selectedDays}
+                  />
+                </View>
+              </>
+            )}
+            <View style={{ marginTop: 10 }}>
               <Text
                 style={{
                   paddingHorizontal: 10,
@@ -707,7 +778,8 @@ const EditProfile = (props) => {
               />
             </View>
 
-            {userLoginSuccess?.data?.roleId == "recruiter" ? null : (
+            {userLoginSuccess?.data?.roleId == "recruiter" ||
+            userLoginSuccess?.data?.roleId == "umpire" ? null : (
               <>
                 <View>
                   <Text

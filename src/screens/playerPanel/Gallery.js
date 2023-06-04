@@ -5,6 +5,8 @@ import {
   TouchableOpacity,
   Image,
   ScrollView,
+  Pressable,
+  Alert,
 } from "react-native";
 import React, { useCallback, useEffect, useState } from "react";
 import { windowWidth } from "../../config/dimensions";
@@ -21,7 +23,8 @@ import FormData from "form-data";
 import CustomToast from "../../components/formComponents/CustomToast";
 import Toast from "react-native-root-toast";
 import { useFocusEffect } from "@react-navigation/native";
-
+import { colors } from "../../config/colors";
+import ImageView from "react-native-image-viewing";
 const Gallery = () => {
   const [toast, setToast] = useState({
     show: false,
@@ -142,9 +145,10 @@ const Gallery = () => {
     axios
       .request(config)
       .then((response) => {
+        console.log(response?.data?.teams, "response?.data?.teams");
         response?.data?.teams?.map((team) => {
           team.images?.map((img) => {
-            image.push({ uri: `${imageURL}${img.profile_img}` });
+            image.push({ uri: `${imageURL}${img.profile_img}`, id: img.id });
           });
         });
         setImage([...image]);
@@ -181,10 +185,75 @@ const Gallery = () => {
       getuserGallery();
     }, [])
   );
+
+  const handleDelete = (id) => {
+    Alert.alert(
+      "Confirm",
+      "Are you sure you want to delete this image?",
+      [
+        {
+          text: "Cancel",
+          onPress: () => console.log("Cancel Pressed"),
+          style: "cancel",
+        },
+        {
+          text: "yes",
+          onPress: async () => {
+            deleteGallery(id);
+          },
+        },
+        {
+          text: "no",
+          onPress: () => {},
+        },
+      ],
+      {
+        cancelable: true,
+      }
+    );
+  };
+  const deleteGallery = (id) => {
+    let data = new FormData();
+    console.log(id, "ID");
+    data.append("player_gallery_id", id);
+
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: `${apiActiveURL}delete-Player-Gallery`,
+      headers: {
+        Authorization: `Bearer ${userLoginSuccess.token}`,
+      },
+      data: data,
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        if (response.data.success) {
+          const index = image.findIndex((i) => i.id === id);
+          if (index != -1) {
+            image.splice(index, 1);
+          }
+          setImage([...image]);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const [visible, setIsVisible] = useState(false);
+  const [index, setIndex] = useState(0);
   return (
     <View>
       <CustomToast show={toast.show} message={toast.message} />
-
+      <ImageView
+        images={image}
+        imageIndex={index}
+        visible={visible}
+        onRequestClose={() => setIsVisible(false)}
+      />
       <View style={{ width: "90%", alignSelf: "center" }}>
         <Text style={{}}>Attach photos</Text>
         <TouchableOpacity
@@ -215,19 +284,34 @@ const Gallery = () => {
                 alignItems: "center",
               }}
               renderItem={({ item, index }) => {
-                console.log("object");
+                console.log(item);
                 return (
-                  <Image
-                    key={index}
-                    style={{
-                      height: 70,
-                      width: 70,
-                      resizeMode: "cover",
-                      borderRadius: 10,
-                      margin: 10,
+                  <Pressable
+                    onPress={() => {
+                      setIndex(index);
+                      setIsVisible(true);
                     }}
-                    source={{ uri: item.uri }}
-                  />
+                    style={{ flexDirection: "row" }}
+                  >
+                    <Image
+                      key={index}
+                      style={{
+                        height: 70,
+                        width: 70,
+                        resizeMode: "cover",
+                        borderRadius: 10,
+                        margin: 10,
+                      }}
+                      source={{ uri: item.uri }}
+                    />
+                    <Entypo
+                      name="squared-cross"
+                      color="red"
+                      size={20}
+                      style={{ marginLeft: -20, zIndex: 100 }}
+                      onPress={() => handleDelete(item.id)}
+                    />
+                  </Pressable>
                 );
               }}
             />
