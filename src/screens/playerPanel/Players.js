@@ -161,10 +161,9 @@ const PlayersScreen = ({ navigation }) => {
       });
   };
 
-
   const deletePlayer = async (item) => {
     console.log(item, "Button pressed!");
-setLoader(true)
+    setLoader(true);
     let data = new FormData();
 
     data.append("playerId", item);
@@ -178,11 +177,15 @@ setLoader(true)
       },
       data: data,
     };
-    console.log(config.data,'config')
+    console.log(config.data, "config");
     // return
 
     await axios(config)
       .then(function (response) {
+        const newData = [...players];
+        const index = newData.findIndex((item) => item.playerId === item);
+        newData.splice(index, 1);
+        setPlayers(newData);
         // console.log(response.data, "join team response");
         Toast.show(response.data.message, {
           duration: 2000,
@@ -202,15 +205,14 @@ setLoader(true)
             paddingRight: 15,
           },
         });
-        listTeams();
-        setLoader(false)
+        // listTeams();
+        setLoader(false);
       })
       .catch(function (error) {
-        setLoader(false)
+        setLoader(false);
         console.log(error);
       });
   };
-
 
   useEffect(() => {
     listPlayers();
@@ -289,25 +291,31 @@ setLoader(true)
                   myStyle={{
                     // alignSelf: "flex-end",
 
-                    width:100
+                    width: 100,
                   }}
-                  txtStyle={{fontSize:12}}
+                  txtStyle={{ fontSize: 12 }}
                 />
                 <CustomButton
                   textColor="white"
-                  btnLabel={!loader ? "Delete Player" : 
-                  <ActivityIndicator animating size={12} color={colors.white} />
-                
-                }
-                Press={() => {
-                    deletePlayer(item.playerId)
+                  btnLabel={
+                    !loader ? (
+                      "Delete Player"
+                    ) : (
+                      <ActivityIndicator
+                        animating
+                        size={12}
+                        color={colors.white}
+                      />
+                    )
+                  }
+                  Press={() => {
+                    deletePlayer(item.playerId);
                     // onPress(item);
                   }}
-                  txtStyle={{fontSize:12}}
-
+                  txtStyle={{ fontSize: 12 }}
                   myStyle={{
                     alignSelf: "flex-end",
-                    width:100,
+                    width: 100,
                   }}
                 />
               </View>
