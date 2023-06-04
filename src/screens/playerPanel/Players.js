@@ -41,6 +41,7 @@ import { LongPressGestureHandler, State } from "react-native-gesture-handler";
 import Toast from "react-native-root-toast";
 import { colors } from "../../config/colors";
 import CustomButton from "../../components/formComponents/CustomButton";
+import Search from "../../components/PlayerProfile/Search";
 
 const LOGO_SIZE = windowHeight * 0.1;
 const CARD_WIDTH = windowWidth * 0.95;
@@ -64,6 +65,7 @@ const PlayersScreen = ({ navigation }) => {
   const [players, setPlayers] = useState([]);
   const [pressedItem, setPressedItem] = useState(null);
   const [modal, setModal] = useState(false);
+  const [searchedBlock, setSearchedBlock] = useState([]);
 
   useEffect(() => {
     if (isFocused) {
@@ -337,41 +339,13 @@ const PlayersScreen = ({ navigation }) => {
       <View style={styles.root}>
         <View>
           <StatusBar barStyle="dark-content" />
-          <LinearGradient colors={["rgba(255,255,255,0.6)", "#2BB789"]}>
-            <View style={{ height: curve_height }}>
-              <View style={[styles.text_input]}>
-                <Ionicons
-                  name="search-outline"
-                  size={INPUT_HEIGHT * 0.5}
-                  color="#2BB789"
-                  style={{
-                    alignSelf: "center",
-                  }}
-                />
-
-                <TextInput
-                  placeholder="Search"
-                  placeholderTextColor="#2BB789"
-                  style={{
-                    paddingLeft: sizes.m8,
-                    fontWeight: "bold",
-                    fontSize: sizes.m16,
-                    width: INPUT_WIDTH * 0.75,
-                  }}
-                />
-
-                <Entypo
-                  name="cross"
-                  size={INPUT_HEIGHT * 0.5}
-                  color="#2BB789"
-                  style={{
-                    alignSelf: "center",
-                    marginLeft: cross_icon,
-                  }}
-                />
-              </View>
-            </View>
-          </LinearGradient>
+          <Search
+            searchArray={players}
+            searchField="playerName"
+            results={(data) => {
+              setSearchedBlock([...data]);
+            }}
+          />
           <View
             style={{
               marginTop: -35,
@@ -423,7 +397,7 @@ const PlayersScreen = ({ navigation }) => {
               }}
             />
             <FlatList
-              data={players}
+              data={searchedBlock.length > 0 ? searchedBlock : players}
               renderItem={(item) => {
                 return renderList(item.item);
               }}

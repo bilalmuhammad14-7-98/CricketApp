@@ -67,10 +67,10 @@ const ScheduleMatch = (props) => {
     setShowPicker(false);
   }, []);
 
-  useEffect(() => {
-    setShowDatePicker(false);
-    setShowTimePicker(false);
-  }, [date, time]);
+  // useEffect(() => {
+  //   setShowDatePicker(false);
+  //   setShowTimePicker(false);
+  // }, [date, time]);
 
   // const handleDateChange = (event, selectedDate) => {
   //   const currentDate = selectedDate || date;
@@ -96,8 +96,8 @@ const ScheduleMatch = (props) => {
   };
 
   const handleDateChange = (event, selectedDate) => {
+    setShowDatePicker(false);
     const currentDate = selectedDate || date;
-    setShowDatePicker(Platform.OS === "ios");
 
     const formattedDate = currentDate
       .toLocaleDateString("en-GB")
@@ -113,15 +113,14 @@ const ScheduleMatch = (props) => {
   };
 
   const handleTimeChange = (event, selectedTime) => {
+    setShowTimePicker(false);
     console.log(event, selectedTime, "data----");
     const currentTime = selectedTime || time;
     console.log(currentTime, "time");
-    // setShowTimePicker(Platform.OS === "ios");
     const formattedTime = selectedTime.toLocaleTimeString("en-GB");
     console.log(formattedTime, "time");
     setFinalTime(formattedTime);
     setTime(currentTime);
-    // setShowTimePicker(false);
   };
   const scheduleMatch = async (date) => {
     if (type && venue && description && formatDateTime(date)) {
