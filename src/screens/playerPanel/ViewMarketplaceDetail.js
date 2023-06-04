@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   ScrollView,
   StyleSheet,
+  Linking,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import Feather from "react-native-vector-icons/Feather";
@@ -33,7 +34,7 @@ const cross_icon = windowHeight * 0.01;
 const curve_height = windowHeight * 0.2;
 const swiper_height = windowHeight * 0.04;
 const ViewMarketplaceDetail = (props) => {
-  console.log(props.route,"marketplace property detail");
+  console.log(props.route, "marketplace property detail");
   const [marketplace, setMarketplace] = useState([]);
   const [imageData, setImageData] = useState([]);
   const [loader, setLoader] = useState(true);
@@ -45,16 +46,17 @@ const ViewMarketplaceDetail = (props) => {
         <View style={{ width: "90%", alignSelf: "center" }}>
           <View style={styles.sliderContainer}>
             <Swiper autoplay activeDotColor="#2BB789">
-                {props.route.params.data.images.map((item)=>
-                 <View style={styles.slide}>
-                 <Image
-                   source={{uri: `https://cricketapp.gulfresource.org/public/storage/${item.image_path}`}}
-                   resizeMode="cover"
-                   style={styles.sliderImage}
-                 />
-               </View>
-                )}
-             
+              {props.route.params.data.images.map((item) => (
+                <View style={styles.slide}>
+                  <Image
+                    source={{
+                      uri: `https://cricketapp.gulfresource.org/public/storage/${item.image_path}`,
+                    }}
+                    resizeMode="cover"
+                    style={styles.sliderImage}
+                  />
+                </View>
+              ))}
 
               {/* <View style={styles.slide}>
                 <Image
@@ -74,18 +76,28 @@ const ViewMarketplaceDetail = (props) => {
             </Swiper>
           </View>
 
-<Text style={{fontSize: 16, fontWeight: "bold", marginTop:10}}>Title</Text>
-          <Text style={{ marginVertical:5, fontSize: 16, }}>
+          <Text style={{ fontSize: 16, fontWeight: "bold", marginTop: 10 }}>
+            Title
+          </Text>
+          <Text style={{ marginVertical: 5, fontSize: 16 }}>
             {props.route.params.data.title}
           </Text>
-          <Text style={{fontSize: 16, fontWeight: "bold"}}>Description</Text>
-          <Text style={{ marginVertical:5, fontSize: 14 }}>
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Description</Text>
+          <Text style={{ marginVertical: 5, fontSize: 14 }}>
             {props.route.params.data.description}
           </Text>
-          <Text style={{fontSize: 16, fontWeight: "bold"}}>Contact No</Text>
-          <Text style={{ marginVertical:5, fontSize: 14 }}>
-            {props.route.params.data.contact}
-          </Text>
+          <Text style={{ fontSize: 16, fontWeight: "bold" }}>Contact No</Text>
+          <TouchableOpacity
+            onPress={() => {
+              Linking.openURL(
+                `whatsapp://send?phone=${props.route.params.data.contact}`
+              );
+            }}
+          >
+            <Text style={{ marginVertical: 5, fontSize: 14 }}>
+              {props.route.params.data.contact}
+            </Text>
+          </TouchableOpacity>
           {/* <Text>{item.description}</Text> */}
         </View>
       </View>
@@ -95,8 +107,6 @@ const ViewMarketplaceDetail = (props) => {
 
 export default ViewMarketplaceDetail;
 const styles = StyleSheet.create({
- 
-
   //slider
   sliderContainer: {
     height: CARD_HEIGHT1,

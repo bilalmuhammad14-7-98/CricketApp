@@ -619,7 +619,7 @@ function MarketPlaceNavigationContainer() {
         name="MarketPlace"
         component={Marketplace}
         options={({ navigation }) => ({
-          title: "",
+          // title: "",
           headerLeft: () => {
             return (
               <NavigationHeader
@@ -639,16 +639,17 @@ function MarketPlaceNavigationContainer() {
       <StackMarketPlace.Screen
         name="ViewMarketplace"
         component={ViewMarketplace}
+        screenOptions={{ headerShown: false }}
         options={({ navigation }) => ({
           // title: "All Marketplaces",
-          // headerLeft: () => {
-          //   return (
-          //     <NavigationHeader
-          //       title={"View Market Place"}
-          //       navigation={navigation}
-          //     />
-          //   );
-          // },
+          headerLeft: () => {
+            return (
+              <NavigationHeader
+                title={"View Market Place"}
+                navigation={navigation}
+              />
+            );
+          },
 
           headerStyle: {
             backgroundColor: "#FAF9F6",
@@ -661,11 +662,12 @@ function MarketPlaceNavigationContainer() {
         name="ViewMarketplaceDetail"
         component={ViewMarketplaceDetail}
         options={({ navigation }) => ({
-          title: "All Marketplaces",
+          // headerTitle="kmdsdsk",
+          // title: "All Marketplaces",
           headerLeft: () => {
             return (
               <NavigationHeader
-                title={"View Market Place"}
+                title={"All MarketPlace"}
                 navigation={navigation}
               />
             );

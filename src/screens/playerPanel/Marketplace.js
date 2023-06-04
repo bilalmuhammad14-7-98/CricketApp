@@ -55,7 +55,6 @@ const Marketplace = ({ navigation }) => {
     contact_info: "",
   });
   const userLoginSuccess = useSelector((state) => {
-
     return state.loginData.data;
   });
 
@@ -92,8 +91,16 @@ const Marketplace = ({ navigation }) => {
     // let imagesArr = [];
     console.log(result, "selected images");
     if (!result?.cancelled) {
-      handleUpdate(result.selected);
-      setImage([...image, ...result.selected]);
+      if (result?.selected) {
+        handleUpdate(result.selected);
+        setImage([...image, ...result.selected]);
+      } else {
+        const temp = [];
+        temp.push({ uri: result.uri });
+        console.log(temp, "temp");
+        handleUpdate(temp);
+        setImage([...image, ...temp]);
+      }
     }
     // if (!result.canceled) {
     // result.selected.forEach((result, index) => {
@@ -107,7 +114,7 @@ const Marketplace = ({ navigation }) => {
     //   let typeLength = pathParts[pathParts.length - 1].split(".");
     //   let typeimg = typeLength[1];
     //   console.log(typeimg, "type----------");
-    
+
     //   imageObj.push({
     //     name: pathParts[pathParts.length - 1],
     //     type: `image/${typeimg}`,
@@ -116,7 +123,7 @@ const Marketplace = ({ navigation }) => {
     //                   : result.uri.replace('file://', ''),
     //                 })
     //   setImgObj(imageObj)
-   
+
     // });
 
     // console.log(image, "images arr");
@@ -142,71 +149,79 @@ const Marketplace = ({ navigation }) => {
   };
 
   const handleUpdate = (images) => {
-    if(images.length > 0 && model.title && model.description && model){
-    setLoader(true);
-    var data = new FormData();
-    data.append("title", model.title);
-    data.append("description", model.description);
-    data.append("contact_info", model.contact_info);
+    console.log(model.contact_info.length, "update contact");
 
-    images.forEach((image, index) => {
-      const fileParts = image.uri.split(".");
-      // Get the last part of the split array, which represents the file extension
-      const fileExtension = fileParts[fileParts.length - 1];
-      data.append(`images[${index}]`, {
-        uri: image.uri,
-        name: image.uri.substring(image.uri.lastIndexOf("/") + 1),
-        type: `image/${fileExtension}`,
-      });
-    });
-    // data.append("images[]", imgObj);
-    // console.log();
-    var config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: `${apiActiveURL}post-market-place`,
-      headers: {
-        Authorization: `Bearer ${userLoginSuccess.token}`,
-        "Content-Type": "multipart/form-data",
-      },
-      data: data,
-    };
-    console.log(imgObj,'imgObj')
-    console.log(config.data, "config");
-// return 
-    axios(config)
-      .then(function (response) {
-        console.log(response.data, "market plce request response");
-        // if(response.status === 'Posted in market successfully!')
-        Toast.show(response.data.message, {
-          duration: 2000,
-          position: Toast.positions.TOP,
-          textColor: "#FFFFFF",
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-          position: 180,
-          backgroundColor: "#32de84",
-          style: {
-            height: 100,
-            padding: 30,
-            borderRadius: 10,
-            paddingLeft: 45,
-            paddingRight: 15,
-          },
+    // return;
+    if (
+      images.length > 0 &&
+      model.title &&
+      model.description &&
+      model.contact_info
+    ) {
+      if (model.contact_info.length == 11) {
+        setLoader(true);
+        var data = new FormData();
+        data.append("title", model.title);
+        data.append("description", model.description);
+        data.append("contact_info", model.contact_info);
+
+        images.forEach((image, index) => {
+          const fileParts = image.uri.split(".");
+          // Get the last part of the split array, which represents the file extension
+          const fileExtension = fileParts[fileParts.length - 1];
+          data.append(`images[${index}]`, {
+            uri: image.uri,
+            name: image.uri.substring(image.uri.lastIndexOf("/") + 1),
+            type: `image/${fileExtension}`,
+          });
         });
-        setLoader(false);
-        // props.navigation.goBack();
-        // listTeams();
-      })
-      .catch(function (error) {
-        setLoader(false);
-        console.log(error);
-      });}
-      else{
-        setLoader(false)
-        Toast.show('All fields are required', {
+        // data.append("images[]", imgObj);
+        // console.log();
+        var config = {
+          method: "post",
+          maxBodyLength: Infinity,
+          url: `${apiActiveURL}post-market-place`,
+          headers: {
+            Authorization: `Bearer ${userLoginSuccess.token}`,
+            "Content-Type": "multipart/form-data",
+          },
+          data: data,
+        };
+        console.log(imgObj, "imgObj");
+        console.log(config.data, "config");
+        // return
+        axios(config)
+          .then(function (response) {
+            console.log(response.data, "market plce request response");
+            // if(response.status === 'Posted in market successfully!')
+            Toast.show(response.data.message, {
+              duration: 2000,
+              position: Toast.positions.TOP,
+              textColor: "#FFFFFF",
+              shadow: true,
+              animation: true,
+              hideOnPress: true,
+              delay: 0,
+              position: 180,
+              backgroundColor: "#32de84",
+              style: {
+                height: 100,
+                padding: 30,
+                borderRadius: 10,
+                paddingLeft: 45,
+                paddingRight: 15,
+              },
+            });
+            setLoader(false);
+            // props.navigation.goBack();
+            // listTeams();
+          })
+          .catch(function (error) {
+            setLoader(false);
+            console.log(error);
+          });
+      } else {
+        Toast.show("Invalid phone number", {
           duration: 2000,
           position: Toast.positions.TOP,
           textColor: "#FFFFFF",
@@ -225,6 +240,27 @@ const Marketplace = ({ navigation }) => {
           },
         });
       }
+    } else {
+      setLoader(false);
+      Toast.show("All fields are required", {
+        duration: 2000,
+        position: Toast.positions.TOP,
+        textColor: "#FFFFFF",
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        delay: 0,
+        position: 180,
+        backgroundColor: "red",
+        style: {
+          height: 100,
+          padding: 30,
+          borderRadius: 10,
+          paddingLeft: 45,
+          paddingRight: 15,
+        },
+      });
+    }
     console.log(image, "images");
   };
   return (
@@ -316,7 +352,10 @@ const Marketplace = ({ navigation }) => {
                     icon="image-area"
                     mode="contained"
                     theme={theme}
-                    onPress={() => pickFromGallery()}
+                    onPress={() =>
+                      // {ima}
+                      pickFromGallery()
+                    }
                   >
                     Gallery
                   </Button>
@@ -346,7 +385,7 @@ const Marketplace = ({ navigation }) => {
               // autoComplete="name"
               onChangeText={(val) => setModel({ ...model, contact_info: val })}
               value={model.contact_info}
-              placeholderText="Please enter contact info"
+              placeholderText="Please enter contact No"
             />
 
             {/* <Button
@@ -365,24 +404,19 @@ const Marketplace = ({ navigation }) => {
                 )
             </Button> */}
 
-               <CustomButton
-                 textColor="white"
-
-                 txtStyle={{fontSize:16}}
-                 btnLabel={
-                   !loader ? (
-                     "Upload Image and Post in Marketplace"
-                     ):(
-                      <ActivityIndicator animating size={30} color="#fff" />
-    
-                    )
-                 }
-                 Press={() => setModal(true)}
-               />
-          
-          
-</View>
-   
+            <CustomButton
+              textColor="white"
+              txtStyle={{ fontSize: 16 }}
+              btnLabel={
+                !loader ? (
+                  "Upload Image and Post in Marketplace"
+                ) : (
+                  <ActivityIndicator animating size={30} color="#fff" />
+                )
+              }
+              Press={() => setModal(true)}
+            />
+          </View>
         </View>
       </View>
     </ScrollView>

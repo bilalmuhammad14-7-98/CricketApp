@@ -91,12 +91,12 @@ const ViewMarketplace = (props) => {
                   return (
                     <TouchableOpacity
                       style={{
-                        backgroundColor: "#fff",
-                        margin: 10,
+                        // backgroundColor: "#fff",
+                        margin: 19,
 
                         borderRadius: 10,
                         height: 200,
-                        width: 150,
+                        width: 120,
                         justifyContent: "center",
                         alignItems: "center",
                       }}
@@ -108,7 +108,7 @@ const ViewMarketplace = (props) => {
                     >
                       <Image
                         style={{
-                          height: 150,
+                          height: 200,
                           width: 150,
                           resizeMode: "cover",
                           borderRadius: 10,
