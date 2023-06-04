@@ -215,6 +215,13 @@ const PlayerHome = ({ navigation }) => {
       navigationScreen: () =>
         navigation.navigate("PlayerHomeRoot", { screen: "Gallery" }),
     },
+    {
+      name: "Matches Scheduled",
+      code: colors.white,
+      image: images.Scorer,
+      navigationScreen: () =>
+        navigation.navigate("PlayerHomeRoot", { screen: "ScheduleMatches" }),
+    },
   ];
 
   const umpireCardItems = [

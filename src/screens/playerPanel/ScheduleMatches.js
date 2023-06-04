@@ -39,65 +39,56 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { useIsFocused } from "@react-navigation/native";
+import Search from "../../components/PlayerProfile/Search";
 
 const curve_height = windowHeight * 0.2;
 const CARD_WIDTH = windowWidth * 0.93;
-const CARD_HEIGHT = windowHeight * 0.5;
+const CARD_HEIGHT = windowHeight * 0.32;
 const INPUT_WIDTH = windowWidth - 40;
 const INPUT_HEIGHT = windowHeight * 0.07;
 const INPUT_HEIGHT1 = windowHeight * 0.07;
 const Search_Bar = windowHeight * 0.06;
 const cross_icon = windowHeight * 0.01;
 
-const RecivedInviteList = ({ navigation }) => {
+const ScheduleMatches = ({ navigation }) => {
   const isFocused = useIsFocused();
   const searchRef = useRef();
   const [search, setSearch] = useState("");
   const [data, setData] = useState("");
-  const [invite, setInvite] = useState([]);
+  const [matches, setMatches] = useState([]);
   // const [filter, setFilter] = useState("");
 
   const [clicked, setClicked] = useState(false);
+  const [searchedBlock, setSearchedBlock] = useState([]);
 
   const userLoginSuccess = useSelector((state) => {
     // console.log(state, "state");
-    console.log(state.loginData.data, "login data success");
+    console.log(state.loginData.data.data.id, "login data success");
     return state.loginData.data;
   });
 
-  const onSearch = (text) => {
-    if (text == "") {
-      setData(data);
-    } else {
-      let templist = data.filter((item) => {
-        return item.title.toLowerCase().indexOf(text.toLowerCase()) > -1;
-      });
-      setData(templist);
-    }
-  };
+  //   useEffect(() => {
+  //     if (isFocused) {
+  //       // This code will run when the screen gains focus
+  //       // alert("screen gained focus");
+  //       listTeams();
+  //     } else {
+  //       // This code will run when the screen loses focus
+  //       // alert("screen lost focus");
+  //     }
+  //   }, [isFocused]);
 
   useEffect(() => {
-    if (isFocused) {
-      // This code will run when the screen gains focus
-      // alert("screen gained focus");
-      listInvites();
-    } else {
-      // This code will run when the screen loses focus
-      // alert("screen lost focus");
-    }
-  }, [isFocused]);
+    // console.log("bilal");
+    listMatches();
+  }, []);
 
-  //   useEffect(() => {
-  //     // console.log("bilal");
-  //     listTeams();
-  //   }, []);
-
-  const listInvites = async () => {
+  const listMatches = async () => {
     // console.log(userLoginSuccess.token, "teams");
     var config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${apiActiveURL}receiving-list`,
+      url: `${apiActiveURL}player-schedule-match?player_id=${userLoginSuccess.data.id}&status=unplayed`,
       headers: {
         Authorization: `Bearer ${userLoginSuccess.token}`,
       },
@@ -105,9 +96,9 @@ const RecivedInviteList = ({ navigation }) => {
 
     await axios(config)
       .then(function (response) {
-        console.log(response.data, "recieved response -----");
+        console.log(response.data, "teams response ===");
         // setCountry(response.data.countries);
-        setInvite(response.data.data);
+        setMatches(response.data.data);
       })
       .catch(function (error) {
         // console.log(error, "error");
@@ -160,14 +151,24 @@ const RecivedInviteList = ({ navigation }) => {
               paddingVertical: 10,
             }}
           >
-            <FlatList
-              data={invite}
-              renderItem={({ item }) => {
-                console.log(item, "item list");
-                return renderList(item);
-              }}
-              keyExtractor={(item) => `${item.value}`}
-            />
+            {matches.length > 0 ? (
+              <FlatList
+                data={matches}
+                renderItem={({ item }) => {
+                  console.log(item, "item list");
+                  return renderList(item);
+                }}
+                keyExtractor={(item) => `${item.value}`}
+              />
+            ) : (
+              <Text
+                style={{
+                  alignSelf: "center",
+                }}
+              >
+                No match found
+              </Text>
+            )}
           </View>
         </View>
       </View>
@@ -175,13 +176,9 @@ const RecivedInviteList = ({ navigation }) => {
   );
 };
 
-export default RecivedInviteList;
+export default ScheduleMatches;
 
 const styles = StyleSheet.create({
-  // root: {
-  //   flex: 1,
-  // },
-
   container: {
     flex: 1,
   },

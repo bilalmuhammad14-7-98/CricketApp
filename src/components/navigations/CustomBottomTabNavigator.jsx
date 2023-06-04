@@ -44,6 +44,7 @@ import TeamList from "../../screens/playerPanel/TeamList";
 import ViewMarketplace from "../../screens/playerPanel/ViewMarketplace";
 import ViewMarketplaceDetail from "../../screens/playerPanel/ViewMarketplaceDetail";
 import Request from "../../screens/UmpireScreens/Request";
+import ScheduleMatches from "../../screens/playerPanel/ScheduleMatches";
 const upper_margin = windowWidth * 0.001;
 const upper_margin1 = windowWidth * 0.01;
 const LOGO_SIZE = windowHeight * 0.06;
@@ -163,6 +164,37 @@ function PlayerHomeNavigationContainer() {
             return (
               <NavigationHeader
                 title={"All Players List"}
+                navigation={navigation}
+              />
+            );
+          },
+          headerRight: () => {
+            return (
+              <View style={{ marginRight: upper_margin1 }}>
+                <Ionicons
+                  name="notifications"
+                  size={logo_size}
+                  color="#2BB789"
+                />
+              </View>
+            );
+          },
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
+
+      <StackPlayerHome.Screen
+        name="ScheduleMatches"
+        component={ScheduleMatches}
+        options={({ navigation }) => ({
+          title: "",
+          headerLeft: () => {
+            return (
+              <NavigationHeader
+                title={"Matches Scheduled"}
                 navigation={navigation}
               />
             );

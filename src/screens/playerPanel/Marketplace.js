@@ -149,8 +149,6 @@ const Marketplace = ({ navigation }) => {
   };
 
   const handleUpdate = (images) => {
-    console.log(model.contact_info.length, "update contact");
-
     // return;
     if (
       images.length > 0 &&
