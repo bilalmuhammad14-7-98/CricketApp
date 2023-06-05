@@ -50,13 +50,20 @@ const Gallery = () => {
     if (!result?.cancelled) {
       if (result?.selected) {
         uploadImages(result.selected);
-        setImage([...image, ...result.selected]);
+        if (image.length > 0) {
+          setImage([...image, ...result.selected]);
+        } else {
+          setImage([...result.selected]);
+        }
       } else {
         const temp = [];
         temp.push({ uri: result.uri });
-
         uploadImages(temp);
-        setImage([...image, ...temp]);
+        if (image.length > 0) {
+          setImage([...image, ...temp]);
+        } else {
+          setImage([...temp]);
+        }
       }
     }
   };

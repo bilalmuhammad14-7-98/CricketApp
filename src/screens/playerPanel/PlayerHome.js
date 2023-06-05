@@ -225,13 +225,13 @@ const PlayerHome = ({ navigation }) => {
   ];
 
   const umpireCardItems = [
-    // {
-    //   name: "Gallery",
-    //   code: colors.white,
-    //   image: images.Scorer,
-    //   navigationScreen: () =>
-    //     navigation.navigate("PlayerHomeRoot", { screen: "Gallery" }),
-    // },
+    {
+      name: "Gallery",
+      code: colors.white,
+      image: images.Scorer,
+      navigationScreen: () =>
+        navigation.navigate("PlayerHomeRoot", { screen: "Gallery" }),
+    },
     {
       name: "Request",
       code: colors.white,
