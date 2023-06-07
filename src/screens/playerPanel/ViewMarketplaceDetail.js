@@ -75,7 +75,12 @@ const ViewMarketplaceDetail = (props) => {
               </View> */}
             </Swiper>
           </View>
-
+          <Text style={{ fontSize: 16, fontWeight: "bold", marginTop: 10 }}>
+            Posted By
+          </Text>
+          <Text style={{ marginVertical: 5, fontSize: 16 }}>
+            {props.route.params.data.post_by}
+          </Text>
           <Text style={{ fontSize: 16, fontWeight: "bold", marginTop: 10 }}>
             Title
           </Text>

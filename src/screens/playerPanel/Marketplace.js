@@ -52,6 +52,8 @@ const Marketplace = ({ navigation }) => {
     team_name: "",
     title: "",
     description: "",
+    price: "",
+
     contact_info: "",
   });
   const userLoginSuccess = useSelector((state) => {
@@ -92,13 +94,13 @@ const Marketplace = ({ navigation }) => {
     console.log(result, "selected images");
     if (!result?.cancelled) {
       if (result?.selected) {
-        handleUpdate(result.selected);
+        // handleUpdate(result.selected);
         setImage([...image, ...result.selected]);
       } else {
         const temp = [];
         temp.push({ uri: result.uri });
         console.log(temp, "temp");
-        handleUpdate(temp);
+        // handleUpdate(temp);
         setImage([...image, ...temp]);
       }
     }
@@ -149,11 +151,20 @@ const Marketplace = ({ navigation }) => {
   };
 
   const handleUpdate = (images) => {
+    console.log(
+      images.length,
+      model.title,
+      model.description,
+      model.price,
+      model.contact_info,
+      "model.contact_infomodel.contact_info"
+    );
     // return;
     if (
       images.length > 0 &&
       model.title &&
       model.description &&
+      model.price &&
       model.contact_info
     ) {
       if (model.contact_info.length == 11) {
@@ -162,6 +173,7 @@ const Marketplace = ({ navigation }) => {
         data.append("title", model.title);
         data.append("description", model.description);
         data.append("contact_info", model.contact_info);
+        data.append("price", model.price);
 
         images.forEach((image, index) => {
           const fileParts = image.uri.split(".");
@@ -381,6 +393,12 @@ const Marketplace = ({ navigation }) => {
             />
             <CustomFormInput
               // autoComplete="name"
+              onChangeText={(val) => setModel({ ...model, price: val })}
+              value={model.price}
+              placeholderText="Please enter price"
+            />
+            <CustomFormInput
+              // autoComplete="name"
               onChangeText={(val) => setModel({ ...model, contact_info: val })}
               value={model.contact_info}
               placeholderText="Please enter contact No"
@@ -405,14 +423,21 @@ const Marketplace = ({ navigation }) => {
             <CustomButton
               textColor="white"
               txtStyle={{ fontSize: 16 }}
+              btnLabel={"Upload Images"}
+              Press={() => setModal(true)}
+            />
+
+            <CustomButton
+              textColor="white"
+              txtStyle={{ fontSize: 16 }}
               btnLabel={
                 !loader ? (
-                  "Upload Image and Post in Marketplace"
+                  "Post in Marketplace"
                 ) : (
                   <ActivityIndicator animating size={30} color="#fff" />
                 )
               }
-              Press={() => setModal(true)}
+              Press={() => handleUpdate(image)}
             />
           </View>
         </View>

@@ -17,11 +17,14 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { colors } from "../../config/colors";
 import { useIsFocused } from "@react-navigation/native";
+import Search from "../../components/PlayerProfile/Search";
 
 const ViewMarketplace = (props) => {
   const [marketplace, setMarketplace] = useState([]);
   const [imageData, setImageData] = useState([]);
   const [loader, setLoader] = useState(true);
+  const [searchedBlock, setSearchedBlock] = useState([]);
+
   const isFocused = useIsFocused();
 
   const userLoginSuccess = useSelector((state) => {
@@ -67,10 +70,17 @@ const ViewMarketplace = (props) => {
     <ScrollView showsVerticalScrollIndicator={false}>
       <View>
         <View style={{ width: "90%", alignSelf: "center" }}>
+          <Search
+            searchArray={marketplace}
+            searchField="title"
+            results={(data) => {
+              setSearchedBlock([...data]);
+            }}
+          />
           {!loader ? (
             marketplace.length > 0 ? (
               <FlatList
-                data={marketplace}
+                data={searchedBlock.length > 0 ? searchedBlock : marketplace}
                 // extraData={imageData}
                 contentContainerStyle={{
                   // alignItems: "flex-start",
@@ -101,9 +111,11 @@ const ViewMarketplace = (props) => {
                         alignItems: "center",
                       }}
                       onPress={() =>
-                        props.navigation.navigate("ViewMarketplaceDetail", {
-                          data: item,
-                        })
+                        props.route.params.type != "my-post"
+                          ? props.navigation.navigate("ViewMarketplaceDetail", {
+                              data: item,
+                            })
+                          : null
                       }
                     >
                       <Image

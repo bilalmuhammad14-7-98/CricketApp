@@ -174,8 +174,26 @@ const ScheduleMatch = (props) => {
           // listTeams();
         })
         .catch(function (error) {
+          Toast.show(error.message, {
+            duration: 2000,
+            position: Toast.positions.TOP,
+            textColor: "#FFFFFF",
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            delay: 0,
+            position: 80,
+            backgroundColor: "#32de84",
+            style: {
+              height: 100,
+              padding: 30,
+              borderRadius: 10,
+              paddingLeft: 45,
+              paddingRight: 15,
+            },
+          });
           setLoader(false);
-          console.log(error);
+          console.log(error.message, "error,");
         });
     } else {
       Toast.show("All fields are Required", {

@@ -292,7 +292,7 @@ const AllPlayer = ({ navigation }) => {
                 </View>
               </View>
             </Modal>
-            <PlayerCustomButtom
+            {/* <PlayerCustomButtom
               textColor="white"
               btnLabel="View Player request"
               onPress={() => {
@@ -306,7 +306,7 @@ const AllPlayer = ({ navigation }) => {
                 paddingHorizontal: 20,
                 borderRadius: 40,
               }}
-            />
+            /> */}
             <FlatList
               data={searchedBlock.length > 0 ? searchedBlock : players}
               renderItem={(item) => {
