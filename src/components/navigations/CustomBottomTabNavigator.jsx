@@ -45,6 +45,7 @@ import ViewMarketplace from "../../screens/playerPanel/ViewMarketplace";
 import ViewMarketplaceDetail from "../../screens/playerPanel/ViewMarketplaceDetail";
 import Request from "../../screens/UmpireScreens/Request";
 import ScheduleMatches from "../../screens/playerPanel/ScheduleMatches";
+import ViewMyMarketplace from "../../screens/playerPanel/ViewMyMarketplace";
 const upper_margin = windowWidth * 0.001;
 const upper_margin1 = windowWidth * 0.01;
 const LOGO_SIZE = windowHeight * 0.06;
@@ -648,14 +649,15 @@ function MarketPlaceNavigationContainer() {
   return (
     <StackMarketPlace.Navigator screenOptions={{ headerShown: true }}>
       <StackMarketPlace.Screen
-        name="MarketPlace"
-        component={Marketplace}
+        name="ViewMarketplace"
+        component={ViewMarketplace}
+        screenOptions={{ headerShown: false }}
         options={({ navigation }) => ({
-          // title: "",
+          // title: "All Marketplaces",
           headerLeft: () => {
             return (
               <NavigationHeader
-                title={"Market Place"}
+                title={"View Market Place"}
                 navigation={navigation}
               />
             );
@@ -667,10 +669,9 @@ function MarketPlaceNavigationContainer() {
           },
         })}
       />
-
       <StackMarketPlace.Screen
-        name="ViewMarketplace"
-        component={ViewMarketplace}
+        name="ViewMyMarketplace"
+        component={ViewMyMarketplace}
         screenOptions={{ headerShown: false }}
         options={({ navigation }) => ({
           // title: "All Marketplaces",
@@ -678,6 +679,26 @@ function MarketPlaceNavigationContainer() {
             return (
               <NavigationHeader
                 title={"View Market Place"}
+                navigation={navigation}
+              />
+            );
+          },
+
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
+      <StackMarketPlace.Screen
+        name="MarketPlace"
+        component={Marketplace}
+        options={({ navigation }) => ({
+          // title: "",
+          headerLeft: () => {
+            return (
+              <NavigationHeader
+                title={"Market Place"}
                 navigation={navigation}
               />
             );

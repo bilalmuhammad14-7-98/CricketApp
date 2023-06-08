@@ -301,40 +301,7 @@ const Marketplace = ({ navigation }) => {
                 // borderWidth: 5
               }}
             /> */}
-            <View style={{ alignItems: "center", justifyContent: "center" }}>
-              <CustomButton
-                textColor="white"
-                btnLabel="View All Post"
-                Press={() => {
-                  navigation.navigate("ViewMarketplace", { type: "all-post" });
-                }}
-                myStyle={{
-                  // marginTop: 10,
-                  width: 150,
-                  alignSelf: "flex-start",
-                  marginRight: 20,
-                  // paddingVertical: 15,
-                  paddingHorizontal: 20,
-                }}
-                txtStyle={{ fontSize: 14 }}
-              />
-              <CustomButton
-                textColor="white"
-                btnLabel="View My Post"
-                Press={() => {
-                  navigation.navigate("ViewMarketplace", { type: "my-post" });
-                }}
-                myStyle={{
-                  // marginTop: 10,
-                  width: 150,
-                  alignSelf: "flex-end",
-                  marginRight: 20,
-                  // paddingVertical: 15,
-                  paddingHorizontal: 20,
-                }}
-                txtStyle={{ fontSize: 14 }}
-              />
-            </View>
+
             {/* <Image
           source={{ uri: image }}
           style={{ width: 200, height: 200 }}
