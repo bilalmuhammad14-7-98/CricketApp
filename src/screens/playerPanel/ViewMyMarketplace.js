@@ -20,7 +20,7 @@ import { useIsFocused } from "@react-navigation/native";
 import Search from "../../components/PlayerProfile/Search";
 import CustomButton from "../../components/formComponents/CustomButton";
 
-const ViewMarketplace = (props) => {
+const ViewMyMarketplace = (props) => {
   const [marketplace, setMarketplace] = useState([]);
   const [imageData, setImageData] = useState([]);
   const [loader, setLoader] = useState(true);
@@ -44,10 +44,8 @@ const ViewMarketplace = (props) => {
     var config = {
       method: "get",
       maxBodyLength: Infinity,
-      url:
-        props?.route?.params?.type == "my-post"
-          ? `${apiActiveURL}list-my-post`
-          : `${apiActiveURL}list-all-post`,
+      url: `${apiActiveURL}list-my-post`,
+
       headers: {
         Authorization: `Bearer ${userLoginSuccess.token}`,
       },
@@ -106,9 +104,9 @@ const ViewMarketplace = (props) => {
 
             <CustomButton
               textColor="white"
-              btnLabel="View My Post"
+              btnLabel="View All Post"
               Press={() => {
-                props.navigation.navigate("ViewMyMarketplace");
+                props.navigation.navigate("ViewMarketplace");
               }}
               myStyle={{
                 // marginTop: 10,
@@ -154,13 +152,13 @@ const ViewMarketplace = (props) => {
                         justifyContent: "center",
                         alignItems: "center",
                       }}
-                      onPress={() =>
-                        props.route.params.type != "my-post"
-                          ? props.navigation.navigate("ViewMarketplaceDetail", {
-                              data: item,
-                            })
-                          : null
-                      }
+                      // onPress={() =>
+                      //   props.route.params.type != "my-post"
+                      //     ? props.navigation.navigate("ViewMarketplaceDetail", {
+                      //         data: item,
+                      //       })
+                      //     : null
+                      // }
                     >
                       <Image
                         style={{
@@ -206,4 +204,4 @@ const ViewMarketplace = (props) => {
   );
 };
 
-export default ViewMarketplace;
+export default ViewMyMarketplace;
