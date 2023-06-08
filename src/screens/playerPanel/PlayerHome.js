@@ -172,13 +172,13 @@ const PlayerHome = ({ navigation }) => {
       navigationScreen: () =>
         navigation.navigate("TeamsScreenRoot", { screen: "TeamsScreen" }),
     },
-    {
-      name: "Gallery",
-      code: colors.white,
-      image: images.Scorer,
-      navigationScreen: () =>
-        navigation.navigate("PlayerHomeRoot", { screen: "Gallery" }),
-    },
+    // {
+    //   name: "Gallery",
+    //   code: colors.white,
+    //   image: images.Scorer,
+    //   navigationScreen: () =>
+    //     navigation.navigate("PlayerHomeRoot", { screen: "Gallery" }),
+    // },
   ];
 
   const playerCardItems = [

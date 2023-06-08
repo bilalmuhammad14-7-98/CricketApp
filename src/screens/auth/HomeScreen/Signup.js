@@ -121,8 +121,8 @@ const Signup = (props) => {
       showToast("Please enter your name", "error");
       return;
     }
-    if (name.trim() <= 4) {
-      showToast("name must be greater than 4 characters", "error");
+    if (name.trim() <= 3) {
+      showToast("name must be greater than 3 characters", "error");
       return;
     }
     if (!email) {
@@ -211,6 +211,8 @@ const Signup = (props) => {
 
     await axios(config)
       .then(function (response) {
+        if (response.data.success == false)
+          return showToast(response.data.message, "error");
         showToast("sign up successfully", "success");
         navigation.navigate("LoginScreen");
       })
