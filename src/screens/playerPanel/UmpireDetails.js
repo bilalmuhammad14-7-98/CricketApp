@@ -208,7 +208,9 @@ const UmpireDetails = (props) => {
               <TouchableOpacity
                 style={{
                   width: SCREEN_WIDTH - 100,
-                  height: CARD_HEIGHT,
+                  // height: CARD_HEIGHT,
+                  paddingHorizontal: 10,
+                  paddingBottom: 5,
                   marginLeft: 10,
                   marginTop: sizes.m15,
                   borderRadius: sizes.m7,
@@ -250,6 +252,7 @@ const UmpireDetails = (props) => {
                       alignSelf: "center",
                       paddingTop: sizes.m8,
                       color: colors.black,
+                      textAlign: "center",
                     }}
                   >
                     {umpire?.available_days}

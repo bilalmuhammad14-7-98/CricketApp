@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Text,
   FlatList,
+  ActivityIndicator,
 } from "react-native";
 import { Avatar, Modal, Portal } from "react-native-paper";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -74,8 +75,10 @@ const StackTeams = createNativeStackNavigator();
 const StackUserProfile = createNativeStackNavigator();
 const StackMarketPlace = createNativeStackNavigator();
 
-const NotiIcon = ({ notification }) => {
+const NotiIcon = () => {
   const [visible, setVisible] = useState(false);
+  const [loader, setLoader] = useState(false);
+  const [notification, setNotification] = useState([]);
   const showModal = (data) => {
     setVisible(true);
   };
@@ -111,19 +114,83 @@ const NotiIcon = ({ notification }) => {
     console.log(`${formattedDate} - ${formattedTime}`);
     return `${formattedDate} - ${formattedTime}`;
   };
+
+  const dispatch = useDispatch();
+  const userLoginSuccess = useSelector((state) => {
+    return state.loginData.data;
+  });
+
+  const getAllNotification = () => {
+    let config = {
+      method: "GET",
+      // maxBodyLength: Infinity,
+      url: `${apiActiveURL}list-notifications`,
+      headers: {
+        Authorization: `Bearer ${userLoginSuccess.token}`,
+      },
+    };
+    console.log(config, "NOTIFICATION CONFIG");
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(response.data, "NOTIFICATIONS");
+        setLoader(false);
+        if (response.data?.success) {
+          // dispatch(setNotification(response.data?.notifications));
+          if (response.data?.notifications == 0) {
+            showToast("No Notifications Availible", "error");
+            hideModal();
+          } else {
+            setNotification(response.data?.notifications);
+          }
+        }
+      })
+      .catch((error) => {
+        setLoader(false);
+        console.log(error);
+      });
+  };
+
+  const handleNotificationPress = (item) => {
+    var index = notification.findIndex(
+      (n) => n.notification_id === item.notification_id
+    );
+
+    if (index != -1) {
+      notification.splice(index, 1);
+    }
+    ReadNotification(item.notification_id);
+
+    setNotification([...notification]);
+  };
+
+  const ReadNotification = (id) => {
+    let config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: `${apiActiveURL}mark-as-read?notification_id=${id}`,
+      headers: {
+        Authorization: `Bearer ${userLoginSuccess.token}`,
+      },
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <TouchableOpacity
       style={{ marginRight: upper_margin1 }}
       onPress={() => {
-        if (notification.length == 0) {
-          console.log(
-            typeof notification.length,
-            "notificationnotificationnotificationnotification"
-          );
-
-          showToast("No Notifications Availible", "error");
-        } else {
+        if (userLoginSuccess) {
+          setLoader(true);
           showModal();
+          getAllNotification();
         }
       }}
     >
@@ -141,23 +208,57 @@ const NotiIcon = ({ notification }) => {
           <Text style={[styles.text, { textAlign: "center", fontSize: 20 }]}>
             Notifications
           </Text>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            data={notification}
-            renderItem={({ item }) => {
-              return (
-                <>
-                  <Text style={{ color: "#000" }}>
-                    {item?.message?.team_name}
-                  </Text>
-                  <Text style={{ color: "#000" }}>
-                    {getDate(item["created_at "])}
-                  </Text>
-                </>
-              );
-            }}
-            // keyExtractor={(item) => `${item.id}`}
-          />
+          {loader ? (
+            <ActivityIndicator
+              size="large"
+              color="#000"
+              style={{ marginTop: 10 }}
+            />
+          ) : notification.length == 0 ? (
+            <Text
+              style={{
+                color: "red",
+                fontSize: 16,
+                fontWeight: "bold",
+                textAlign: "center",
+                marginTop: 10,
+              }}
+            >
+              Not notification availible:(
+            </Text>
+          ) : (
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              data={notification}
+              renderItem={({ item }) => {
+                return (
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "#dfdfdf",
+                      padding: 10,
+                      borderRadius: 20,
+                      marginTop: 10,
+                    }}
+                    onPress={() => handleNotificationPress(item)}
+                  >
+                    <Text
+                      style={{
+                        color: "#000",
+                        fontSize: 16,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {item?.message}
+                    </Text>
+                    <Text style={{ color: "#000", fontSize: 12, marginTop: 5 }}>
+                      {getDate(item["created_at "])}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+              // keyExtractor={(item) => `${item.id}`}
+            />
+          )}
         </Modal>
       </Portal>
     </TouchableOpacity>
@@ -701,41 +802,7 @@ function MarketPlaceNavigationContainer() {
 
 export default function CustomBottomTabNavigator() {
   console.log("HERE AT CUSTOME TAB ========================> ");
-  const dispatch = useDispatch();
-  const userLoginSuccess = useSelector((state) => {
-    return state.loginData.data;
-  });
-  const state = useSelector((state) => {
-    return state;
-  });
-  useEffect(() => {
-    if (userLoginSuccess) getAllNotification();
 
-    return () => {};
-  }, []);
-
-  const getAllNotification = () => {
-    let config = {
-      method: "GET",
-      // maxBodyLength: Infinity,
-      url: `${apiActiveURL}list-notifications`,
-      headers: {
-        Authorization: `Bearer ${userLoginSuccess.token}`,
-      },
-    };
-    console.log(config, "NOTIFICATION CONFIG");
-    axios
-      .request(config)
-      .then((response) => {
-        console.log(response.data, "NOTIFICATIONS");
-        if (response.data?.success) {
-          dispatch(setNotification(response.data?.notifications));
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
   return (
     <>
       <StatusBar style="dark-content" />
