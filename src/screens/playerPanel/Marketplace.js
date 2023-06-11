@@ -13,6 +13,7 @@ import {
   Platform,
   FlatList,
   ActivityIndicator,
+  Pressable,
 } from "react-native";
 import React, { useState, useEffect, useContext } from "react";
 import CustomButton from "../../components/formComponents/CustomButton";
@@ -28,7 +29,7 @@ import { Avatar } from "react-native-paper";
 import { sizes } from "../../config/sizes";
 import images from "../../config/images";
 import axios from "axios";
-import { apiActiveURL } from "../../ApiBaseURL";
+import { apiActiveURL, SCREEN_HEIGHT } from "../../ApiBaseURL";
 import { useDispatch, useSelector } from "react-redux";
 import Toast from "react-native-root-toast";
 import PlayerCustomButtom from "../../components/formComponents/PlayerCustomButtom";
@@ -321,7 +322,6 @@ const Marketplace = ({ navigation }) => {
               value={model.title}
               placeholderText="Please enter title"
             />
-
             <CustomFormInput
               // autoComplete="name"
               onChangeText={(val) => setModel({ ...model, description: val })}
@@ -341,29 +341,55 @@ const Marketplace = ({ navigation }) => {
               placeholderText="Please enter contact No"
             />
 
-            {/* <Button
-              style={styles.inputStyle}
-              // icon={picture == "" ? "upload" : "check"}
-              icon={"upload"}
-              mode="contained"
-              theme={theme}
-              onPress={() => setModal(true)}
-            >
-                {!loader ? (
-             Upload Image and Post in Marketplace
-                ):(
-                  <ActivityIndicator animating size={30} color="#fff" />
-
-                )
-            </Button> */}
-
+            {/* <View style={{ height: SCREEN_HEIGHT - 200 }}> */}
+            {image && image.length > 0 && (
+              <FlatList
+                data={image}
+                numColumns={3}
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{
+                  alignItems: "center",
+                }}
+                renderItem={({ item, index }) => {
+                  console.log(item);
+                  return (
+                    <Pressable
+                      // onPress={() => {
+                      //   setIndex(index);
+                      //   setIsVisible(true);
+                      // }}
+                      style={{ flexDirection: "row" }}
+                    >
+                      <Image
+                        key={index}
+                        style={{
+                          height: 70,
+                          width: 70,
+                          resizeMode: "cover",
+                          borderRadius: 10,
+                          margin: 10,
+                        }}
+                        source={{ uri: item.uri }}
+                      />
+                      {/* <Entypo
+                    name="squared-cross"
+                    color="red"
+                    size={20}
+                    style={{ marginLeft: -20, zIndex: 100 }}
+                    onPress={() => handleDelete(item.id)}
+                  /> */}
+                    </Pressable>
+                  );
+                }}
+              />
+            )}
+            {/* </View> */}
             <CustomButton
               textColor="white"
               txtStyle={{ fontSize: 16 }}
               btnLabel={"Upload Images"}
               Press={() => setModal(true)}
             />
-
             <CustomButton
               textColor="white"
               txtStyle={{ fontSize: 16 }}
