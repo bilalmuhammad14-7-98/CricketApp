@@ -37,6 +37,7 @@ import Marketplace from "./Marketplace";
 import UserProfile from "./UserProfile";
 import { ScrollView } from "react-native-gesture-handler";
 import SearchBar from "../../components/formComponents/SearchBar";
+import withToast from "../../components/Toast";
 
 const CARD_WIDTH1 = windowWidth * 0.93;
 const CARD_HEIGHT1 = windowWidth * 0.5;
@@ -314,7 +315,7 @@ const UmpireHome = ({ navigation }) => {
   );
 };
 
-export default UmpireHome;
+export default withToast(UmpireHome);
 
 const styles = StyleSheet.create({
   //card

@@ -38,11 +38,13 @@ import { ScrollView } from "react-native-gesture-handler";
 import axios from "axios";
 import { http } from "../../components/http/http";
 import { apiActiveURL } from "../../ApiBaseURL";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CustomButton from "../../components/formComponents/CustomButton";
 import { colors } from "../../config/colors";
 import Toast from "react-native-root-toast";
 import CustomToast from "../../components/formComponents/CustomToast";
+import withToast from "../../components/Toast";
+import { showSnackBar } from "../../store/actions";
 
 const LOGO_SIZE = windowHeight * 0.1;
 const CARD_WIDTH = windowWidth * 0.95;
@@ -56,6 +58,7 @@ const INPUT_HEIGHT1 = windowHeight * 0.07;
 
 const Request = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [recruterRequests, setRecruterRequests] = useState([]);
   const [visible, setVisible] = useState(false);
   const [toast, setToast] = useState({
@@ -172,45 +175,19 @@ const Request = () => {
       .then((response) => {
         console.log(JSON.stringify(response.data), "UMPIRE REQUEST");
         if (response.data.success) {
-          Toast.show(response.data.message, {
-            duration: Toast.durations.SHORT,
-            position: Toast.positions.TOP,
-            textColor: "#FFFFFF",
-            shadow: true,
-            animation: true,
-            hideOnPress: true,
-            delay: 0,
-            position: 80,
-            backgroundColor: "#32de84",
-            style: {
-              height: 100,
-              padding: 30,
-              borderRadius: 10,
-              paddingLeft: 45,
-              paddingRight: 15,
-            },
-          });
+          dispatch(
+            showSnackBar({
+              visible: true,
+              text: response.data.message,
+              error: false,
+            })
+          );
           navigation.goBack();
         }
         if (response.data.success == false && response.data.message == "") {
-          Toast.show("offer declined", {
-            duration: Toast.durations.SHORT,
-            position: Toast.positions.TOP,
-            textColor: "#FFFFFF",
-            shadow: true,
-            animation: true,
-            hideOnPress: true,
-            delay: 0,
-            position: 80,
-            backgroundColor: "#32de84",
-            style: {
-              height: 100,
-              padding: 30,
-              borderRadius: 10,
-              paddingLeft: 45,
-              paddingRight: 15,
-            },
-          });
+          dispatch(
+            showSnackBar({ visible: true, text: "Offer declined", error: true })
+          );
           navigation.goBack();
         }
       })
@@ -391,7 +368,7 @@ const Request = () => {
   );
 };
 
-export default Request;
+export default withToast(Request);
 
 const styles = StyleSheet.create({
   root: {

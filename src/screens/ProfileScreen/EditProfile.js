@@ -66,6 +66,7 @@ import { Days } from "../../util";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import SectionedMultiSelect from "react-native-sectioned-multi-select";
 import { useCallback } from "react";
+import withToast from "../../components/Toast";
 
 const CARD_WIDTH = windowWidth * 0.05;
 const CARD_HEIGHT = windowHeight * 0.23;
@@ -274,26 +275,13 @@ const EditProfile = (props) => {
 
     await axios(config)
       .then(function (response) {
-        console.log(response, "update user data response");
-
-        Toast.show(response.data.message, {
-          duration: 2000,
-          position: Toast.positions.TOP,
-          textColor: "#FFFFFF",
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-          position: 80,
-          backgroundColor: "#32de84",
-          style: {
-            height: 100,
-            padding: 30,
-            borderRadius: 10,
-            paddingLeft: 45,
-            paddingRight: 15,
-          },
-        });
+        dispatch(
+          showSnackBar({
+            visible: true,
+            text: response.data.message,
+            error: false,
+          })
+        );
         props.navigation.navigate("UserProfile");
         // listTeams();
       })
@@ -866,7 +854,7 @@ const theme = {
   },
 };
 
-export default EditProfile;
+export default withToast(EditProfile);
 
 const styles = StyleSheet.create({
   logo: {

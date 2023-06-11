@@ -19,6 +19,7 @@ import { colors } from "../../config/colors";
 import { useIsFocused } from "@react-navigation/native";
 import Search from "../../components/PlayerProfile/Search";
 import CustomButton from "../../components/formComponents/CustomButton";
+import withToast from "../../components/Toast";
 
 const ViewMyMarketplace = (props) => {
   const [marketplace, setMarketplace] = useState([]);
@@ -204,4 +205,4 @@ const ViewMyMarketplace = (props) => {
   );
 };
 
-export default ViewMyMarketplace;
+export default withToast(ViewMyMarketplace);

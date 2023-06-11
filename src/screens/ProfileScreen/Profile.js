@@ -33,6 +33,7 @@ import { colors } from "../../config/colors";
 import { useSelector } from "react-redux";
 import { apiActiveURL } from "../../ApiBaseURL";
 import axios from "axios";
+import withToast from "../../components/Toast";
 // import { searchPlayer } from "../../services/playerService";
 
 const CARD_WIDTH = windowWidth * 0.05;
@@ -445,7 +446,7 @@ const Profile = (props) => {
   );
 };
 
-export default Profile;
+export default withToast(Profile);
 
 const styles = StyleSheet.create({
   logo: {

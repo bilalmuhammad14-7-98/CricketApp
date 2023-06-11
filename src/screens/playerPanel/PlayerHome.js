@@ -39,6 +39,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import SearchBar from "../../components/formComponents/SearchBar";
 import { useSelector } from "react-redux";
 import Search from "../../components/PlayerProfile/Search";
+import withToast from "../../components/Toast";
 const CARD_WIDTH1 = windowWidth * 0.93;
 const CARD_HEIGHT1 = windowWidth * 0.5;
 const CARD_WIDTH = windowWidth * 0.44;
@@ -364,7 +365,7 @@ const PlayerHome = ({ navigation }) => {
   );
 };
 
-export default PlayerHome;
+export default withToast(PlayerHome);
 
 const styles = StyleSheet.create({
   sliderContainer: {

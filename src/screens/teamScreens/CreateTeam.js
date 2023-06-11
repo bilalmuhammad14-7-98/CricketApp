@@ -62,6 +62,7 @@ import { callApi } from "../../services";
 import { methodType } from "../../config/methodType";
 import { searchPlayer } from "../../services/playerService";
 import { useSelector } from "react-redux";
+import withToast from "../../components/Toast";
 const CARD_WIDTH = windowWidth * 0.05;
 const CARD_HEIGHT = windowHeight * 0.23;
 const curve_height = windowHeight * 0.15;
@@ -229,26 +230,13 @@ const CreateTeam = (props) => {
     await axios(config)
       .then(function (response) {
         console.log(response, "create team data response");
-
-        Toast.show(response.data.message, {
-          duration: 2000,
-          position: Toast.positions.TOP,
-          textColor: "#FFFFFF",
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-          position: 80,
-          backgroundColor: "#32de84",
-          style: {
-            height: 100,
-            padding: 30,
-            borderRadius: 10,
-            paddingLeft: 45,
-            paddingRight: 15,
-          },
-        });
-
+        dispatch(
+          showSnackBar({
+            visible: true,
+            text: response.data.message,
+            error: false,
+          })
+        );
         props.navigation.goBack();
         // listTeams();
       })
@@ -495,4 +483,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CreateTeam;
+export default withToast(CreateTeam);

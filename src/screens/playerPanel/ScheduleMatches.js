@@ -40,6 +40,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { useIsFocused } from "@react-navigation/native";
 import Search from "../../components/PlayerProfile/Search";
+import withToast from "../../components/Toast";
 
 const curve_height = windowHeight * 0.2;
 const CARD_WIDTH = windowWidth * 0.93;
@@ -176,7 +177,7 @@ const ScheduleMatches = ({ navigation }) => {
   );
 };
 
-export default ScheduleMatches;
+export default withToast(ScheduleMatches);
 
 const styles = StyleSheet.create({
   container: {

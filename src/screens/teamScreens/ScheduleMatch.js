@@ -29,6 +29,7 @@ import CustomDropDown from "../../components/formComponents/CustomDropDown";
 import axios from "axios";
 
 import { useSelector } from "react-redux";
+import withToast from "../../components/Toast";
 
 const CARD_WIDTH = windowWidth * 0.05;
 const CARD_HEIGHT = windowHeight * 0.23;
@@ -149,71 +150,32 @@ const ScheduleMatch = (props) => {
 
       await axios(config)
         .then(function (response) {
-          console.log(response, "create team data response");
-
-          Toast.show(response.data.message, {
-            duration: 2000,
-            position: Toast.positions.TOP,
-            textColor: "#FFFFFF",
-            shadow: true,
-            animation: true,
-            hideOnPress: true,
-            delay: 0,
-            position: 80,
-            backgroundColor: "#32de84",
-            style: {
-              height: 100,
-              padding: 30,
-              borderRadius: 10,
-              paddingLeft: 45,
-              paddingRight: 15,
-            },
-          });
+          dispatch(
+            showSnackBar({
+              visible: true,
+              text: response.data.message,
+              error: false,
+            })
+          );
           setLoader(false);
           if (response.data.success) props.navigation.goBack();
           // listTeams();
         })
         .catch(function (error) {
-          Toast.show(error.message, {
-            duration: 2000,
-            position: Toast.positions.TOP,
-            textColor: "#FFFFFF",
-            shadow: true,
-            animation: true,
-            hideOnPress: true,
-            delay: 0,
-            position: 80,
-            backgroundColor: "#32de84",
-            style: {
-              height: 100,
-              padding: 30,
-              borderRadius: 10,
-              paddingLeft: 45,
-              paddingRight: 15,
-            },
-          });
+          dispatch(
+            showSnackBar({ visible: true, text: error.message, error: true })
+          );
           setLoader(false);
           console.log(error.message, "error,");
         });
     } else {
-      Toast.show("All fields are Required", {
-        duration: 2000,
-        position: Toast.positions.TOP,
-        textColor: "#FFFFFF",
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-        position: 80,
-        backgroundColor: "#32de84",
-        style: {
-          height: 100,
-          padding: 30,
-          borderRadius: 10,
-          paddingLeft: 45,
-          paddingRight: 15,
-        },
-      });
+      dispatch(
+        showSnackBar({
+          visible: true,
+          text: "All fields are required",
+          error: true,
+        })
+      );
     }
   };
 
@@ -392,4 +354,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ScheduleMatch;
+export default withToast(ScheduleMatch);

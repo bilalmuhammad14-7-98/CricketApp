@@ -38,6 +38,7 @@ import { useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { LongPressGestureHandler, State } from "react-native-gesture-handler";
 import Toast from "react-native-root-toast";
+import withToast from "../../components/Toast";
 
 const LOGO_SIZE = windowHeight * 0.1;
 const CARD_WIDTH = windowWidth * 0.95;
@@ -248,7 +249,7 @@ const TeamList = ({ navigation, route }) => {
   );
 };
 
-export default TeamList;
+export default withToast(TeamList);
 
 const styles = StyleSheet.create({
   root: {

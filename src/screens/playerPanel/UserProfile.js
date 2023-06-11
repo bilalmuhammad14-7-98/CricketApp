@@ -43,6 +43,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logoutUser } from "../../store/actions/UserLogin";
 import { UnSetUser } from "../../store/actions/authAction";
 import { useIsFocused } from "@react-navigation/native";
+import withToast from "../../components/Toast";
 
 const curve_height = windowHeight * 0.15;
 const LOGO_SIZE = windowHeight * 0.15;
@@ -108,25 +109,13 @@ const UserProfile = (props) => {
   const handleLogout = async () => {
     // await AsyncStorage.removeItem("Profile");
     dispatch(logoutUser());
-    // alert("Logout Successfully.");
-    Toast.show("User Logout Successfully", {
-      duration: Toast.durations.SHORT,
-      position: Toast.positions.TOP,
-      textColor: "#FFFFFF",
-      shadow: true,
-      animation: true,
-      hideOnPress: true,
-      delay: 0,
-      position: 80,
-      backgroundColor: "#32de84",
-      style: {
-        height: 100,
-        padding: 30,
-        borderRadius: 10,
-        paddingLeft: 45,
-        paddingRight: 15,
-      },
-    });
+    dispatch(
+      showSnackBar({
+        visible: true,
+        text: "user logout successfully",
+        error: false,
+      })
+    );
     props.navigation.navigate("LoginScreen");
   };
 
@@ -148,9 +137,7 @@ const UserProfile = (props) => {
         <View style={styles.profile}>
           <Avatar.Image
             size={LOGO_SIZE}
-            source={
-              userData?.profileImg ? { uri: userData?.profileImg } : images.logo
-            }
+            source={userData?.profileImg ? { uri: userData?.profileImg } : null}
             style={{
               marginTop: LOGO_SIZE * 0.5 * -1,
               // borderColor: colors.primary,
@@ -215,7 +202,7 @@ const UserProfile = (props) => {
   );
 };
 
-export default UserProfile;
+export default withToast(UserProfile);
 
 const styles = StyleSheet.create({
   logo: {

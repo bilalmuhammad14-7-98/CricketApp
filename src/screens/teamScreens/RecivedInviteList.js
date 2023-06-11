@@ -39,6 +39,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { useIsFocused } from "@react-navigation/native";
+import withToast from "../../components/Toast";
 
 const curve_height = windowHeight * 0.2;
 const CARD_WIDTH = windowWidth * 0.93;
@@ -175,7 +176,7 @@ const RecivedInviteList = ({ navigation }) => {
   );
 };
 
-export default RecivedInviteList;
+export default withToast(RecivedInviteList);
 
 const styles = StyleSheet.create({
   // root: {

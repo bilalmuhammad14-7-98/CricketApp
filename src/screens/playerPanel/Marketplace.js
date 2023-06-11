@@ -29,9 +29,11 @@ import { sizes } from "../../config/sizes";
 import images from "../../config/images";
 import axios from "axios";
 import { apiActiveURL } from "../../ApiBaseURL";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Toast from "react-native-root-toast";
 import PlayerCustomButtom from "../../components/formComponents/PlayerCustomButtom";
+import withToast from "../../components/Toast";
+import { showSnackBar } from "../../store/actions";
 
 const CARD_WIDTH = windowWidth * 0.05;
 const CARD_HEIGHT = windowHeight * 0.23;
@@ -41,6 +43,7 @@ const IMAGE_SIZE1 = windowHeight * 0.025;
 const LOGO_SIZE = windowHeight * 0.15;
 
 const Marketplace = ({ navigation }) => {
+  const dispatch = useDispatch();
   const [modal, setModal] = useState(false);
   const [image, setImage] = useState([]);
   const [loader, setLoader] = useState(false);
@@ -204,24 +207,13 @@ const Marketplace = ({ navigation }) => {
           .then(function (response) {
             console.log(response.data, "market plce request response");
             // if(response.status === 'Posted in market successfully!')
-            Toast.show(response.data.message, {
-              duration: 2000,
-              position: Toast.positions.TOP,
-              textColor: "#FFFFFF",
-              shadow: true,
-              animation: true,
-              hideOnPress: true,
-              delay: 0,
-              position: 180,
-              backgroundColor: "#32de84",
-              style: {
-                height: 100,
-                padding: 30,
-                borderRadius: 10,
-                paddingLeft: 45,
-                paddingRight: 15,
-              },
-            });
+            dispatch(
+              showSnackBar({
+                visible: true,
+                text: response.data.message,
+                error: true,
+              })
+            );
             setLoader(false);
             // props.navigation.goBack();
             // listTeams();
@@ -231,45 +223,23 @@ const Marketplace = ({ navigation }) => {
             console.log(error);
           });
       } else {
-        Toast.show("Invalid phone number", {
-          duration: 2000,
-          position: Toast.positions.TOP,
-          textColor: "#FFFFFF",
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-          position: 180,
-          backgroundColor: "red",
-          style: {
-            height: 100,
-            padding: 30,
-            borderRadius: 10,
-            paddingLeft: 45,
-            paddingRight: 15,
-          },
-        });
+        dispatch(
+          showSnackBar({
+            visible: true,
+            text: "Invalid phone number",
+            error: true,
+          })
+        );
       }
     } else {
       setLoader(false);
-      Toast.show("All fields are required", {
-        duration: 2000,
-        position: Toast.positions.TOP,
-        textColor: "#FFFFFF",
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-        position: 180,
-        backgroundColor: "red",
-        style: {
-          height: 100,
-          padding: 30,
-          borderRadius: 10,
-          paddingLeft: 45,
-          paddingRight: 15,
-        },
-      });
+      dispatch(
+        showSnackBar({
+          visible: true,
+          text: "All fields are required",
+          error: true,
+        })
+      );
     }
     console.log(image, "images");
   };
@@ -476,4 +446,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Marketplace;
+export default withToast(Marketplace);

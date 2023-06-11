@@ -32,8 +32,10 @@ import { ScrollView } from "react-native-gesture-handler";
 import axios from "axios";
 import { http } from "../../components/http/http";
 import { apiActiveURL } from "../../ApiBaseURL";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Toast from "react-native-root-toast";
+import withToast from "../../components/Toast";
+import { showSnackBar } from "../../store/actions";
 
 const LOGO_SIZE = windowHeight * 0.1;
 const CARD_WIDTH = windowWidth * 0.95;
@@ -46,6 +48,7 @@ const Search_Bar = windowHeight * 0.06;
 const INPUT_HEIGHT1 = windowHeight * 0.07;
 
 const PlayerRequests = (navigation) => {
+  const dispatch = useDispatch();
   const userLoginSuccess = useSelector((state) => {
     // console.log(state, "state");
     console.log(state.loginData.data, "login data success");
@@ -99,25 +102,13 @@ const PlayerRequests = (navigation) => {
     await axios(config)
       .then(function (response) {
         console.log(response, "players request response");
-
-        Toast.show(response.data.message, {
-          duration: 2000,
-          position: Toast.positions.TOP,
-          textColor: "#FFFFFF",
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-          position: 80,
-          backgroundColor: "#32de84",
-          style: {
-            height: 100,
-            padding: 30,
-            borderRadius: 10,
-            paddingLeft: 45,
-            paddingRight: 15,
-          },
-        });
+        dispatch(
+          showSnackBar({
+            visible: true,
+            text: response.data.message,
+            error: false,
+          })
+        );
         listPlayers();
 
         // props.navigation.goBack();
@@ -273,7 +264,7 @@ const PlayerRequests = (navigation) => {
   );
 };
 
-export default PlayerRequests;
+export default withToast(PlayerRequests);
 
 const styles = StyleSheet.create({
   root: {

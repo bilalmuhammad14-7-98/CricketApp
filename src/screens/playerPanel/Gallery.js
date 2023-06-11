@@ -17,7 +17,7 @@ import * as ImagePicker from "expo-image-picker";
 import Entypo from "react-native-vector-icons/Entypo";
 import { apiActiveURL, imageURL, SCREEN_HEIGHT } from "../../ApiBaseURL";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as FileSystem from "expo-file-system";
 import FormData from "form-data";
 import CustomToast from "../../components/formComponents/CustomToast";
@@ -25,7 +25,10 @@ import Toast from "react-native-root-toast";
 import { useFocusEffect } from "@react-navigation/native";
 import { colors } from "../../config/colors";
 import ImageView from "react-native-image-viewing";
+import withToast from "../../components/Toast";
+import { showSnackBar } from "../../store/actions";
 const Gallery = () => {
+  const dispatch = useDispatch();
   const [toast, setToast] = useState({
     show: false,
     message: "",
@@ -97,45 +100,19 @@ const Gallery = () => {
       .request(config)
       .then((response) => {
         if (response.data.success) {
-          Toast.show(response.data.message, {
-            duration: Toast.durations.SHORT,
-            position: Toast.positions.TOP,
-            textColor: "#FFFFFF",
-            shadow: true,
-            animation: true,
-            hideOnPress: true,
-            delay: 0,
-            position: 80,
-            backgroundColor: "#32de84",
-            style: {
-              height: 100,
-              padding: 30,
-              borderRadius: 10,
-              paddingLeft: 45,
-              paddingRight: 15,
-            },
-          });
+          dispatch(
+            showSnackBar({
+              visible: true,
+              text: response.data.success,
+              error: false,
+            })
+          );
         }
       })
       .catch((error) => {
-        Toast.show(error.message, {
-          duration: Toast.durations.SHORT,
-          position: Toast.positions.TOP,
-          textColor: "#FFFFFF",
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-          position: 80,
-          backgroundColor: "#FF033E",
-          style: {
-            height: 100,
-            padding: 30,
-            borderRadius: 10,
-            paddingLeft: 45,
-            paddingRight: 15,
-          },
-        });
+        dispatch(
+          showSnackBar({ visible: true, text: error.message, error: true })
+        );
       });
   };
 
@@ -161,24 +138,9 @@ const Gallery = () => {
         setImage([...image]);
       })
       .catch((error) => {
-        Toast.show(error.message, {
-          duration: Toast.durations.SHORT,
-          position: Toast.positions.TOP,
-          textColor: "#FFFFFF",
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-          position: 80,
-          backgroundColor: "#FF033E",
-          style: {
-            height: 100,
-            padding: 30,
-            borderRadius: 10,
-            paddingLeft: 45,
-            paddingRight: 15,
-          },
-        });
+        dispatch(
+          showSnackBar({ visible: true, text: "error.message", error: true })
+        );
       });
   };
   useEffect(() => {
@@ -329,4 +291,4 @@ const Gallery = () => {
   );
 };
 
-export default Gallery;
+export default withToast(Gallery);

@@ -43,6 +43,7 @@ import { colors } from "../../config/colors";
 import Toast from "react-native-root-toast";
 import CustomToast from "../../components/formComponents/CustomToast";
 import Search from "../../components/PlayerProfile/Search";
+import withToast from "../../components/Toast";
 
 const LOGO_SIZE = windowHeight * 0.1;
 const CARD_WIDTH = windowWidth * 0.95;
@@ -340,24 +341,13 @@ const UmpireScreen = () => {
         console.log(JSON.stringify(response.data), "REQUEST TO UMPIRE");
         if (response.data.success) {
           hideModal();
-          Toast.show(response.data.message, {
-            duration: Toast.durations.SHORT,
-            position: Toast.positions.TOP,
-            textColor: "#FFFFFF",
-            shadow: true,
-            animation: true,
-            hideOnPress: true,
-            delay: 0,
-            position: 80,
-            backgroundColor: "#32de84",
-            style: {
-              height: 100,
-              padding: 30,
-              borderRadius: 10,
-              paddingLeft: 45,
-              paddingRight: 15,
-            },
-          });
+          dispatch(
+            showSnackBar({
+              visible: true,
+              text: response.data.message,
+              error: false,
+            })
+          );
           setTimeout(() => {
             navigation.goBack();
           }, 2000);
@@ -440,7 +430,7 @@ const UmpireScreen = () => {
   );
 };
 
-export default UmpireScreen;
+export default withToast(UmpireScreen);
 
 const styles = StyleSheet.create({
   root: {

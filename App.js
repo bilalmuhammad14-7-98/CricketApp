@@ -6,9 +6,10 @@ import { Provider } from "react-redux";
 
 // imports
 import MyNavigationContainer from "./src/components/navigations";
-import { store } from "./src/store";
+import { store, persistor } from "./src/store";
 import ProfileContextProvider from "./src/components/context/context";
 import { Provider as PaperProvider } from "react-native-paper";
+import { PersistGate } from "redux-persist/integration/react";
 
 const Stack = createNativeStackNavigator();
 
@@ -32,9 +33,11 @@ function App() {
   return (
     <ProfileContextProvider>
       <Provider store={store}>
-        <PaperProvider>
-          <MyNavigationContainer />
-        </PaperProvider>
+        <PersistGate persistor={persistor}>
+          <PaperProvider>
+            <MyNavigationContainer />
+          </PaperProvider>
+        </PersistGate>
       </Provider>
     </ProfileContextProvider>
   );

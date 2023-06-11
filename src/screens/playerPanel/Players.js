@@ -35,13 +35,15 @@ import { ScrollView } from "react-native-gesture-handler";
 import axios from "axios";
 import { http } from "../../components/http/http";
 import { apiActiveURL } from "../../ApiBaseURL";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { LongPressGestureHandler, State } from "react-native-gesture-handler";
 import Toast from "react-native-root-toast";
 import { colors } from "../../config/colors";
 import CustomButton from "../../components/formComponents/CustomButton";
 import Search from "../../components/PlayerProfile/Search";
+import withToast from "../../components/Toast";
+import { showSnackBar } from "../../store/actions";
 
 const LOGO_SIZE = windowHeight * 0.1;
 const CARD_WIDTH = windowWidth * 0.95;
@@ -55,6 +57,7 @@ const INPUT_HEIGHT1 = windowHeight * 0.07;
 
 const PlayersScreen = ({ navigation }) => {
   const isFocused = useIsFocused();
+  const dispatch = useDispatch();
   const userLoginSuccess = useSelector((state) => {
     // console.log(state, "state");
     console.log(state.loginData.data.token, "login data success");
@@ -133,25 +136,13 @@ const PlayersScreen = ({ navigation }) => {
     await axios(config)
       .then(function (response) {
         console.log(response, "make captain response");
-
-        Toast.show(response.data.message, {
-          duration: 2000,
-          position: Toast.positions.TOP,
-          textColor: "#FFFFFF",
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-          position: 80,
-          backgroundColor: "#32de84",
-          style: {
-            height: 100,
-            padding: 30,
-            borderRadius: 10,
-            paddingLeft: 45,
-            paddingRight: 15,
-          },
-        });
+        dispatch(
+          showSnackBar({
+            visible: true,
+            text: response.data.message,
+            error: true,
+          })
+        );
         listPlayers();
         setModal(false);
 
@@ -189,24 +180,13 @@ const PlayersScreen = ({ navigation }) => {
         newData.splice(index, 1);
         setPlayers(newData);
         // console.log(response.data, "join team response");
-        Toast.show(response.data.message, {
-          duration: 2000,
-          position: Toast.positions.TOP,
-          textColor: "#FFFFFF",
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-          position: 80,
-          backgroundColor: "#32de84",
-          style: {
-            height: 100,
-            padding: 30,
-            borderRadius: 10,
-            paddingLeft: 45,
-            paddingRight: 15,
-          },
-        });
+        dispatch(
+          showSnackBar({
+            visible: true,
+            text: response.data.message,
+            error: true,
+          })
+        );
         // listTeams();
         setLoader(false);
       })
@@ -410,7 +390,7 @@ const PlayersScreen = ({ navigation }) => {
   );
 };
 
-export default PlayersScreen;
+export default withToast(PlayersScreen);
 
 const styles = StyleSheet.create({
   root: {

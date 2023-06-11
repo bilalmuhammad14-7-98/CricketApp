@@ -39,6 +39,7 @@ import { colors } from "../../config/colors";
 import { apiActiveURL, SCREEN_WIDTH } from "../../ApiBaseURL";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import withToast from "../../components/Toast";
 
 const CARD_WIDTH = windowWidth * 0.27;
 const DATA_WIDTH = windowWidth * 0.87;
@@ -320,7 +321,7 @@ const UmpireDetails = (props) => {
   );
 };
 
-export default UmpireDetails;
+export default withToast(UmpireDetails);
 
 const styles = StyleSheet.create({
   logo: {

@@ -12,7 +12,6 @@ import {
   SafeAreaView,
 } from "react-native";
 
-
 // imports
 import { LinearGradient } from "expo-linear-gradient";
 import { ScrollView } from "react-native-gesture-handler";
@@ -23,6 +22,7 @@ import { sizes } from "../../../config/sizes";
 import LoginCredentialsButton from "../../../components/formComponents/LoginCredentialsButton";
 import { colors } from "../../../config/colors";
 import images from "../../../config/images";
+import withToast from "../../../components/Toast";
 
 const PROFILECARD_WIDTH = windowWidth * 0.9;
 const PROFILECARD_HEIGHT = windowHeight * 0.6;
@@ -50,57 +50,56 @@ const LoginCredentials = (props) => {
             backgroundColor: "white",
             borderTopLeftRadius: 30,
             borderTopRightRadius: 30,
-            flex:1,
+            flex: 1,
           }}
         >
+          <View
+            style={{
+              width: PROFILECARD_WIDTH,
+              height: PROFILECARD_HEIGHT,
+              margin: sizes.m13,
+              marginTop: HEIGHT,
+              marginLeft: CARD_WIDTH,
+              borderRadius: sizes.m15,
+              borderColor: colors.primary,
+              backgroundColor: colors.white,
+              borderWidth: 2,
+            }}
+          >
+            <View style={styles.card}>
+              <LoginCredentialsButton
+                textColor="white"
+                btnLabel="Login As Player"
+                Press={() => props.navigation.navigate("LoginScreen")}
+                //   Press={() => handleSubmit()}
+              />
+            </View>
 
-        <View
-          style={{
-            width: PROFILECARD_WIDTH,
-            height: PROFILECARD_HEIGHT,
-            margin: sizes.m13,
-            marginTop: HEIGHT,
-            marginLeft: CARD_WIDTH,
-            borderRadius: sizes.m15,
-            borderColor: colors.primary,
-            backgroundColor: colors.white,
-            borderWidth: 2,
-          }}
-        >
-          <View style={styles.card}>
-            <LoginCredentialsButton
-              textColor="white"
-              btnLabel="Login As Player"
-              Press={() => props.navigation.navigate("LoginScreen")}
-              //   Press={() => handleSubmit()}
-            />
-          </View>
+            <View style={styles.card}>
+              <LoginCredentialsButton
+                textColor="white"
+                btnLabel="Login As Recruiter"
+                Press={() => props.navigation.navigate("RecruiterLogin")}
+                //   Press={() => handleSubmit()}
+              />
+            </View>
 
-          <View style={styles.card}>
-            <LoginCredentialsButton
-              textColor="white"
-              btnLabel="Login As Recruiter"
-              Press={() => props.navigation.navigate("RecruiterLogin")}
-              //   Press={() => handleSubmit()}
-            />
+            <View style={styles.card}>
+              <LoginCredentialsButton
+                textColor="white"
+                btnLabel="Login As Umpire"
+                Press={() => props.navigation.navigate("UmpireLogin")}
+                //   Press={() => handleSubmit()}
+              />
+            </View>
           </View>
-
-          <View style={styles.card}>
-            <LoginCredentialsButton
-              textColor="white"
-              btnLabel="Login As Umpire"
-              Press={() => props.navigation.navigate("UmpireLogin")}
-              //   Press={() => handleSubmit()}
-            />
-          </View>
-        </View>
         </View>
       </View>
     </ScrollView>
   );
 };
 
-export default LoginCredentials;
+export default withToast(LoginCredentials);
 
 const styles = StyleSheet.create({
   card: {
@@ -125,6 +124,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingTop: 50,
   },
-  logo: {
-  },
+  logo: {},
 });

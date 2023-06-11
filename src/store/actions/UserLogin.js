@@ -1,7 +1,7 @@
 import axios from "axios";
 import { apiActiveURL } from "../../ApiBaseURL";
 
-export const UserLogin = (data) => {
+export const UserLogin = (data, callback) => {
   console.log(
     data.username,
     data.password,
@@ -36,12 +36,15 @@ export const UserLogin = (data) => {
         console.log(res.data, "login response");
         if (res.data.success) {
           LoginSuccess(dispatch, res.data);
+          callback({ success: true, message: "Login successful" });
         } else {
           LoginFail(dispatch, res.data);
+          callback({ success: false, message: res.data.message });
         }
       })
       .catch((e) => {
         console.log(e.message, "catch error");
+        callback({ success: false, message: e.message });
         LoginFail(dispatch, e.message);
       });
   };

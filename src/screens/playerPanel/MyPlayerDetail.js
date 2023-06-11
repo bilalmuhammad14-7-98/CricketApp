@@ -39,6 +39,7 @@ import { colors } from "../../config/colors";
 import { apiActiveURL } from "../../ApiBaseURL";
 import axios from "axios";
 import { useSelector } from "react-redux";
+import withToast from "../../components/Toast";
 
 const CARD_WIDTH = windowWidth * 0.27;
 const DATA_WIDTH = windowWidth * 0.87;
@@ -553,7 +554,7 @@ const MyPlayerDetail = (props) => {
   );
 };
 
-export default MyPlayerDetail;
+export default withToast(MyPlayerDetail);
 
 const styles = StyleSheet.create({
   logo: {

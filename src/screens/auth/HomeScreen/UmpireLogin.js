@@ -29,6 +29,7 @@ import { colors } from "../../../config/colors";
 import { SetUser } from "../../../store/actions/authAction";
 import { profileContext } from "../../../components/context/context";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import withToast from "../../../components/Toast";
 
 const curve_height = windowHeight * 0.25;
 const input_width = windowHeight * 0.48;
@@ -235,4 +236,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default UmpireLogin;
+export default withToast(UmpireLogin);

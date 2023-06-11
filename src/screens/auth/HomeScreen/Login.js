@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Image,
 } from "react-native";
-import { useTheme } from "@react-navigation/native";
+import { useNavigation, useTheme } from "@react-navigation/native";
 import Toast from "react-native-root-toast";
 
 //imports
@@ -29,6 +29,8 @@ import { profileContext } from "../../../components/context/context";
 import { ScrollView } from "react-native-gesture-handler";
 import { UserLogin } from "../../../store/actions/UserLogin";
 import { showToast, validateEmail } from "../../../util";
+import { showSnackBar } from "../../../store/actions";
+import withToast from "../../../components/Toast";
 
 const curve_height = windowHeight * 0.25;
 const input_width = windowHeight * 0.48;
@@ -36,6 +38,7 @@ const button_height = windowHeight * 0.36;
 
 const Login = (props) => {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const [username, setUsername] = useState("ambani@gmail.com");
   const [password, setPassword] = useState("Bilal12345$");
   const [isLoading, setIsLoading] = useState();
@@ -46,83 +49,37 @@ const Login = (props) => {
   });
   const { colors } = useTheme();
 
-  const userLoginSuccess = useSelector((state) => {
-    console.log(state, "state");
-    console.log(state.loginData.data, "login data success");
-    return state.loginData.data;
-  });
-
-  const userLoginError = useSelector((state) => {
-    // console.log(state, "state");
-    console.log(state.loginData.error, "login error success");
-    return state.loginData.error;
-  });
-
-  useEffect(() => {
-    if (userLoginSuccess) {
-      // console.log(userLoginSuccess, "if userLogin Success");
-      props.navigation.navigate("PlayerHome");
-      // alert(userLoginSuccess.message);
-      Toast.show(userLoginSuccess.message, {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.TOP,
-        textColor: "#FFFFFF",
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-        position: 80,
-        backgroundColor: "#32de84",
-        style: {
-          height: 100,
-          padding: 30,
-          borderRadius: 10,
-          paddingLeft: 45,
-          paddingRight: 15,
-        },
-      });
-    } else if (userLoginError) {
-      // alert("Login Failed !!!");
-      Toast.show(userLoginError.message, {
-        duration: Toast.durations.SHORT,
-        position: Toast.positions.TOP,
-        textColor: "#FFFFFF",
-        shadow: true,
-        animation: true,
-        hideOnPress: true,
-        delay: 0,
-        position: 80,
-        backgroundColor: "#FF033E",
-        style: {
-          height: 100,
-          padding: 30,
-          borderRadius: 10,
-          paddingLeft: 45,
-          paddingRight: 15,
-        },
-      });
-    } else {
-      // alert("Something Went Wrong");
-    }
-
-    // return () => {
-    //   dispatch(resetloginAdmin());
-    // };
-  }, [userLoginSuccess, userLoginError]);
-
   const handleSubmit = async () => {
     if (!username.trim()) {
-      showToast("Please enter your email address", "error");
+      dispatch(
+        showSnackBar({
+          visible: true,
+          text: "Please enter your email address",
+          error: true,
+        })
+      );
       return;
     }
 
     if (!validateEmail(username)) {
-      showToast("Invalid email address", "error");
+      dispatch(
+        showSnackBar({
+          visible: true,
+          text: "Invalid email address",
+          error: true,
+        })
+      );
       return;
     }
 
     if (!password) {
-      showToast("Please enter a password", "error");
+      dispatch(
+        showSnackBar({
+          visible: true,
+          text: "Please enter a password",
+          error: true,
+        })
+      );
       return;
     }
 
@@ -132,7 +89,17 @@ const Login = (props) => {
     };
 
     console.log(data, "login data");
-    dispatch(UserLogin(data));
+    dispatch(
+      UserLogin(data, (data) => {
+        console.log("HERE IN DATA", data);
+        if (data.success) {
+          navigation.navigate("PlayerHome");
+          dispatch(showSnackBar({ visible: true, text: data.message }));
+        } else {
+          dispatch(showSnackBar({ visible: true, text: data.message }));
+        }
+      })
+    );
   };
 
   const handleUsernameChange = (text) => {
@@ -202,7 +169,7 @@ const Login = (props) => {
             />
 
             <TouchableOpacity
-              onPress={() => props.navigation.navigate("ForgotPassword")}
+              onPress={() => navigation.navigate("ForgotPassword")}
             >
               <View style={styles.a1}>
                 <Text style={[styles.text4, { color: colors.primary }]}>
@@ -223,7 +190,7 @@ const Login = (props) => {
               <Text style={styles.text5}>Don't have an account ? </Text>
 
               <TouchableOpacity
-                onPress={() => props.navigation.navigate("SignupScreen")}
+                onPress={() => navigation.navigate("SignupScreen")}
               >
                 <Text style={[styles.text6, { color: colors.heading }]}>
                   Signup
@@ -301,4 +268,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Login;
+export default withToast(Login);

@@ -34,6 +34,7 @@ import PlayerStatsCard from "../../components/PlayerProfile/PlayerStatsCard";
 import PlayerGallery from "../../components/PlayerProfile/PlayerGallery";
 import { profileContext } from "../../components/context/context";
 import { searchPlayer } from "../../services/playerService";
+import withToast from "../../components/Toast";
 
 const CARD_WIDTH = windowWidth * 0.05;
 const DATA_WIDTH = windowWidth * 0.87;
@@ -151,7 +152,7 @@ const CricketProfile = (props) => {
   );
 };
 
-export default CricketProfile;
+export default withToast(CricketProfile);
 
 const styles = StyleSheet.create({
   logo: {

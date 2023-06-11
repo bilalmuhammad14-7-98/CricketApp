@@ -9,12 +9,23 @@ import LoginCredentials from "../../screens/auth/HomeScreen/LoginCredentials";
 import UmpireLogin from "../../screens/auth/HomeScreen/UmpireLogin";
 import RecruiterLogin from "../../screens/auth/HomeScreen/RecruiterLogin";
 import SplashScreen from "../../screens/auth/HomeScreen/SplashScreen";
+import { useSelector } from "react-redux";
 
 const Stack = createNativeStackNavigator();
 
 export default function AuthNavigationContainer() {
+  const userLoginSuccess = useSelector((state) => {
+    return state.loginData.data;
+  });
+  console.log(
+    userLoginSuccess,
+    "userLoginSuccessuserLoginSuccessuserLoginSuccess"
+  );
   return (
-    <Stack.Navigator screenOptions={{ headerShown: false }}>
+    <Stack.Navigator
+      screenOptions={{ headerShown: false }}
+      initialRouteName={userLoginSuccess ? "PlayerHome" : "HomeScreen"}
+    >
       {/* <Stack.Screen name="SplashScreen" component={SplashScreen} /> */}
       <Stack.Screen name="HomeScreen" component={HomeScreen} />
       <Stack.Screen name="LoginCredentials" component={LoginCredentials} />
@@ -27,4 +38,3 @@ export default function AuthNavigationContainer() {
     </Stack.Navigator>
   );
 }
-

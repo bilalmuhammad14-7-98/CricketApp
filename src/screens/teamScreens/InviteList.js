@@ -39,6 +39,7 @@ import { useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "axios";
 import { useIsFocused } from "@react-navigation/native";
+import withToast from "../../components/Toast";
 
 const curve_height = windowHeight * 0.2;
 const CARD_WIDTH = windowWidth * 0.93;
@@ -113,52 +114,6 @@ const InviteList = ({ navigation }) => {
         // console.log(error, "error");
       });
   };
-
-  //   const onPress = async (item) => {
-  //     console.log(item, "Button pressed!");
-
-  //     let data = new FormData();
-
-  //     data.append("team_id", item.value);
-  //     data.append("recruiter_id", item.recruiter_id);
-
-  //     var config = {
-  //       method: "post",
-  //       maxBodyLength: Infinity,
-  //       url: `${apiActiveURL}join-team`,
-  //       headers: {
-  //         Authorization: `Bearer ${userLoginSuccess.token}`,
-  //       },
-  //       data: data,
-  //     };
-
-  //     await axios(config)
-  //       .then(function (response) {
-  //         // console.log(response.data, "join team response");
-  //         Toast.show(response.data.message, {
-  //           duration: 2000,
-  //           position: Toast.positions.TOP,
-  //           textColor: "#FFFFFF",
-  //           shadow: true,
-  //           animation: true,
-  //           hideOnPress: true,
-  //           delay: 0,
-  //           position: 80,
-  //           backgroundColor: "#32de84",
-  //           style: {
-  //             height: 100,
-  //             padding: 30,
-  //             borderRadius: 10,
-  //             paddingLeft: 45,
-  //             paddingRight: 15,
-  //           },
-  //         });
-  //         listTeams();
-  //       })
-  //       .catch(function (error) {
-  //         console.log(error);
-  //       });
-  //   };
 
   const renderList = (item) => {
     // console.log(item, "item---");
@@ -302,7 +257,7 @@ const InviteList = ({ navigation }) => {
   );
 };
 
-export default InviteList;
+export default withToast(InviteList);
 
 const styles = StyleSheet.create({
   // root: {

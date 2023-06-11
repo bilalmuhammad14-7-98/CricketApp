@@ -40,6 +40,7 @@ import { useSelector } from "react-redux";
 import axios from "axios";
 import { useIsFocused } from "@react-navigation/native";
 import Search from "../../components/PlayerProfile/Search";
+import withToast from "../../components/Toast";
 
 const curve_height = windowHeight * 0.2;
 const CARD_WIDTH = windowWidth * 0.93;
@@ -125,25 +126,13 @@ const TeamsScreen = ({ navigation }) => {
 
     await axios(config)
       .then(function (response) {
-        // console.log(response.data, "join team response");
-        Toast.show(response.data.message, {
-          duration: 2000,
-          position: Toast.positions.TOP,
-          textColor: "#FFFFFF",
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-          position: 80,
-          backgroundColor: "#32de84",
-          style: {
-            height: 100,
-            padding: 30,
-            borderRadius: 10,
-            paddingLeft: 45,
-            paddingRight: 15,
-          },
-        });
+        dispatch(
+          showSnackBar({
+            visible: true,
+            text: response.data.message,
+            error: false,
+          })
+        );
         listTeams();
       })
       .catch(function (error) {
@@ -331,7 +320,7 @@ const TeamsScreen = ({ navigation }) => {
   );
 };
 
-export default TeamsScreen;
+export default withToast(TeamsScreen);
 
 const styles = StyleSheet.create({
   // root: {

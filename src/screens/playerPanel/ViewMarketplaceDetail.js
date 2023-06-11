@@ -21,6 +21,7 @@ import { colors } from "../../config/colors";
 import { useIsFocused } from "@react-navigation/native";
 import Swiper from "react-native-swiper";
 import { sizes } from "../../config/sizes";
+import withToast from "../../components/Toast";
 const CARD_WIDTH1 = windowWidth * 0.93;
 const CARD_HEIGHT1 = windowWidth * 0.5;
 const CARD_WIDTH = windowWidth * 0.44;
@@ -110,7 +111,7 @@ const ViewMarketplaceDetail = (props) => {
   );
 };
 
-export default ViewMarketplaceDetail;
+export default withToast(ViewMarketplaceDetail);
 const styles = StyleSheet.create({
   //slider
   sliderContainer: {

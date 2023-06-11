@@ -7,6 +7,7 @@ import { profileContext } from "../../../components/context/context";
 import { useState, useEffect, useContext } from "react";
 import images from "../../../config/images";
 import { sizes } from "../../../config/sizes";
+import withToast from "../../../components/Toast";
 
 const button_width = windowWidth * 0.96;
 const ImageWidth = windowWidth * 0.99;
@@ -78,4 +79,4 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
 });
-export default HomeScreen;
+export default withToast(HomeScreen);

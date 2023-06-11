@@ -27,6 +27,9 @@ import { ScrollView } from "react-native-gesture-handler";
 // import { apiActiveURL } from "../../ApiBaseURL";
 import { apiActiveURL } from "../../../ApiBaseURL";
 import { showToast, validateEmail } from "../../../util";
+import withToast from "../../../components/Toast";
+import { showSnackBar } from "../../../store/actions";
+import { useDispatch } from "react-redux";
 
 const curve_height = windowHeight * 0.25;
 const input_width = windowHeight * 0.48;
@@ -34,6 +37,7 @@ const button_height = windowHeight * 0.1;
 
 const Signup = (props) => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -118,67 +122,130 @@ const Signup = (props) => {
 
   const onClick = async (event) => {
     if (!name.trim()) {
-      showToast("Please enter your name", "error");
+      dispatch(
+        showSnackBar({
+          visible: true,
+          text: "Please enter your name",
+          error: true,
+        })
+      );
       return;
     }
     if (name.trim() <= 3) {
-      showToast("name must be greater than 3 characters", "error");
+      dispatch(
+        showSnackBar({
+          visible: true,
+          text: "name must be greater than 3 characters",
+          error: true,
+        })
+      );
       return;
     }
     if (!email) {
-      showToast("Please enter a email address", "error");
+      dispatch(
+        showSnackBar({
+          visible: true,
+          text: "Please enter a email address",
+          error: true,
+        })
+      );
       return;
     }
     if (!validateEmail(email)) {
-      showToast("Invalid email address", "error");
+      dispatch(
+        showSnackBar({
+          visible: true,
+          text: "Invalid email address",
+          error: true,
+        })
+      );
       return;
     }
 
     if (!password.trim()) {
-      showToast("Please enter a password", "error");
+      dispatch(
+        showSnackBar({
+          visible: true,
+          text: "Please enter a password",
+          error: true,
+        })
+      );
       return;
     }
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*\W).{8,}$/;
     if (!passwordRegex.test(password)) {
-      showToast(
-        "password must be 8 character long, it must have at least 1 upper case and lower case character and a symbol",
-        "error",
-        "long"
+      dispatch(
+        showSnackBar({
+          visible: true,
+          text: "password must be 8 character long, it must have at least 1 upper case and lower case character and a symbol",
+          error: true,
+        })
       );
+
       return;
     }
     if (!phone) {
-      showToast("Please enter a phone number", "error");
+      dispatch(
+        showSnackBar({
+          visible: true,
+          text: "Please enter a phone number",
+          error: true,
+        })
+      );
       return;
     }
 
     if (phone.length != 11) {
-      showToast("Invalid phone number", "error");
+      dispatch(
+        showSnackBar({
+          visible: true,
+          text: "Invalid phone number",
+          error: true,
+        })
+      );
       return;
     }
 
     if (phone.length != 11) {
-      showToast("Invalid phone number", "error");
+      dispatch(
+        showSnackBar({
+          visible: true,
+          text: "Invalid phone number",
+          error: true,
+        })
+      );
       return;
     }
 
     if (phone.length != 11) {
-      showToast("Invalid phone number", "error");
+      dispatch(
+        showSnackBar({
+          visible: true,
+          text: "Invalid phone number",
+          error: true,
+        })
+      );
       return;
     }
 
     if (!selectedCountry) {
-      showToast("select a country", "error");
+      dispatch(
+        showSnackBar({ visible: true, text: "select a country", error: true })
+      );
       return;
     }
 
     if (!selectedCity) {
-      showToast("select a city", "error");
+      dispatch(
+        showSnackBar({ visible: true, text: "select a city", error: true })
+      );
       return;
     }
 
     if (!selectedRole) {
-      showToast("select a role", "error");
+      dispatch(
+        showSnackBar({ visible: true, text: "select a role", error: true })
+      );
       return;
     }
 
@@ -435,4 +502,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Signup;
+export default withToast(Signup);

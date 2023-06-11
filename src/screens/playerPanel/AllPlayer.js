@@ -39,6 +39,7 @@ import { useIsFocused } from "@react-navigation/native";
 import { LongPressGestureHandler, State } from "react-native-gesture-handler";
 import Toast from "react-native-root-toast";
 import Search from "../../components/PlayerProfile/Search";
+import withToast from "../../components/Toast";
 
 const LOGO_SIZE = windowHeight * 0.1;
 const CARD_WIDTH = windowWidth * 0.95;
@@ -321,7 +322,7 @@ const AllPlayer = ({ navigation }) => {
   );
 };
 
-export default AllPlayer;
+export default withToast(AllPlayer);
 
 const styles = StyleSheet.create({
   root: {
