@@ -1,8 +1,15 @@
 import { StatusBar } from "expo-status-bar";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
-import { StyleSheet, View, TouchableOpacity, Text } from "react-native";
-import { Avatar } from "react-native-paper";
+import {
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Text,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
+import { Avatar, Modal, Portal } from "react-native-paper";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 //import icons
@@ -45,6 +52,15 @@ import ViewMarketplace from "../../screens/playerPanel/ViewMarketplace";
 import ViewMarketplaceDetail from "../../screens/playerPanel/ViewMarketplaceDetail";
 import Request from "../../screens/UmpireScreens/Request";
 import ScheduleMatches from "../../screens/playerPanel/ScheduleMatches";
+import UmpireDetails from "../../screens/playerPanel/UmpireDetails";
+import { apiActiveURL, SCREEN_WIDTH } from "../../ApiBaseURL";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { useEffect } from "react";
+import { setNotification } from "../../store/actions";
+import { useState } from "react";
+import { getMonths, showToast } from "../../util";
+import CustomToast from "../formComponents/CustomToast";
 import ViewMyMarketplace from "../../screens/playerPanel/ViewMyMarketplace";
 const upper_margin = windowWidth * 0.001;
 const upper_margin1 = windowWidth * 0.01;
@@ -59,7 +75,198 @@ const StackTeams = createNativeStackNavigator();
 const StackUserProfile = createNativeStackNavigator();
 const StackMarketPlace = createNativeStackNavigator();
 
+const NotiIcon = () => {
+  const [visible, setVisible] = useState(false);
+  const [loader, setLoader] = useState(false);
+  const [notification, setNotification] = useState([]);
+  const showModal = (data) => {
+    setVisible(true);
+  };
+  const [toast, setToast] = useState({
+    show: false,
+    message: "",
+  });
+
+  useEffect(() => {
+    setTimeout(function hideToast() {
+      setToast({ ...toast, show: false, message: "" });
+    }, 500);
+  }, []);
+  // const messageObject = JSON.parse(notification.message);
+  const hideModal = () => setVisible(false);
+
+  const getDate = (dateString) => {
+    const date = new Date(dateString);
+
+    // Format the date
+    const formattedDate = `${date.getDate()} ${
+      getMonths[date.getMonth()]
+    } ${date.getFullYear()}`;
+
+    // Format the time
+    const hour = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    const amPm = hour >= 12 ? "pm" : "am";
+    const formattedTime = `${hour % 12 || 12}:${minutes} ${amPm}`;
+
+    // Combine the formatted date and time
+    // const result = `${formattedDate} - ${formattedTime}`;
+    console.log(`${formattedDate} - ${formattedTime}`);
+    return `${formattedDate} - ${formattedTime}`;
+  };
+
+  const dispatch = useDispatch();
+  const userLoginSuccess = useSelector((state) => {
+    return state.loginData.data;
+  });
+
+  const getAllNotification = () => {
+    let config = {
+      method: "GET",
+      // maxBodyLength: Infinity,
+      url: `${apiActiveURL}list-notifications`,
+      headers: {
+        Authorization: `Bearer ${userLoginSuccess.token}`,
+      },
+    };
+    console.log(config, "NOTIFICATION CONFIG");
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(response.data, "NOTIFICATIONS");
+        setLoader(false);
+        if (response.data?.success) {
+          // dispatch(setNotification(response.data?.notifications));
+          if (response.data?.notifications == 0) {
+            showToast("No Notifications Availible", "error");
+            hideModal();
+          } else {
+            setNotification(response.data?.notifications);
+          }
+        }
+      })
+      .catch((error) => {
+        setLoader(false);
+        console.log(error);
+      });
+  };
+
+  const handleNotificationPress = (item) => {
+    var index = notification.findIndex(
+      (n) => n.notification_id === item.notification_id
+    );
+
+    if (index != -1) {
+      notification.splice(index, 1);
+    }
+    ReadNotification(item.notification_id);
+
+    setNotification([...notification]);
+  };
+
+  const ReadNotification = (id) => {
+    let config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: `${apiActiveURL}mark-as-read?notification_id=${id}`,
+      headers: {
+        Authorization: `Bearer ${userLoginSuccess.token}`,
+      },
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  return (
+    <TouchableOpacity
+      style={{ marginRight: upper_margin1 }}
+      onPress={() => {
+        if (userLoginSuccess) {
+          setLoader(true);
+          showModal();
+          getAllNotification();
+        }
+      }}
+    >
+      <Ionicons name="notifications" size={logo_size} color="#2BB789" />
+      <CustomToast show={toast.show} message={toast.message} />
+      <Portal>
+        <Modal
+          visible={visible}
+          onDismiss={hideModal}
+          contentContainerStyle={{
+            ...styles.modalStyles,
+            maxHeight: "90%",
+          }}
+        >
+          <Text style={[styles.text, { textAlign: "center", fontSize: 20 }]}>
+            Notifications
+          </Text>
+          {loader ? (
+            <ActivityIndicator
+              size="large"
+              color="#000"
+              style={{ marginTop: 10 }}
+            />
+          ) : notification.length == 0 ? (
+            <Text
+              style={{
+                color: "red",
+                fontSize: 16,
+                fontWeight: "bold",
+                textAlign: "center",
+                marginTop: 10,
+              }}
+            >
+              Not notification availible:(
+            </Text>
+          ) : (
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              data={notification}
+              renderItem={({ item }) => {
+                return (
+                  <TouchableOpacity
+                    style={{
+                      backgroundColor: "#dfdfdf",
+                      padding: 10,
+                      borderRadius: 20,
+                      marginTop: 10,
+                    }}
+                    onPress={() => handleNotificationPress(item)}
+                  >
+                    <Text
+                      style={{
+                        color: "#000",
+                        fontSize: 16,
+                        fontWeight: "bold",
+                      }}
+                    >
+                      {item?.message}
+                    </Text>
+                    <Text style={{ color: "#000", fontSize: 12, marginTop: 5 }}>
+                      {getDate(item["created_at "])}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              }}
+              // keyExtractor={(item) => `${item.id}`}
+            />
+          )}
+        </Modal>
+      </Portal>
+    </TouchableOpacity>
+  );
+};
 function PlayerHomeNavigationContainer() {
+  const { notification } = useSelector((state) => state.auth);
+  console.log(notification, "notification in player");
   return (
     <StackPlayerHome.Navigator screenOptions={{ headerShown: true }}>
       <StackPlayerHome.Screen
@@ -68,15 +275,7 @@ function PlayerHomeNavigationContainer() {
         options={({}) => ({
           title: "",
           headerRight: () => {
-            return (
-              <View style={{ marginRight: upper_margin1 }}>
-                <Ionicons
-                  name="notifications"
-                  size={logo_size}
-                  color="#2BB789"
-                />
-              </View>
-            );
+            return <NotiIcon notification={notification} />;
           },
 
           headerLeft: () => {
@@ -108,17 +307,6 @@ function PlayerHomeNavigationContainer() {
               />
             );
           },
-          headerRight: () => {
-            return (
-              <View style={{ marginRight: upper_margin1 }}>
-                <Ionicons
-                  name="notifications"
-                  size={logo_size}
-                  color="#2BB789"
-                />
-              </View>
-            );
-          },
           headerStyle: {
             backgroundColor: "#FAF9F6",
             elevation: 0,
@@ -139,17 +327,6 @@ function PlayerHomeNavigationContainer() {
               />
             );
           },
-          headerRight: () => {
-            return (
-              <View style={{ marginRight: upper_margin1 }}>
-                <Ionicons
-                  name="notifications"
-                  size={logo_size}
-                  color="#2BB789"
-                />
-              </View>
-            );
-          },
           headerStyle: {
             backgroundColor: "#FAF9F6",
             elevation: 0,
@@ -167,17 +344,6 @@ function PlayerHomeNavigationContainer() {
                 title={"All Players List"}
                 navigation={navigation}
               />
-            );
-          },
-          headerRight: () => {
-            return (
-              <View style={{ marginRight: upper_margin1 }}>
-                <Ionicons
-                  name="notifications"
-                  size={logo_size}
-                  color="#2BB789"
-                />
-              </View>
             );
           },
           headerStyle: {
@@ -200,17 +366,6 @@ function PlayerHomeNavigationContainer() {
               />
             );
           },
-          headerRight: () => {
-            return (
-              <View style={{ marginRight: upper_margin1 }}>
-                <Ionicons
-                  name="notifications"
-                  size={logo_size}
-                  color="#2BB789"
-                />
-              </View>
-            );
-          },
           headerStyle: {
             backgroundColor: "#FAF9F6",
             elevation: 0,
@@ -229,17 +384,6 @@ function PlayerHomeNavigationContainer() {
                 title={"View Profile Details"}
                 navigation={navigation}
               />
-            );
-          },
-          headerRight: () => {
-            return (
-              <View style={{ marginRight: upper_margin1 }}>
-                <Ionicons
-                  name="notifications"
-                  size={logo_size}
-                  color="#2BB789"
-                />
-              </View>
             );
           },
           headerStyle: {
@@ -261,17 +405,6 @@ function PlayerHomeNavigationContainer() {
               />
             );
           },
-          headerRight: () => {
-            return (
-              <View style={{ marginRight: upper_margin1 }}>
-                <Ionicons
-                  name="notifications"
-                  size={logo_size}
-                  color="#2BB789"
-                />
-              </View>
-            );
-          },
           headerStyle: {
             backgroundColor: "#FAF9F6",
             elevation: 0,
@@ -286,17 +419,6 @@ function PlayerHomeNavigationContainer() {
           headerLeft: () => {
             return (
               <NavigationHeader title={"Gallery"} navigation={navigation} />
-            );
-          },
-          headerRight: () => {
-            return (
-              <View style={{ marginRight: upper_margin1 }}>
-                <Ionicons
-                  name="notifications"
-                  size={logo_size}
-                  color="#2BB789"
-                />
-              </View>
             );
           },
           headerStyle: {
@@ -316,17 +438,6 @@ function PlayerHomeNavigationContainer() {
                 title={"Umpiring Request"}
                 navigation={navigation}
               />
-            );
-          },
-          headerRight: () => {
-            return (
-              <View style={{ marginRight: upper_margin1 }}>
-                <Ionicons
-                  name="notifications"
-                  size={logo_size}
-                  color="#2BB789"
-                />
-              </View>
             );
           },
           headerStyle: {
@@ -377,15 +488,24 @@ function PlayerHomeNavigationContainer() {
               <NavigationHeader title={"Umpire"} navigation={navigation} />
             );
           },
-          headerRight: () => {
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
+
+      <StackPlayerHome.Screen
+        name="umpireprofile"
+        component={UmpireDetails}
+        options={({ navigation }) => ({
+          title: "",
+          headerLeft: () => {
             return (
-              <View style={{ marginRight: upper_margin1 }}>
-                <Ionicons
-                  name="notifications"
-                  size={logo_size}
-                  color="#2BB789"
-                />
-              </View>
+              <NavigationHeader
+                title={"Umpire Details"}
+                navigation={navigation}
+              />
             );
           },
           headerStyle: {
@@ -408,17 +528,6 @@ function TeamsScreenNavigationContainer() {
           title: "",
           headerLeft: () => {
             return <NavigationHeader title={"Teams"} navigation={navigation} />;
-          },
-          headerRight: () => {
-            return (
-              <View style={{ marginRight: upper_margin1 }}>
-                <Ionicons
-                  name="notifications"
-                  size={logo_size}
-                  color="#2BB789"
-                />
-              </View>
-            );
           },
 
           headerStyle: {
@@ -536,18 +645,6 @@ function UserProfileNavigationContainer() {
               />
             );
           },
-          headerRight: () => {
-            return (
-              <View style={{ marginRight: upper_margin1 }}>
-                <Ionicons
-                  name="notifications"
-                  size={logo_size}
-                  color="#2BB789"
-                />
-              </View>
-            );
-          },
-
           headerStyle: {
             backgroundColor: "#FAF9F6",
             elevation: 0,
@@ -562,17 +659,6 @@ function UserProfileNavigationContainer() {
           headerLeft: () => {
             return (
               <NavigationHeader title={"Profile"} navigation={navigation} />
-            );
-          },
-          headerRight: () => {
-            return (
-              <View style={{ marginRight: upper_margin1 }}>
-                <Ionicons
-                  name="notifications"
-                  size={logo_size}
-                  color="#2BB789"
-                />
-              </View>
             );
           },
           headerStyle: {
@@ -594,17 +680,6 @@ function UserProfileNavigationContainer() {
               />
             );
           },
-          headerRight: () => {
-            return (
-              <View style={{ marginRight: upper_margin1 }}>
-                <Ionicons
-                  name="notifications"
-                  size={logo_size}
-                  color="#2BB789"
-                />
-              </View>
-            );
-          },
           headerStyle: {
             backgroundColor: "#FAF9F6",
             elevation: 0,
@@ -622,17 +697,6 @@ function UserProfileNavigationContainer() {
                 title={"Edit Profile"}
                 navigation={navigation}
               />
-            );
-          },
-          headerRight: () => {
-            return (
-              <View style={{ marginRight: upper_margin1 }}>
-                <Ionicons
-                  name="notifications"
-                  size={logo_size}
-                  color="#2BB789"
-                />
-              </View>
             );
           },
           headerStyle: {
@@ -737,6 +801,8 @@ function MarketPlaceNavigationContainer() {
 }
 
 export default function CustomBottomTabNavigator() {
+  console.log("HERE AT CUSTOME TAB ========================> ");
+
   return (
     <>
       <StatusBar style="dark-content" />
@@ -812,13 +878,7 @@ export default function CustomBottomTabNavigator() {
               </View>
             ),
             headerRight: () => (
-              <View style={{ marginRight: upper_margin1 }}>
-                <Ionicons
-                  name="notifications"
-                  size={logo_size}
-                  color="#2BB789"
-                />
-              </View>
+              <NotiIcon/>
             ),
             headerLeft: () => (
               <View style={styles.header}>
@@ -937,5 +997,12 @@ const styles = StyleSheet.create({
     marginLeft: logo_margin,
     // paddingTop: 3,
     // flex: 1,
+  },
+  modalStyles: {
+    alignSelf: "center",
+    backgroundColor: "#FFFFFF",
+    width: SCREEN_WIDTH - 20,
+    borderRadius: 15,
+    padding: 25,
   },
 });

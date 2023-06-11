@@ -278,7 +278,8 @@ const Profile = (props) => {
                     <Text> {userData?.gender}</Text>
                   </View>
                 </View>
-                {userLoginSuccess?.data?.roleId == "recruiter" ? null : (
+                {userLoginSuccess?.data?.roleId == "recruiter" ||
+                userLoginSuccess?.data?.roleId == "umpire" ? null : (
                   <View style={styles.profile_stats1}>
                     <View style={{ flexDirection: "column" }}>
                       <Text
@@ -319,8 +320,47 @@ const Profile = (props) => {
                   </View>
                 )}
 
+                {userLoginSuccess?.data?.roleId == "umpire" && (
+                  <View style={styles.profile_stats1}>
+                    <View style={{ flexDirection: "column" }}>
+                      <Text
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                        style={{
+                          fontSize: 15,
+                          fontWeight: "bold",
+                          color: colors.primary,
+                        }}
+                      >
+                        Fees
+                      </Text>
+                      <Text
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                        style={{ width: input_width }}
+                      >
+                        {userData?.fees}
+                      </Text>
+                    </View>
+                    <View style={{ flexDirection: "column" }}>
+                      <Text
+                        style={{
+                          paddingRight: PADDING_IMAGE,
+                          fontSize: 15,
+                          fontWeight: "bold",
+                          color: colors.primary,
+                        }}
+                      >
+                        Age
+                      </Text>
+                      <Text> {userData?.dob}</Text>
+                    </View>
+                  </View>
+                )}
+
                 <View style={styles.profile_stats1}>
-                  {userLoginSuccess?.data?.roleId == "recruiter" ? null : (
+                  {userLoginSuccess?.data?.roleId == "recruiter" ||
+                  userLoginSuccess?.data?.roleId == "umpire" ? null : (
                     <View style={{ flexDirection: "column" }}>
                       <Text
                         numberOfLines={1}
@@ -343,19 +383,35 @@ const Profile = (props) => {
                     </View>
                   )}
 
-                  <View style={{ flexDirection: "column" }}>
-                    <Text
-                      style={{
-                        paddingRight: PADDING_IMAGE,
-                        fontSize: 15,
-                        fontWeight: "bold",
-                        color: colors.primary,
-                      }}
-                    >
-                      Age
-                    </Text>
-                    <Text> {userData?.dob}</Text>
-                  </View>
+                  {userLoginSuccess?.data?.roleId == "umpire" ? (
+                    <View style={{ flexDirection: "column" }}>
+                      <Text
+                        style={{
+                          paddingRight: PADDING_IMAGE,
+                          fontSize: 15,
+                          fontWeight: "bold",
+                          color: colors.primary,
+                        }}
+                      >
+                        Availible Days
+                      </Text>
+                      <Text> {userData?.available_days}</Text>
+                    </View>
+                  ) : (
+                    <View style={{ flexDirection: "column" }}>
+                      <Text
+                        style={{
+                          paddingRight: PADDING_IMAGE,
+                          fontSize: 15,
+                          fontWeight: "bold",
+                          color: colors.primary,
+                        }}
+                      >
+                        Age
+                      </Text>
+                      <Text> {userData?.dob}</Text>
+                    </View>
+                  )}
                 </View>
 
                 <View style={styles.profile_stats1}>

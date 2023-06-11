@@ -139,6 +139,7 @@ const UmpireScreen = () => {
                 flex: 1,
                 justifyContent: "space-between",
                 padding: sizes.m7,
+                flexDirection: "row",
               }}
             >
               <View
@@ -170,7 +171,7 @@ const UmpireScreen = () => {
                 style={{
                   marginRight: sizes.m5,
                   marginBottom: sizes.m5,
-                  justifyContent: "flex-end",
+                  justifyContent: "space-between",
                 }}
               >
                 <PlayerCustomButtom
@@ -182,6 +183,16 @@ const UmpireScreen = () => {
                   onPress={() => {
                     setCurrentUmpire(item.id);
                     getMatchID();
+                  }}
+                />
+                <PlayerCustomButtom
+                  textColor="white"
+                  btnLabel="View Profile"
+                  myStyle={{
+                    alignSelf: "flex-end",
+                  }}
+                  onPress={() => {
+                    navigation.navigate("umpireprofile", { umpire: item });
                   }}
                 />
               </View>
