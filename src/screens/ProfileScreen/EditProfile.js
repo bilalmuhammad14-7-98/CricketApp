@@ -36,7 +36,11 @@ import {
 // imports
 import { LinearGradient } from "expo-linear-gradient";
 import { Avatar } from "react-native-paper";
-import { useFocusEffect, useTheme } from "@react-navigation/native";
+import {
+  useFocusEffect,
+  useNavigation,
+  useTheme,
+} from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Asset } from "expo-asset";
 
@@ -61,12 +65,13 @@ import {
 import { callApi } from "../../services";
 import { methodType } from "../../config/methodType";
 import { searchPlayer } from "../../services/playerService";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Days } from "../../util";
 import Icon from "react-native-vector-icons/MaterialIcons";
 import SectionedMultiSelect from "react-native-sectioned-multi-select";
 import { useCallback } from "react";
 import withToast from "../../components/Toast";
+import { showSnackBar } from "../../store/actions";
 
 const CARD_WIDTH = windowWidth * 0.05;
 const CARD_HEIGHT = windowHeight * 0.23;
@@ -77,6 +82,8 @@ const LOGO_SIZE = windowHeight * 0.15;
 
 const EditProfile = (props) => {
   console.log(props, "props");
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
   const userLoginSuccess = useSelector((state) => {
     return state.loginData.data;
   });
@@ -282,7 +289,7 @@ const EditProfile = (props) => {
             error: false,
           })
         );
-        props.navigation.navigate("UserProfile");
+        navigation.navigate("UserProfile");
         // listTeams();
       })
       .catch(function (error) {
@@ -514,7 +521,7 @@ const EditProfile = (props) => {
 
             <Avatar.Image
               size={LOGO_SIZE}
-              // onPress={() => props.navigation.navigate("Profile")}
+              // onPress={() => navigation.navigate("Profile")}
               // source={{ uri: image ? image : null }}
               source={image ? { uri: image } : images.FypLogo}
               // source={{ uri: item?.profileImg }}

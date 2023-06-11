@@ -24,7 +24,7 @@ import { Avatar } from "react-native-paper";
 import { windowHeight, windowWidth } from "../../config/dimensions";
 import images from "../../config/images";
 import { sizes } from "../../config/sizes";
-import { useTheme } from "@react-navigation/native";
+import { useRoute, useTheme } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -51,7 +51,7 @@ const CARD_HEIGHT1 = windowWidth * 0.05;
 
 const MyPlayerDetail = (props) => {
   const [gamesTab, setGamesTab] = useState(1);
-
+  const { params } = useRoute();
   const [playerDetail, setPlayerDetail] = useState({});
   const [loader, setLoader] = useState(true);
 
@@ -63,7 +63,7 @@ const MyPlayerDetail = (props) => {
     return state.loginData.data;
   });
   const { profile } = useContext(profileContext);
-  console.log(props.route.params.playerId, "props.route.params.playerId");
+  console.log(params.playerId, "params.playerId");
 
   const [model, setModel] = useState({
     Name: "",
@@ -73,13 +73,13 @@ const MyPlayerDetail = (props) => {
   });
   useEffect(() => {
     getPlayerProfile();
-  }, [props.route.params.playerId]);
+  }, [params.playerId]);
 
   const getPlayerProfile = () => {
     var config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${apiActiveURL}get-player-detail?id=${props.route.params.playerId}`,
+      url: `${apiActiveURL}get-player-detail?id=${params.playerId}`,
       headers: {
         Authorization: `Bearer ${userLoginSuccess.token}`,
       },

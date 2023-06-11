@@ -24,7 +24,7 @@ import { ScrollView } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
 import { windowHeight, windowWidth } from "../../config/dimensions";
 import * as ImagePicker from "expo-image-picker";
-import { useTheme } from "@react-navigation/native";
+import { useNavigation, useTheme } from "@react-navigation/native";
 import { Avatar } from "react-native-paper";
 import { sizes } from "../../config/sizes";
 import images from "../../config/images";
@@ -43,7 +43,8 @@ const IMAGE_SIZE = windowHeight * 0.13;
 const IMAGE_SIZE1 = windowHeight * 0.025;
 const LOGO_SIZE = windowHeight * 0.15;
 
-const Marketplace = ({ navigation }) => {
+const Marketplace = () => {
+  const navigation = useNavigation();
   const dispatch = useDispatch();
   const [modal, setModal] = useState(false);
   const [image, setImage] = useState([]);
@@ -216,8 +217,6 @@ const Marketplace = ({ navigation }) => {
               })
             );
             setLoader(false);
-            // props.navigation.goBack();
-            // listTeams();
           })
           .catch(function (error) {
             setLoader(false);
@@ -260,32 +259,6 @@ const Marketplace = ({ navigation }) => {
           }}
         >
           <View style={styles.profile}>
-            {/* <Avatar.Image
-              size={LOGO_SIZE}
-              // onPress={() => props.navigation.navigate("Profile")}
-              // source={{ uri: image ? image : null }}
-              // source={{ uri: item?.profileImg }}
-              // source={{ uri: image }}
-              style={{
-                marginTop: LOGO_SIZE * 0.5 * -1,
-                // borderColor: colors.primary,
-                // borderWidth: 5
-              }}
-            /> */}
-
-            {/* <Image
-          source={{ uri: image }}
-          style={{ width: 200, height: 200 }}
-        /> */}
-            {/* <Text
-              style={styles.image_text}
-              mode="contained"
-              theme={theme}
-              onPress={() => setModal(true)}
-            >
-              Upload Image
-            </Text> */}
-
             <Modal
               //  animationType="slide"
               transparent={true}

@@ -7,7 +7,7 @@ import {
   StyleSheet,
   Image,
 } from "react-native";
-import { useTheme } from "@react-navigation/native";
+import { useNavigation, useTheme } from "@react-navigation/native";
 import Toast from "react-native-root-toast";
 // import Logo from '../../../assets/Images/Fyp_Logo.jpg';
 
@@ -37,6 +37,7 @@ const button_height = windowHeight * 0.36;
 
 const RecruiterLogin = (props) => {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState();
@@ -49,7 +50,7 @@ const RecruiterLogin = (props) => {
 
   useEffect(() => {
     if (profile) {
-      props.navigation.navigate("PlayerHome");
+      navigation.navigate("PlayerHome");
     }
   }, []);
 
@@ -65,7 +66,7 @@ const RecruiterLogin = (props) => {
       } else if (response.data.isOk == true) {
         await AsyncStorage.setItem("Profile", JSON.stringify(response.data));
         alert("Login Successfully !!!");
-        props.navigation.navigate("PlayerHome");
+        navigation.navigate("PlayerHome");
       }
     } catch (error) {
       console.log(error);
@@ -138,7 +139,7 @@ const RecruiterLogin = (props) => {
           />
 
           <TouchableOpacity
-            onPress={() => props.navigation.navigate("ForgotPassword")}
+            onPress={() => navigation.navigate("ForgotPassword")}
           >
             <View style={styles.a1}>
               <Text style={[styles.text4, { color: colors.primary }]}>
@@ -159,7 +160,7 @@ const RecruiterLogin = (props) => {
             <Text style={styles.text5}>Don't have an account ? </Text>
 
             <TouchableOpacity
-              onPress={() => props.navigation.navigate("SignupScreen")}
+              onPress={() => navigation.navigate("SignupScreen")}
             >
               <Text style={[styles.text6, { color: colors.heading }]}>
                 Signup

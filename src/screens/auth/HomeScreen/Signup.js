@@ -432,7 +432,7 @@ const Signup = (props) => {
               <Text style={styles.text5}>Already have an account ? </Text>
 
               <TouchableOpacity
-                onPress={() => props.navigation.navigate("HomeScreen")}
+                onPress={() => navigation.navigate("HomeScreen")}
               >
                 <Text style={[styles.text6, { color: colors.heading }]}>
                   Login

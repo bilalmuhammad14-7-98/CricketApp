@@ -18,7 +18,7 @@ import { apiActiveURL } from "../../ApiBaseURL";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { colors } from "../../config/colors";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useRoute } from "@react-navigation/native";
 import Swiper from "react-native-swiper";
 import { sizes } from "../../config/sizes";
 import withToast from "../../components/Toast";
@@ -35,7 +35,7 @@ const cross_icon = windowHeight * 0.01;
 const curve_height = windowHeight * 0.2;
 const swiper_height = windowHeight * 0.04;
 const ViewMarketplaceDetail = (props) => {
-  console.log(props.route, "marketplace property detail");
+  const { params } = useRoute();
   const [marketplace, setMarketplace] = useState([]);
   const [imageData, setImageData] = useState([]);
   const [loader, setLoader] = useState(true);
@@ -47,7 +47,7 @@ const ViewMarketplaceDetail = (props) => {
         <View style={{ width: "90%", alignSelf: "center" }}>
           <View style={styles.sliderContainer}>
             <Swiper autoplay activeDotColor="#2BB789">
-              {props.route.params.data.images.map((item) => (
+              {params.data.images.map((item) => (
                 <View style={styles.slide}>
                   <Image
                     source={{
@@ -80,28 +80,26 @@ const ViewMarketplaceDetail = (props) => {
             Posted By
           </Text>
           <Text style={{ marginVertical: 5, fontSize: 16 }}>
-            {props.route.params.data.post_by}
+            {params.data.post_by}
           </Text>
           <Text style={{ fontSize: 16, fontWeight: "bold", marginTop: 10 }}>
             Title
           </Text>
           <Text style={{ marginVertical: 5, fontSize: 16 }}>
-            {props.route.params.data.title}
+            {params.data.title}
           </Text>
           <Text style={{ fontSize: 16, fontWeight: "bold" }}>Description</Text>
           <Text style={{ marginVertical: 5, fontSize: 14 }}>
-            {props.route.params.data.description}
+            {params.data.description}
           </Text>
           <Text style={{ fontSize: 16, fontWeight: "bold" }}>Contact No</Text>
           <TouchableOpacity
             onPress={() => {
-              Linking.openURL(
-                `whatsapp://send?phone=${props.route.params.data.contact}`
-              );
+              Linking.openURL(`whatsapp://send?phone=${params.data.contact}`);
             }}
           >
             <Text style={{ marginVertical: 5, fontSize: 14 }}>
-              {props.route.params.data.contact}
+              {params.data.contact}
             </Text>
           </TouchableOpacity>
           {/* <Text>{item.description}</Text> */}

@@ -27,7 +27,7 @@ import Toast from "react-native-root-toast";
 import { windowHeight, windowWidth } from "../../config/dimensions";
 import images from "../../config/images";
 import { sizes } from "../../config/sizes";
-import { useTheme } from "@react-navigation/native";
+import { useNavigation, useTheme } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { ScrollView } from "react-native-gesture-handler";
 import PlayerCustomButtom from "../../components/formComponents/PlayerCustomButtom";
@@ -50,7 +50,8 @@ const INPUT_HEIGHT1 = windowHeight * 0.07;
 const Search_Bar = windowHeight * 0.06;
 const cross_icon = windowHeight * 0.01;
 
-const InviteList = ({ navigation }) => {
+const InviteList = () => {
+  const navigation = useNavigation();
   const isFocused = useIsFocused();
   const searchRef = useRef();
   const [search, setSearch] = useState("");

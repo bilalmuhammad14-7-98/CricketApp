@@ -28,7 +28,7 @@ import images from "../../config/images";
 import { sizes } from "../../config/sizes";
 import PlayerCustomButtom from "../../components/formComponents/PlayerCustomButtom";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { ScrollView } from "react-native-gesture-handler";
 import axios from "axios";
@@ -51,7 +51,8 @@ const cross_icon = windowHeight * 0.01;
 const Search_Bar = windowHeight * 0.06;
 const INPUT_HEIGHT1 = windowHeight * 0.07;
 
-const AllPlayer = ({ navigation }) => {
+const AllPlayer = () => {
+  const navigation = useNavigation();
   const isFocused = useIsFocused();
   const userLoginSuccess = useSelector((state) => {
     // console.log(state, "state");
@@ -150,9 +151,6 @@ const AllPlayer = ({ navigation }) => {
         });
         listPlayers();
         setModal(false);
-
-        // props.navigation.goBack();
-        // listTeams();
       })
       .catch(function (error) {
         console.log(error);

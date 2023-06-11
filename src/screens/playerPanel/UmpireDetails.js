@@ -24,7 +24,7 @@ import { Avatar } from "react-native-paper";
 import { windowHeight, windowWidth } from "../../config/dimensions";
 import images from "../../config/images";
 import { sizes } from "../../config/sizes";
-import { useTheme } from "@react-navigation/native";
+import { useRoute, useTheme } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -50,7 +50,8 @@ const CARD_WIDTH1 = windowWidth * 0.03;
 const CARD_HEIGHT1 = windowWidth * 0.05;
 
 const UmpireDetails = (props) => {
-  const { umpire } = props.route.params;
+  const { params } = useRoute();
+  const { umpire } = params;
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}

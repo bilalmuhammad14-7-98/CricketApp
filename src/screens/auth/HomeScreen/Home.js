@@ -1,6 +1,6 @@
 import React from "react";
 import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
-import { useTheme } from "@react-navigation/native";
+import { useNavigation, useTheme } from "@react-navigation/native";
 import { windowHeight, windowWidth } from "../../../config/dimensions";
 import CustomButton from "../../../components/formComponents/CustomButton";
 import { profileContext } from "../../../components/context/context";
@@ -14,12 +14,13 @@ const ImageWidth = windowWidth * 0.99;
 const ImageHeight = windowHeight * 0.4;
 
 const HomeScreen = (props) => {
+  const navigation = useNavigation();
   const { colors } = useTheme();
   const { profile } = useContext(profileContext);
 
   useEffect(() => {
     if (profile) {
-      props.navigation.navigate("PlayerHome");
+      navigation.navigate("PlayerHome");
     }
   }, []);
 
@@ -36,15 +37,15 @@ const HomeScreen = (props) => {
         textColor={colors.white}
         btnLabel="Login"
         bgColor={colors.primary}
-        // Press={() => props.navigation.navigate("LoginCredentials")}
-        Press={() => props.navigation.navigate("LoginScreen")}
+        // Press={() => navigation.navigate("LoginCredentials")}
+        Press={() => navigation.navigate("LoginScreen")}
       />
       <CustomButton
         style={styles.button}
         bgColor={colors.white}
         textColor={colors.primary}
         btnLabel="Signup"
-        Press={() => props.navigation.navigate("SignupScreen")}
+        Press={() => navigation.navigate("SignupScreen")}
       />
     </View>
   );

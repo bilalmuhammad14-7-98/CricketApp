@@ -25,7 +25,7 @@ import { Avatar } from "react-native-paper";
 import { windowHeight, windowWidth } from "../../config/dimensions";
 import images from "../../config/images";
 import { sizes } from "../../config/sizes";
-import { useTheme } from "@react-navigation/native";
+import { useNavigation, useTheme } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { ScrollView } from "react-native-gesture-handler";
 import { profileContext } from "../../components/context/context";
@@ -52,6 +52,7 @@ const PROFILECARD_WIDTH = windowWidth * 0.9;
 const PROFILECARD_HEIGHT = windowHeight * 0.6;
 
 const Profile = (props) => {
+  const navigation = useNavigation();
   const theme = useTheme();
   // const { profile } = useContext(profileContext);
   const [modal, setModal] = useState(false);
@@ -158,7 +159,7 @@ const Profile = (props) => {
               <View style={styles.logo}>
                 <Avatar.Image
                   size={IMAGE_SIZE}
-                  onPress={() => props.navigation.navigate("Profile")}
+                  onPress={() => navigation.navigate("Profile")}
                   source={{ uri: userData ? userData?.profileImg : null }}
                 />
               </View>
@@ -182,7 +183,7 @@ const Profile = (props) => {
                 >
                   <TouchableOpacity
                     onPress={() => {
-                      props.navigation.navigate("CricketProfile");
+                      navigation.navigate("CricketProfile");
                     }}
                     style={{
                       width: IMAGE_SIZE1,
@@ -221,7 +222,7 @@ const Profile = (props) => {
             <View style={{ flexDirection: "row", alignItems: "center" }}>
               <TouchableOpacity
                 onPress={() =>
-                  props.navigation.navigate("EditProfile", { item: userData })
+                  navigation.navigate("EditProfile", { item: userData })
                 }
                 style={{
                   marginRight: CARD_WIDTH,

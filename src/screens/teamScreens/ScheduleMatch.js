@@ -17,7 +17,7 @@ import Toast from "react-native-root-toast";
 //icons import
 
 import { LinearGradient } from "expo-linear-gradient";
-import { useTheme } from "@react-navigation/native";
+import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
 
 //import
@@ -28,8 +28,9 @@ import { sizes } from "../../config/sizes";
 import CustomDropDown from "../../components/formComponents/CustomDropDown";
 import axios from "axios";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import withToast from "../../components/Toast";
+import { showSnackBar } from "../../store/actions";
 
 const CARD_WIDTH = windowWidth * 0.05;
 const CARD_HEIGHT = windowHeight * 0.23;
@@ -39,11 +40,13 @@ const IMAGE_SIZE1 = windowHeight * 0.025;
 const LOGO_SIZE = windowHeight * 0.15;
 
 const ScheduleMatch = (props) => {
-  console.log(props.route.params.data.recruiter_id, "props ======");
+  const dispatch = useDispatch();
+  const { params } = useRoute();
+  console.log(params.data.recruiter_id, "props ======");
   const userLoginSuccess = useSelector((state) => {
     return state.loginData.data;
   });
-
+  const navigation = useNavigation();
   console.log(userLoginSuccess, "userLoginSuccess");
   const { colors } = useTheme();
   const [date, setDate] = useState(new Date());
@@ -129,8 +132,8 @@ const ScheduleMatch = (props) => {
 
       var data = new FormData();
       data.append("request_sender_team_id", userLoginSuccess.data.team_id);
-      data.append("requested_receiver_team_id", props.route.params.data.value);
-      data.append("request_receiver_id", props.route.params.data.recruiter_id);
+      data.append("requested_receiver_team_id", params.data.value);
+      data.append("request_receiver_id", params.data.recruiter_id);
       data.append("venue", venue);
       data.append("description", description);
       data.append("match_date_time", formatDateTime(date));
@@ -158,7 +161,7 @@ const ScheduleMatch = (props) => {
             })
           );
           setLoader(false);
-          if (response.data.success) props.navigation.goBack();
+          if (response.data.success) navigation.goBack();
           // listTeams();
         })
         .catch(function (error) {

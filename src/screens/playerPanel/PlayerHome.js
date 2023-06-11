@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import {
   View,
@@ -53,7 +53,8 @@ const cross_icon = windowHeight * 0.01;
 const curve_height = windowHeight * 0.2;
 const swiper_height = windowHeight * 0.04;
 
-const Card = ({ item, navigation }) => {
+const Card = ({ item }) => {
+  const navigation = useNavigation();
   const { colors } = useTheme();
   return (
     <TouchableOpacity
@@ -100,7 +101,8 @@ const Card = ({ item, navigation }) => {
   );
 };
 
-const PlayerHome = ({ navigation }) => {
+const PlayerHome = () => {
+  const navigation = useNavigation();
   const userLoginSuccess = useSelector((state) => {
     console.log(state.loginData.data, "login data ");
     return state.loginData.data;

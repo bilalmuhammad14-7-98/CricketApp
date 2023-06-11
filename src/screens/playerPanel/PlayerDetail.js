@@ -23,7 +23,7 @@ import { Avatar } from "react-native-paper";
 import { windowHeight, windowWidth } from "../../config/dimensions";
 import images from "../../config/images";
 import { sizes } from "../../config/sizes";
-import { useTheme } from "@react-navigation/native";
+import { useRoute, useTheme } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -47,6 +47,7 @@ const CARD_HEIGHT1 = windowWidth * 0.05;
 
 const PlayerDetail = (props) => {
   const [gamesTab, setGamesTab] = useState(1);
+  const { params } = useRoute();
   const {
     player_name,
     batting_style,
@@ -57,7 +58,7 @@ const PlayerDetail = (props) => {
     total_matches,
     total_overs,
     total_wickets,
-  } = props.route.params.data;
+  } = params.data;
   const onSelectSwitch = (value) => {
     setGamesTab(value);
   };

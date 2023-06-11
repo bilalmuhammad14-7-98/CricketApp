@@ -27,7 +27,7 @@ import Toast from "react-native-root-toast";
 import { windowHeight, windowWidth } from "../../config/dimensions";
 import images from "../../config/images";
 import { sizes } from "../../config/sizes";
-import { useTheme } from "@react-navigation/native";
+import { useNavigation, useTheme } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { ScrollView } from "react-native-gesture-handler";
 import PlayerCustomButtom from "../../components/formComponents/PlayerCustomButtom";
@@ -36,11 +36,12 @@ import SearchBar from "../../components/formComponents/SearchBar";
 
 import { apiActiveURL } from "../../ApiBaseURL";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { useIsFocused } from "@react-navigation/native";
 import Search from "../../components/PlayerProfile/Search";
 import withToast from "../../components/Toast";
+import { showSnackBar } from "../../store/actions";
 
 const curve_height = windowHeight * 0.2;
 const CARD_WIDTH = windowWidth * 0.93;
@@ -51,7 +52,9 @@ const INPUT_HEIGHT1 = windowHeight * 0.07;
 const Search_Bar = windowHeight * 0.06;
 const cross_icon = windowHeight * 0.01;
 
-const TeamsScreen = ({ navigation }) => {
+const TeamsScreen = () => {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
   const isFocused = useIsFocused();
   const searchRef = useRef();
   const [search, setSearch] = useState("");

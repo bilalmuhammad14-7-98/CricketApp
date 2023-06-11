@@ -16,12 +16,13 @@ import { apiActiveURL } from "../../ApiBaseURL";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { colors } from "../../config/colors";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import Search from "../../components/PlayerProfile/Search";
 import CustomButton from "../../components/formComponents/CustomButton";
 import withToast from "../../components/Toast";
 
 const ViewMarketplace = (props) => {
+  const navigation = useNavigation();
   const [marketplace, setMarketplace] = useState([]);
   const [imageData, setImageData] = useState([]);
   const [loader, setLoader] = useState(true);
@@ -92,7 +93,7 @@ const ViewMarketplace = (props) => {
               textColor="white"
               btnLabel="Post in Marketplace"
               Press={() => {
-                props.navigation.navigate("MarketPlace");
+                navigation.navigate("MarketPlace");
               }}
               myStyle={{
                 // marginTop: 10,
@@ -109,7 +110,7 @@ const ViewMarketplace = (props) => {
               textColor="white"
               btnLabel="View My Post"
               Press={() => {
-                props.navigation.navigate("ViewMyMarketplace");
+                navigation.navigate("ViewMyMarketplace");
               }}
               myStyle={{
                 // marginTop: 10,
@@ -156,7 +157,7 @@ const ViewMarketplace = (props) => {
                         alignItems: "center",
                       }}
                       onPress={() =>
-                        props.navigation.navigate("ViewMarketplaceDetail", {
+                        navigation.navigate("ViewMarketplaceDetail", {
                           data: item,
                         })
                       }

@@ -23,6 +23,7 @@ import LoginCredentialsButton from "../../../components/formComponents/LoginCred
 import { colors } from "../../../config/colors";
 import images from "../../../config/images";
 import withToast from "../../../components/Toast";
+import { useNavigation } from "@react-navigation/native";
 
 const PROFILECARD_WIDTH = windowWidth * 0.9;
 const PROFILECARD_HEIGHT = windowHeight * 0.6;
@@ -33,6 +34,7 @@ const CARD_WIDTH = windowWidth * 0.05;
 const curve_height = windowHeight * 0.3;
 
 const LoginCredentials = (props) => {
+  const navigation = useNavigation();
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View>
@@ -70,7 +72,7 @@ const LoginCredentials = (props) => {
               <LoginCredentialsButton
                 textColor="white"
                 btnLabel="Login As Player"
-                Press={() => props.navigation.navigate("LoginScreen")}
+                Press={() => navigation.navigate("LoginScreen")}
                 //   Press={() => handleSubmit()}
               />
             </View>
@@ -79,7 +81,7 @@ const LoginCredentials = (props) => {
               <LoginCredentialsButton
                 textColor="white"
                 btnLabel="Login As Recruiter"
-                Press={() => props.navigation.navigate("RecruiterLogin")}
+                Press={() => navigation.navigate("RecruiterLogin")}
                 //   Press={() => handleSubmit()}
               />
             </View>
@@ -88,7 +90,7 @@ const LoginCredentials = (props) => {
               <LoginCredentialsButton
                 textColor="white"
                 btnLabel="Login As Umpire"
-                Press={() => props.navigation.navigate("UmpireLogin")}
+                Press={() => navigation.navigate("UmpireLogin")}
                 //   Press={() => handleSubmit()}
               />
             </View>

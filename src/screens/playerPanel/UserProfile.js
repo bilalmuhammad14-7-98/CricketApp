@@ -1,7 +1,7 @@
 import { StatusBar } from "expo-status-bar";
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { useState, useEffect, useContext } from "react";
 import {
   View,
@@ -44,6 +44,7 @@ import { logoutUser } from "../../store/actions/UserLogin";
 import { UnSetUser } from "../../store/actions/authAction";
 import { useIsFocused } from "@react-navigation/native";
 import withToast from "../../components/Toast";
+import { showSnackBar } from "../../store/actions";
 
 const curve_height = windowHeight * 0.15;
 const LOGO_SIZE = windowHeight * 0.15;
@@ -54,6 +55,7 @@ const button_margin = windowWidth * 0.26;
 const input_width1 = windowWidth * 0.33;
 
 const UserProfile = (props) => {
+  const navigation = useNavigation();
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const { colors } = useTheme();
@@ -116,7 +118,7 @@ const UserProfile = (props) => {
         error: false,
       })
     );
-    props.navigation.navigate("LoginScreen");
+    navigation.navigate("LoginScreen");
   };
 
   return (
@@ -163,7 +165,7 @@ const UserProfile = (props) => {
             <CustomButton1
               textColor="white"
               btnLabel="View Profile"
-              Press={() => props.navigation.navigate("Profile")}
+              Press={() => navigation.navigate("Profile")}
               myStyle={{
                 alignSelf: "flex-end",
               }}

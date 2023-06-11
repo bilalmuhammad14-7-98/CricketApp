@@ -110,9 +110,6 @@ const PlayerRequests = (navigation) => {
           })
         );
         listPlayers();
-
-        // props.navigation.goBack();
-        // listTeams();
       })
       .catch(function (error) {
         console.log(error);

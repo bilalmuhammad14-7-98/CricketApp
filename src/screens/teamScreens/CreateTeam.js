@@ -36,7 +36,7 @@ import {
 // imports
 import { LinearGradient } from "expo-linear-gradient";
 import { Avatar } from "react-native-paper";
-import { useTheme } from "@react-navigation/native";
+import { useNavigation, useTheme } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
 import { Asset } from "expo-asset";
 
@@ -61,8 +61,9 @@ import {
 import { callApi } from "../../services";
 import { methodType } from "../../config/methodType";
 import { searchPlayer } from "../../services/playerService";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import withToast from "../../components/Toast";
+import { showSnackBar } from "../../store/actions";
 const CARD_WIDTH = windowWidth * 0.05;
 const CARD_HEIGHT = windowHeight * 0.23;
 const curve_height = windowHeight * 0.15;
@@ -71,6 +72,8 @@ const IMAGE_SIZE1 = windowHeight * 0.025;
 const LOGO_SIZE = windowHeight * 0.15;
 
 const CreateTeam = (props) => {
+  const dispatch = useDispatch();
+  const navigation = useNavigation();
   console.log(props, "props");
   const userLoginSuccess = useSelector((state) => {
     return state.loginData.data;
@@ -237,7 +240,7 @@ const CreateTeam = (props) => {
             error: false,
           })
         );
-        props.navigation.goBack();
+        navigation.goBack();
         // listTeams();
       })
       .catch(function (error) {
@@ -262,7 +265,7 @@ const CreateTeam = (props) => {
           <View style={styles.profile}>
             <Avatar.Image
               size={LOGO_SIZE}
-              // onPress={() => props.navigation.navigate("Profile")}
+              // onPress={() => navigation.navigate("Profile")}
               source={{ uri: image ? image : null }}
               // source={{ uri: item?.profileImg }}
               // source={{ uri: image }}

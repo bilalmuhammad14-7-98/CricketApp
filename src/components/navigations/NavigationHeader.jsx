@@ -3,10 +3,12 @@ import React from "react";
 import { windowWidth } from "../../config/dimensions";
 import { sizes } from "../../config/sizes";
 import icons from "../../config/icons";
+import { useNavigation } from "@react-navigation/native";
 
 const upper_margin = windowWidth * 0.001;
 
-const NavigationHeader = ({ title, navigation }) => {
+const NavigationHeader = ({ title }) => {
+  const navigation = useNavigation();
   return (
     <View>
       <View style={styles.header}>

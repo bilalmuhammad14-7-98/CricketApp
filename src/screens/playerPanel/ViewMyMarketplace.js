@@ -16,12 +16,13 @@ import { apiActiveURL } from "../../ApiBaseURL";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { colors } from "../../config/colors";
-import { useIsFocused } from "@react-navigation/native";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
 import Search from "../../components/PlayerProfile/Search";
 import CustomButton from "../../components/formComponents/CustomButton";
 import withToast from "../../components/Toast";
 
 const ViewMyMarketplace = (props) => {
+  const navigation = useNavigation();
   const [marketplace, setMarketplace] = useState([]);
   const [imageData, setImageData] = useState([]);
   const [loader, setLoader] = useState(true);
@@ -90,7 +91,7 @@ const ViewMyMarketplace = (props) => {
               textColor="white"
               btnLabel="Post in Marketplace"
               Press={() => {
-                props.navigation.navigate("MarketPlace");
+                navigation.navigate("MarketPlace");
               }}
               myStyle={{
                 // marginTop: 10,
@@ -107,7 +108,7 @@ const ViewMyMarketplace = (props) => {
               textColor="white"
               btnLabel="View All Post"
               Press={() => {
-                props.navigation.navigate("ViewMarketplace");
+                navigation.navigate("ViewMarketplace");
               }}
               myStyle={{
                 // marginTop: 10,
@@ -153,13 +154,6 @@ const ViewMyMarketplace = (props) => {
                         justifyContent: "center",
                         alignItems: "center",
                       }}
-                      // onPress={() =>
-                      //   props.route.params.type != "my-post"
-                      //     ? props.navigation.navigate("ViewMarketplaceDetail", {
-                      //         data: item,
-                      //       })
-                      //     : null
-                      // }
                     >
                       <Image
                         style={{

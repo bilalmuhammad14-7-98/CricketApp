@@ -21,6 +21,7 @@ const withToast = (WrappedComponent) => {
             alignSelf: "center",
             width: SCREEN_WIDTH - 100,
             backgroundColor: snack.error ? "#FF033E" : "#32de84",
+            color: "#000",
           }}
           visible={snack?.visible}
           // wrapperStyle={props.screens == 'Filters' ? {top: 0} : ''}

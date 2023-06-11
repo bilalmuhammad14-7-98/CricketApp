@@ -37,13 +37,14 @@ import { ScrollView } from "react-native-gesture-handler";
 import axios from "axios";
 import { http } from "../../components/http/http";
 import { apiActiveURL } from "../../ApiBaseURL";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import CustomButton from "../../components/formComponents/CustomButton";
 import { colors } from "../../config/colors";
 import Toast from "react-native-root-toast";
 import CustomToast from "../../components/formComponents/CustomToast";
 import Search from "../../components/PlayerProfile/Search";
 import withToast from "../../components/Toast";
+import { showSnackBar } from "../../store/actions";
 
 const LOGO_SIZE = windowHeight * 0.1;
 const CARD_WIDTH = windowWidth * 0.95;
@@ -56,6 +57,7 @@ const Search_Bar = windowHeight * 0.06;
 const INPUT_HEIGHT1 = windowHeight * 0.07;
 
 const UmpireScreen = () => {
+  const dispatch = useDispatch();
   const navigation = useNavigation();
   const [umpires, setUmpires] = useState([]);
   const [matches, setMatches] = useState([]);
