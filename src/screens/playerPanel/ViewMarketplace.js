@@ -155,11 +155,9 @@ const ViewMarketplace = (props) => {
                         alignItems: "center",
                       }}
                       onPress={() =>
-                        props.route.params.type != "my-post"
-                          ? props.navigation.navigate("ViewMarketplaceDetail", {
-                              data: item,
-                            })
-                          : null
+                        props.navigation.navigate("ViewMarketplaceDetail", {
+                          data: item,
+                        })
                       }
                     >
                       <Image
