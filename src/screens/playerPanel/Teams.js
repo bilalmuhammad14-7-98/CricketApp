@@ -66,8 +66,6 @@ const TeamsScreen = () => {
   const [searchedBlock, setSearchedBlock] = useState([]);
 
   const userLoginSuccess = useSelector((state) => {
-    // console.log(state, "state");
-    console.log(state.loginData.data, "login data success");
     return state.loginData.data;
   });
 
@@ -308,14 +306,20 @@ const TeamsScreen = () => {
                 />
               </View>
             ) : null}
-            <FlatList
-              data={searchedBlock.length > 0 ? searchedBlock : teams}
-              renderItem={({ item }) => {
-                console.log(item, "item list");
-                return renderList(item);
-              }}
-              keyExtractor={(item) => `${item.value}`}
-            />
+            {searchedBlock[0] == "empty" ? (
+              <View style={{ justifyContent: "center", alignItems: "center" }}>
+                <Text>No Teams found</Text>
+              </View>
+            ) : (
+              <FlatList
+                data={searchedBlock.length > 0 ? searchedBlock : teams}
+                renderItem={({ item }) => {
+                  console.log(item, "item list");
+                  return renderList(item);
+                }}
+                keyExtractor={(item) => `${item.value}`}
+              />
+            )}
           </View>
         </View>
       </View>

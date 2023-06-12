@@ -56,7 +56,6 @@ const AllPlayer = () => {
   const isFocused = useIsFocused();
   const userLoginSuccess = useSelector((state) => {
     // console.log(state, "state");
-    console.log(state.loginData.data, "login data success");
     return state.loginData.data;
   });
   const [players, setPlayers] = useState([]);
@@ -167,7 +166,7 @@ const AllPlayer = () => {
       <TouchableOpacity
         style={{ flex: 1 }}
         key={item.playerId}
-        onLongPress={() => handleLongPress(item)}
+        // onLongPress={() => handleLongPress(item)}
       >
         <View>
           <View style={styles.card}>
@@ -306,13 +305,19 @@ const AllPlayer = () => {
                 borderRadius: 40,
               }}
             /> */}
-            <FlatList
-              data={searchedBlock.length > 0 ? searchedBlock : players}
-              renderItem={(item) => {
-                return renderList(item.item);
-              }}
-              keyExtractor={(item) => `${item.playerId}`}
-            />
+            {searchedBlock[0] == "empty" ? (
+              <View style={{ justifyContent: "center", alignItems: "center" }}>
+                <Text>No player found</Text>
+              </View>
+            ) : (
+              <FlatList
+                data={searchedBlock.length > 0 ? searchedBlock : players}
+                renderItem={(item) => {
+                  return renderList(item.item);
+                }}
+                keyExtractor={(item) => `${item.playerId}`}
+              />
+            )}
           </View>
         </View>
       </View>

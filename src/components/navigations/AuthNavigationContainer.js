@@ -17,10 +17,6 @@ export default function AuthNavigationContainer() {
   const userLoginSuccess = useSelector((state) => {
     return state.loginData.data;
   });
-  console.log(
-    userLoginSuccess,
-    "userLoginSuccessuserLoginSuccessuserLoginSuccess"
-  );
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}

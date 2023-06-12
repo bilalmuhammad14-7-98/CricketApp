@@ -2,13 +2,7 @@ import axios from "axios";
 import { apiActiveURL } from "../../ApiBaseURL";
 
 export const UserLogin = (data, callback) => {
-  console.log(
-    data.username,
-    data.password,
-    "data==============================================="
-  );
   const { username, password } = data;
-  console.log(username, password, "email");
   // return;
 
   var data = new FormData();

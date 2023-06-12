@@ -108,10 +108,6 @@ const NotiIcon = () => {
     const minutes = date.getMinutes().toString().padStart(2, "0");
     const amPm = hour >= 12 ? "pm" : "am";
     const formattedTime = `${hour % 12 || 12}:${minutes} ${amPm}`;
-
-    // Combine the formatted date and time
-    // const result = `${formattedDate} - ${formattedTime}`;
-    console.log(`${formattedDate} - ${formattedTime}`);
     return `${formattedDate} - ${formattedTime}`;
   };
 
@@ -129,11 +125,9 @@ const NotiIcon = () => {
         Authorization: `Bearer ${userLoginSuccess.token}`,
       },
     };
-    console.log(config, "NOTIFICATION CONFIG");
     axios
       .request(config)
       .then((response) => {
-        console.log(response.data, "NOTIFICATIONS");
         setLoader(false);
         if (response.data?.success) {
           // dispatch(setNotification(response.data?.notifications));
@@ -147,7 +141,6 @@ const NotiIcon = () => {
       })
       .catch((error) => {
         setLoader(false);
-        console.log(error);
       });
   };
 
@@ -266,7 +259,13 @@ const NotiIcon = () => {
 };
 function PlayerHomeNavigationContainer() {
   const { notification } = useSelector((state) => state.auth);
-  console.log(notification, "notification in player");
+  const userLoginSuccess = useSelector((state) => {
+    return state.loginData.data;
+  });
+  console.log(
+    userLoginSuccess,
+    "userLoginSuccessuserLoginSuccessuserLoginSuccess"
+  );
   return (
     <StackPlayerHome.Navigator screenOptions={{ headerShown: true }}>
       <StackPlayerHome.Screen
@@ -281,7 +280,14 @@ function PlayerHomeNavigationContainer() {
           headerLeft: () => {
             return (
               <View style={styles.profile}>
-                <Avatar.Image size={LOGO_SIZE} source={images.FypLogo} />
+                <Avatar.Image
+                  size={LOGO_SIZE}
+                  source={
+                    userLoginSuccess?.data?.profileImg
+                      ? userLoginSuccess?.data?.profileImg
+                      : images.FypLogo
+                  }
+                />
               </View>
             );
           },
@@ -801,8 +807,9 @@ function MarketPlaceNavigationContainer() {
 }
 
 export default function CustomBottomTabNavigator() {
-  console.log("HERE AT CUSTOME TAB ========================> ");
-
+  const userLoginSuccess = useSelector((state) => {
+    return state.loginData.data;
+  });
   return (
     <>
       <StatusBar style="dark-content" />
@@ -841,27 +848,29 @@ export default function CustomBottomTabNavigator() {
           }}
         />
 
-        <Tab.Screen
-          name="TeamsScreenRoot"
-          component={TeamsScreenNavigationContainer}
-          options={{
-            headerShown: false,
-            title: "",
-            tabBarIcon: ({ focused }) => (
-              <View style={styles.icon}>
-                <AntDesign
-                  name="team"
-                  size={23}
-                  color={focused ? "#2BB789" : "grey"}
-                />
-              </View>
-            ),
-            headerStyle: {
-              backgroundColor: "#FAF9F6",
-              elevation: 0,
-            },
-          }}
-        />
+        {userLoginSuccess?.data?.roleId != "umpire" && (
+          <Tab.Screen
+            name="TeamsScreenRoot"
+            component={TeamsScreenNavigationContainer}
+            options={{
+              headerShown: false,
+              title: "",
+              tabBarIcon: ({ focused }) => (
+                <View style={styles.icon}>
+                  <AntDesign
+                    name="team"
+                    size={23}
+                    color={focused ? "#2BB789" : "grey"}
+                  />
+                </View>
+              ),
+              headerStyle: {
+                backgroundColor: "#FAF9F6",
+                elevation: 0,
+              },
+            }}
+          />
+        )}
 
         {/* <Tab.Screen
           name="MarketPlace"

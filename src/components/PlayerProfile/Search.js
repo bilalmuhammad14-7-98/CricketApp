@@ -29,7 +29,8 @@ const Search = ({ searchArray, searchField, results }) => {
     if (text) {
       var newData = "";
       newData = getSearchResult({ searchArray, searchField, text });
-      results(newData);
+      console.log(newData, "newDatanewDatanewDatanewDatanewData");
+      results(newData.length == 0 ? ["empty"] : newData);
       setSearch(text);
     } else {
       results(searchArray);

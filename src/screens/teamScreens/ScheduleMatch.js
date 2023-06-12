@@ -42,12 +42,10 @@ const LOGO_SIZE = windowHeight * 0.15;
 const ScheduleMatch = (props) => {
   const dispatch = useDispatch();
   const { params } = useRoute();
-  console.log(params.data.recruiter_id, "props ======");
   const userLoginSuccess = useSelector((state) => {
     return state.loginData.data;
   });
   const navigation = useNavigation();
-  console.log(userLoginSuccess, "userLoginSuccess");
   const { colors } = useTheme();
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);

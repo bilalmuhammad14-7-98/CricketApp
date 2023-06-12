@@ -64,8 +64,6 @@ const ScheduleMatches = () => {
   const [searchedBlock, setSearchedBlock] = useState([]);
 
   const userLoginSuccess = useSelector((state) => {
-    // console.log(state, "state");
-    console.log(state.loginData.data.data.id, "login data success");
     return state.loginData.data;
   });
 

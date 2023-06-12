@@ -104,7 +104,6 @@ const Card = ({ item }) => {
 const PlayerHome = () => {
   const navigation = useNavigation();
   const userLoginSuccess = useSelector((state) => {
-    console.log(state.loginData.data, "login data ");
     return state.loginData.data;
   });
   const [playinRole, setplayinRole] = useState("");
@@ -168,20 +167,6 @@ const PlayerHome = () => {
       navigationScreen: () =>
         navigation.navigate("TeamsScreenRoot", { screen: "TeamsScreen" }),
     },
-    {
-      name: "Scorer",
-      code: colors.white,
-      image: images.Scorer,
-      navigationScreen: () =>
-        navigation.navigate("TeamsScreenRoot", { screen: "TeamsScreen" }),
-    },
-    // {
-    //   name: "Gallery",
-    //   code: colors.white,
-    //   image: images.Scorer,
-    //   navigationScreen: () =>
-    //     navigation.navigate("PlayerHomeRoot", { screen: "Gallery" }),
-    // },
   ];
 
   const playerCardItems = [
@@ -201,13 +186,6 @@ const PlayerHome = () => {
       name: "Teams",
       code: colors.white,
       image: images.Teams,
-      navigationScreen: () =>
-        navigation.navigate("TeamsScreenRoot", { screen: "TeamsScreen" }),
-    },
-    {
-      name: "Scorer",
-      code: colors.white,
-      image: images.Scorer,
       navigationScreen: () =>
         navigation.navigate("TeamsScreenRoot", { screen: "TeamsScreen" }),
     },
@@ -320,45 +298,37 @@ const PlayerHome = () => {
                 alignItems: "center",
               }}
             >
-              {searchedBlock && searchedBlock?.length > 0
-                ? searchedBlock.map((item) => {
-                    return (
-                      <Card
-                        key={item.name}
-                        item={item}
-                        navigation={navigation}
-                      />
-                    );
-                  })
-                : userLoginSuccess?.data?.roleId == "umpire"
-                ? umpireCardItems.map((item) => {
-                    return (
-                      <Card
-                        key={item.name}
-                        item={item}
-                        navigation={navigation}
-                      />
-                    );
-                  })
-                : userLoginSuccess?.data?.roleId == "recruiter"
-                ? cardItems.map((item) => {
-                    return (
-                      <Card
-                        key={item.name}
-                        item={item}
-                        navigation={navigation}
-                      />
-                    );
-                  })
-                : playerCardItems.map((item) => {
-                    return (
-                      <Card
-                        key={item.name}
-                        item={item}
-                        navigation={navigation}
-                      />
-                    );
-                  })}
+              {searchedBlock[0] == "empty" ? (
+                <View
+                  style={{ justifyContent: "center", alignItems: "center" }}
+                >
+                  <Text>No Block found</Text>
+                </View>
+              ) : searchedBlock?.length > 0 ? (
+                searchedBlock.map((item) => {
+                  return (
+                    <Card key={item.name} item={item} navigation={navigation} />
+                  );
+                })
+              ) : userLoginSuccess?.data?.roleId == "umpire" ? (
+                umpireCardItems.map((item) => {
+                  return (
+                    <Card key={item.name} item={item} navigation={navigation} />
+                  );
+                })
+              ) : userLoginSuccess?.data?.roleId == "recruiter" ? (
+                cardItems.map((item) => {
+                  return (
+                    <Card key={item.name} item={item} navigation={navigation} />
+                  );
+                })
+              ) : (
+                playerCardItems.map((item) => {
+                  return (
+                    <Card key={item.name} item={item} navigation={navigation} />
+                  );
+                })
+              )}
             </View>
           </View>
         </View>

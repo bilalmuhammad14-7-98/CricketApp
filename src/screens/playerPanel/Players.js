@@ -60,8 +60,6 @@ const PlayersScreen = () => {
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const userLoginSuccess = useSelector((state) => {
-    // console.log(state, "state");
-    console.log(state.loginData.data.token, "login data success");
     return state.loginData.data;
   });
   const [loader, setLoader] = useState(false);
@@ -374,13 +372,19 @@ const PlayersScreen = () => {
                 borderRadius: 40,
               }}
             />
-            <FlatList
-              data={searchedBlock.length > 0 ? searchedBlock : players}
-              renderItem={(item) => {
-                return renderList(item.item);
-              }}
-              keyExtractor={(item) => `${item.playerId}`}
-            />
+            {searchedBlock[0] == "empty" ? (
+              <View style={{ justifyContent: "center", alignItems: "center" }}>
+                <Text>No Player found</Text>
+              </View>
+            ) : (
+              <FlatList
+                data={searchedBlock.length > 0 ? searchedBlock : players}
+                renderItem={(item) => {
+                  return renderList(item.item);
+                }}
+                keyExtractor={(item) => `${item.playerId}`}
+              />
+            )}
           </View>
         </View>
       </View>

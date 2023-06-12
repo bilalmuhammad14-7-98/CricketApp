@@ -62,7 +62,6 @@ const UserProfile = (props) => {
   const [userData, setUserData] = useState();
 
   const userLoginSuccess = useSelector((state) => {
-    console.log(state.loginData.data, "login data");
     return state.loginData.data;
   });
 

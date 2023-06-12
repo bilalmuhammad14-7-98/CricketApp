@@ -417,13 +417,19 @@ const UmpireScreen = () => {
               borderTopRightRadius: 30,
             }}
           >
-            <FlatList
-              data={searchedBlock.length > 0 ? searchedBlock : umpires}
-              renderItem={({ item }) => {
-                return renderList(item);
-              }}
-              keyExtractor={(item) => `${item.id}`}
-            />
+            {searchedBlock[0] == "empty" ? (
+              <View style={{ justifyContent: "center", alignItems: "center" }}>
+                <Text>No Umpires found</Text>
+              </View>
+            ) : (
+              <FlatList
+                data={searchedBlock.length > 0 ? searchedBlock : umpires}
+                renderItem={({ item }) => {
+                  return renderList(item);
+                }}
+                keyExtractor={(item) => `${item.id}`}
+              />
+            )}
           </View>
         </View>
       </View>

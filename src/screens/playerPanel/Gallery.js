@@ -85,6 +85,11 @@ const Gallery = () => {
         name: image.uri.substring(image.uri.lastIndexOf("/") + 1),
         type: `image/${fileExtension}`,
       });
+      console.log({
+        uri: image.uri,
+        name: image.uri.substring(image.uri.lastIndexOf("/") + 1),
+        type: `image/${fileExtension}`,
+      });
     });
 
     const config = {
@@ -99,12 +104,24 @@ const Gallery = () => {
     axios
       .request(config)
       .then((response) => {
+        console.log(
+          response.data,
+          "RESPONSE OF IMAGE UPLOAD ===========================================================================> "
+        );
         if (response.data.success) {
           dispatch(
             showSnackBar({
               visible: true,
-              text: response.data.success,
+              text: response.data.message,
               error: false,
+            })
+          );
+        } else {
+          dispatch(
+            showSnackBar({
+              visible: true,
+              text: response.data.message,
+              error: true,
             })
           );
         }
@@ -129,7 +146,7 @@ const Gallery = () => {
     axios
       .request(config)
       .then((response) => {
-        console.log(response?.data?.teams, "response?.data?.teams");
+        console.log(response?.data, "response?.data OF GET IMAGE");
         response?.data?.teams?.map((team) => {
           team.images?.map((img) => {
             image.push({ uri: `${imageURL}${img.profile_img}`, id: img.id });
@@ -183,7 +200,6 @@ const Gallery = () => {
   };
   const deleteGallery = (id) => {
     let data = new FormData();
-    console.log(id, "ID");
     data.append("player_gallery_id", id);
 
     let config = {
@@ -199,7 +215,6 @@ const Gallery = () => {
     axios
       .request(config)
       .then((response) => {
-        console.log(JSON.stringify(response.data));
         if (response.data.success) {
           const index = image.findIndex((i) => i.id === id);
           if (index != -1) {
@@ -253,7 +268,6 @@ const Gallery = () => {
                 alignItems: "center",
               }}
               renderItem={({ item, index }) => {
-                console.log(item);
                 return (
                   <Pressable
                     onPress={() => {

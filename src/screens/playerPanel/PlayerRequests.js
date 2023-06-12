@@ -50,8 +50,6 @@ const INPUT_HEIGHT1 = windowHeight * 0.07;
 const PlayerRequests = (navigation) => {
   const dispatch = useDispatch();
   const userLoginSuccess = useSelector((state) => {
-    // console.log(state, "state");
-    console.log(state.loginData.data, "login data success");
     return state.loginData.data;
   });
   const [players, setPlayers] = useState([]);

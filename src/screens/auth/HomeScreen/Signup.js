@@ -318,7 +318,11 @@ const Signup = (props) => {
           >
             <AuthCustomFormInput
               value={name}
-              onChangeText={(text) => setName(text)}
+              onChangeText={(text) => {
+                const regex = /[^a-zA-Z0-9 ]/g;
+                const cleanedString = text.replace(regex, "");
+                setName(cleanedString);
+              }}
               placeholder=" Name"
             />
 

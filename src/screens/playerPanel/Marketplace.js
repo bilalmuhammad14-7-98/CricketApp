@@ -19,7 +19,7 @@ import React, { useState, useEffect, useContext } from "react";
 import CustomButton from "../../components/formComponents/CustomButton";
 import CustomFormInput from "../../components/formComponents/CustomFormInput";
 import { Button } from "react-native-paper";
-
+import Entypo from "react-native-vector-icons/Entypo";
 import { ScrollView } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
 import { windowHeight, windowWidth } from "../../config/dimensions";
@@ -64,7 +64,6 @@ const Marketplace = () => {
   const userLoginSuccess = useSelector((state) => {
     return state.loginData.data;
   });
-
   // useEffect(() => {
   //   Toast.show(",dsaldsadsa", {
   //     duration: 2000,
@@ -89,14 +88,15 @@ const Marketplace = () => {
   const { colors } = useTheme();
   const pickFromGallery = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       // allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
-      allowsMultipleSelection: true,
+      allowsMultipleSelection: false,
     });
     // let imagesArr = [];
     console.log(result, "selected images");
+    setModal(false);
     if (!result?.cancelled) {
       if (result?.selected) {
         // handleUpdate(result.selected);
@@ -156,59 +156,81 @@ const Marketplace = () => {
   };
 
   const handleUpdate = (images) => {
-    console.log(
-      images.length,
-      model.title,
-      model.description,
-      model.price,
-      model.contact_info,
-      "model.contact_infomodel.contact_info"
-    );
-    // return;
-    if (
-      images.length > 0 &&
-      model.title &&
-      model.description &&
-      model.price &&
-      model.contact_info
-    ) {
-      if (model.contact_info.length == 11) {
-        setLoader(true);
-        var data = new FormData();
-        data.append("title", model.title);
-        data.append("description", model.description);
-        data.append("contact_info", model.contact_info);
-        data.append("price", model.price);
+    if (!model.title)
+      return dispatch(
+        showSnackBar({ visible: true, text: "Title is required", error: true })
+      );
+    if (!model.description)
+      return dispatch(
+        showSnackBar({
+          visible: true,
+          text: "Description is required",
+          error: true,
+        })
+      );
+    if (!model.price)
+      return dispatch(
+        showSnackBar({ visible: true, text: "Price is required", error: true })
+      );
 
-        images.forEach((image, index) => {
-          const fileParts = image.uri.split(".");
-          // Get the last part of the split array, which represents the file extension
-          const fileExtension = fileParts[fileParts.length - 1];
-          data.append(`images[${index}]`, {
-            uri: image.uri,
-            name: image.uri.substring(image.uri.lastIndexOf("/") + 1),
-            type: `image/${fileExtension}`,
-          });
+    if (images.length == 0)
+      return dispatch(
+        showSnackBar({
+          visible: true,
+          text: "Select at least one image",
+          error: true,
+        })
+      );
+    // return;
+    if (images.length > 0 && model.title && model.description && model.price) {
+      setLoader(true);
+      var data = new FormData();
+      data.append("title", model.title);
+      data.append("description", model.description);
+      data.append("contact_info", "76663647336");
+      data.append("price", model.price);
+
+      images.forEach((image, index) => {
+        const fileParts = image.uri.split(".");
+        // Get the last part of the split array, which represents the file extension
+        const fileExtension = fileParts[fileParts.length - 1];
+        data.append(`images[${index}]`, {
+          uri: image.uri,
+          name: image.uri.substring(image.uri.lastIndexOf("/") + 1),
+          type: `image/${fileExtension}`,
         });
-        // data.append("images[]", imgObj);
-        // console.log();
-        var config = {
-          method: "post",
-          maxBodyLength: Infinity,
-          url: `${apiActiveURL}post-market-place`,
-          headers: {
-            Authorization: `Bearer ${userLoginSuccess.token}`,
-            "Content-Type": "multipart/form-data",
-          },
-          data: data,
-        };
-        console.log(imgObj, "imgObj");
-        console.log(config.data, "config");
-        // return
-        axios(config)
-          .then(function (response) {
-            console.log(response.data, "market plce request response");
-            // if(response.status === 'Posted in market successfully!')
+      });
+      // data.append("images[]", imgObj);
+      // console.log();
+      var config = {
+        method: "post",
+        maxBodyLength: Infinity,
+        url: `${apiActiveURL}post-market-place`,
+        headers: {
+          Authorization: `Bearer ${userLoginSuccess.token}`,
+          "Content-Type": "multipart/form-data",
+        },
+        data: data,
+      };
+      console.log(imgObj, "imgObj");
+      console.log(config.data, "config");
+      // return
+      axios(config)
+        .then(function (response) {
+          console.log(response.data, "market plce request response");
+          // if(response.status === 'Posted in market successfully!')
+          setLoader(false);
+
+          if (response.data.success) {
+            dispatch(
+              showSnackBar({
+                visible: true,
+                text: response.data.message,
+                error: false,
+              })
+            );
+            return navigation.goBack();
+          } else {
             dispatch(
               showSnackBar({
                 visible: true,
@@ -216,21 +238,12 @@ const Marketplace = () => {
                 error: true,
               })
             );
-            setLoader(false);
-          })
-          .catch(function (error) {
-            setLoader(false);
-            console.log(error);
-          });
-      } else {
-        dispatch(
-          showSnackBar({
-            visible: true,
-            text: "Invalid phone number",
-            error: true,
-          })
-        );
-      }
+          }
+        })
+        .catch(function (error) {
+          setLoader(false);
+          console.log(error);
+        });
     } else {
       setLoader(false);
       dispatch(
@@ -242,6 +255,13 @@ const Marketplace = () => {
       );
     }
     console.log(image, "images");
+  };
+  const handleDelete = (uri) => {
+    const index = image.findIndex((i) => i.uri === uri);
+    if (index != -1) {
+      image.splice(index, 1);
+    }
+    setImage([...image]);
   };
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
@@ -303,18 +323,22 @@ const Marketplace = () => {
             />
             <CustomFormInput
               // autoComplete="name"
-              onChangeText={(val) => setModel({ ...model, price: val })}
+              onChangeText={(val) => {
+                const regex = /[^a-zA-Z0-9 ]/g;
+                const cleanedString = val.replace(regex, "");
+                setModel({ ...model, price: cleanedString.trim() });
+              }}
               value={model.price}
               placeholderText="Please enter price"
+              keyboardType={"numeric"}
             />
             <CustomFormInput
               // autoComplete="name"
               onChangeText={(val) => setModel({ ...model, contact_info: val })}
-              value={model.contact_info}
+              value={userLoginSuccess?.data?.phone}
               placeholderText="Please enter contact No"
+              editable={false}
             />
-
-            {/* <View style={{ height: SCREEN_HEIGHT - 200 }}> */}
             {image && image.length > 0 && (
               <FlatList
                 data={image}
@@ -327,10 +351,7 @@ const Marketplace = () => {
                   console.log(item);
                   return (
                     <Pressable
-                      // onPress={() => {
-                      //   setIndex(index);
-                      //   setIsVisible(true);
-                      // }}
+                      onPress={() => {}}
                       style={{ flexDirection: "row" }}
                     >
                       <Image
@@ -344,25 +365,25 @@ const Marketplace = () => {
                         }}
                         source={{ uri: item.uri }}
                       />
-                      {/* <Entypo
-                    name="squared-cross"
-                    color="red"
-                    size={20}
-                    style={{ marginLeft: -20, zIndex: 100 }}
-                    onPress={() => handleDelete(item.id)}
-                  /> */}
+                      <Entypo
+                        name="squared-cross"
+                        color="red"
+                        size={20}
+                        style={{ marginLeft: -20, zIndex: 100 }}
+                        onPress={() => handleDelete(item.uri)}
+                      />
                     </Pressable>
                   );
                 }}
               />
             )}
-            {/* </View> */}
             <CustomButton
               textColor="white"
               txtStyle={{ fontSize: 16 }}
               btnLabel={"Upload Images"}
               Press={() => setModal(true)}
             />
+
             <CustomButton
               textColor="white"
               txtStyle={{ fontSize: 16 }}

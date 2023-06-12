@@ -54,8 +54,6 @@ const TeamList = ({ navigation, route }) => {
   console.log(route.params, "route params");
   const isFocused = useIsFocused();
   const userLoginSuccess = useSelector((state) => {
-    // console.log(state, "state");
-    console.log(state.loginData.data, "login data success");
     return state.loginData.data;
   });
   const [players, setPlayers] = useState([]);

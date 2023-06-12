@@ -87,8 +87,6 @@ const Login = (props) => {
       username,
       password,
     };
-
-    console.log(data, "login data");
     dispatch(
       UserLogin(data, (data) => {
         console.log("HERE IN DATA", data);

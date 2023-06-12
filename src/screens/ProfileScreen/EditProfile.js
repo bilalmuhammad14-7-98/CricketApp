@@ -39,6 +39,7 @@ import { Avatar } from "react-native-paper";
 import {
   useFocusEffect,
   useNavigation,
+  useRoute,
   useTheme,
 } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
@@ -82,13 +83,14 @@ const LOGO_SIZE = windowHeight * 0.15;
 
 const EditProfile = (props) => {
   console.log(props, "props");
+  const { params } = useRoute();
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const userLoginSuccess = useSelector((state) => {
     return state.loginData.data;
   });
   const { colors } = useTheme();
-  const [image, setImage] = useState(props?.route?.params?.item?.profileImg);
+  const [image, setImage] = useState(params?.item?.profileImg);
   const [imageName, setImageName] = useState();
   const [imgObj, setImgObj] = useState(null);
 
@@ -480,8 +482,6 @@ const EditProfile = (props) => {
     useCallback(() => {
       if (item) {
         const splittedDays = item?.available_days?.split(",");
-        console.log(item.available_days, "item.available_days");
-        console.log(splittedDays, "splittedDays");
         const temp = [];
         Days.map((d) => {
           if (
@@ -490,7 +490,6 @@ const EditProfile = (props) => {
             temp.push(d.id);
           }
         });
-        console.log(temp, "TEMP -==================> ");
         setSelectedDays(temp);
       }
     }, [userLoginSuccess])

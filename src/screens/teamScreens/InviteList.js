@@ -62,8 +62,6 @@ const InviteList = () => {
   const [clicked, setClicked] = useState(false);
 
   const userLoginSuccess = useSelector((state) => {
-    // console.log(state, "state");
-    console.log(state.loginData.data, "login data success");
     return state.loginData.data;
   });
 
