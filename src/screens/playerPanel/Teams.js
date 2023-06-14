@@ -154,9 +154,9 @@ const TeamsScreen = () => {
             />
           </View>
 
-          <View style={styles.cardInfo}>
+          <View style={[styles.cardInfo, { flexDirection: "row" }]}>
             <Text
-              style={styles.cardTitle}
+              style={[styles.cardTitle, { flex: 1 }]}
               numberOfLines={1}
               ellipsizeMode="tail"
             >
@@ -164,7 +164,13 @@ const TeamsScreen = () => {
             </Text>
 
             {userLoginSuccess?.data?.roleId == "recruiter" ? (
-              <>
+              <View
+                style={{
+                  // marginHorizontal: sizes.m5,
+                  flexDirection: "column",
+                  justifyContent: "space-evenly",
+                }}
+              >
                 <PlayerCustomButtom
                   textColor="white"
                   btnLabel="Schedule Match"
@@ -191,9 +197,9 @@ const TeamsScreen = () => {
                     // paddingVertical: 10,
                   }}
                 />
-              </>
+              </View>
             ) : (
-              <>
+              <View style={{ backgroundColor: "yellow" }}>
                 <PlayerCustomButtom
                   textColor="white"
                   btnLabel={item.requested_status}
@@ -218,7 +224,7 @@ const TeamsScreen = () => {
                     // paddingVertical: 10,
                   }}
                 />
-              </>
+              </View>
             )}
           </View>
         </View>
@@ -330,23 +336,9 @@ const TeamsScreen = () => {
 export default withToast(TeamsScreen);
 
 const styles = StyleSheet.create({
-  // root: {
-  //   flex: 1,
-  // },
-
   container: {
     flex: 1,
   },
-
-  // header: {
-  //   paddingVertical: 20,
-  //   flexDirection: "row",
-  //   alignItems: "center",
-  //   // marginHorizontal: 20,
-  //   paddingHorizontal: 10,
-  //   justifyContent: "space-between",
-  // },
-
   logo: {
     marginLeft: sizes.m10,
     // marginTop: sizes.m35,

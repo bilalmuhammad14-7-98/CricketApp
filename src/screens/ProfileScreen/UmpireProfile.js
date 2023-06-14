@@ -35,8 +35,8 @@ import PlayerGallery from "../../components/PlayerProfile/PlayerGallery";
 import { profileContext } from "../../components/context/context";
 import { searchPlayer } from "../../services/playerService";
 import withToast from "../../components/Toast";
+import UmpireStateCard from "../../components/PlayerProfile/UmpireStats";
 import UmpireGallery from "../../components/PlayerProfile/UmpireGallery";
-import { useSelector } from "react-redux";
 
 const CARD_WIDTH = windowWidth * 0.05;
 const DATA_WIDTH = windowWidth * 0.87;
@@ -44,13 +44,10 @@ const CARD_HEIGHT = windowHeight * 0.23;
 const curve_height = windowHeight * 0.24;
 const IMAGE_SIZE = windowHeight * 0.13;
 
-const CricketProfile = (props) => {
+const UmpireProfile = (props) => {
   const [gamesTab, setGamesTab] = useState(1);
   const { params } = useRoute();
-  const userLoginSuccess = useSelector((state) => {
-    console.log(state.loginData.data);
-    return state.loginData.data;
-  });
+
   const onSelectSwitch = (value) => {
     setGamesTab(value);
   };
@@ -158,15 +155,13 @@ const CricketProfile = (props) => {
               <CustomSwitch
                 selectionMode={1}
                 option1="My Stats"
-                option2="My Teams"
-                option3="Gallery"
+                option2="Gallery"
                 onSelectSwitch={onSelectSwitch}
               />
             </View>
 
-            {gamesTab == 1 && <PlayerStatsCard />}
-            {gamesTab == 2 && <PlayerTeam />}
-            {gamesTab == 3 && <UmpireGallery />}
+            {gamesTab == 1 && <UmpireStateCard profile={params?.profile} />}
+            {gamesTab == 2 && <UmpireGallery profile={params?.profile} />}
           </View>
         </View>
       </View>
@@ -174,7 +169,7 @@ const CricketProfile = (props) => {
   );
 };
 
-export default withToast(CricketProfile);
+export default withToast(UmpireProfile);
 
 const styles = StyleSheet.create({
   logo: {

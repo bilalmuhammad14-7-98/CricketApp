@@ -181,7 +181,19 @@ const Profile = (props) => {
                 >
                   <TouchableOpacity
                     onPress={() => {
-                      navigation.navigate("CricketProfile");
+                      if (userLoginSuccess?.data?.roleId == "umpire") {
+                        return navigation.navigate("umpireprofile", {
+                          profile: userData,
+                        });
+                      }
+                      if (userLoginSuccess?.data?.roleId == "recruiter") {
+                        return navigation.navigate("recruiterprofile", {
+                          profile: userData,
+                        });
+                      }
+                      navigation.navigate("CricketProfile", {
+                        profile: userData,
+                      });
                     }}
                     style={{
                       width: IMAGE_SIZE1,
@@ -199,7 +211,12 @@ const Profile = (props) => {
                       resizeMode="contain"
                     />
                   </TouchableOpacity>
-                  <Text style={{ fontSize: 13 }}> My Cricket Profile</Text>
+                  <Text style={{ fontSize: 13 }}>
+                    {userLoginSuccess?.data?.roleId == "umpire" ||
+                    userLoginSuccess?.data?.roleId == "recruiter"
+                      ? `My Profile`
+                      : `My Cricket Profile`}
+                  </Text>
                 </View>
               </View>
             </View>

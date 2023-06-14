@@ -94,7 +94,9 @@ const Login = (props) => {
           navigation.navigate("PlayerHome");
           dispatch(showSnackBar({ visible: true, text: data.message }));
         } else {
-          dispatch(showSnackBar({ visible: true, text: data.message }));
+          dispatch(
+            showSnackBar({ visible: true, text: data.message, error: true })
+          );
         }
       })
     );

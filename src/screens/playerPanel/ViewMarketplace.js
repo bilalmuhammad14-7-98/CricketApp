@@ -61,7 +61,7 @@ const ViewMarketplace = (props) => {
     await axios(config)
       .then(function (response) {
         console.log(response.data, "get market response");
-        setMarketplace(response?.data?.teams);
+        setMarketplace(response?.data?.teams.reverse());
         // handleData();
         setLoader(false);
 
@@ -175,7 +175,10 @@ const ViewMarketplace = (props) => {
                               borderRadius: 10,
                             }}
                             source={{
-                              uri: `https://cricketapp.gulfresource.org/public/storage/${item.images[0].image_path}`,
+                              uri:
+                                item.images?.length > 0
+                                  ? `https://cricketapp.gulfresource.org/public/storage/${item.images[0]?.image_path}`
+                                  : "",
                             }}
                           />
 
@@ -184,7 +187,7 @@ const ViewMarketplace = (props) => {
                               fontSize: 16,
                               fontWeight: "bold",
                               textAlign: "center",
-                              paddingTop: 10,
+                              paddingVertical: 10,
                             }}
                           >
                             {item.title}

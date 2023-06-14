@@ -195,7 +195,11 @@ const UmpireScreen = () => {
                     alignSelf: "flex-end",
                   }}
                   onPress={() => {
-                    navigation.navigate("umpireprofile", { umpire: item });
+                    // return console.log(item);
+                    // navigation.navigate("umpireprofile", { umpire: item });
+                    return navigation.navigate("umpireprofile", {
+                      profile: item,
+                    });
                   }}
                 />
               </View>

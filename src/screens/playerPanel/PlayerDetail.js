@@ -170,7 +170,7 @@ const PlayerDetail = (props) => {
               <TouchableOpacity
                 style={{
                   width: CARD_WIDTH,
-                  height: CARD_HEIGHT,
+                  // height: CARD_HEIGHT,
                   marginLeft: 10,
                   marginTop: sizes.m15,
                   borderRadius: sizes.m7,
@@ -221,7 +221,7 @@ const PlayerDetail = (props) => {
               <TouchableOpacity
                 style={{
                   width: CARD_WIDTH,
-                  height: CARD_HEIGHT,
+                  // height: CARD_HEIGHT,
                   marginLeft: 10,
                   marginTop: sizes.m15,
                   borderRadius: sizes.m7,
@@ -274,7 +274,7 @@ const PlayerDetail = (props) => {
               <TouchableOpacity
                 style={{
                   width: CARD_WIDTH,
-                  height: CARD_HEIGHT,
+                  // height: CARD_HEIGHT,
                   marginLeft: 10,
                   marginTop: sizes.m15,
                   borderRadius: sizes.m7,
@@ -325,7 +325,7 @@ const PlayerDetail = (props) => {
               <TouchableOpacity
                 style={{
                   width: CARD_WIDTH,
-                  height: CARD_HEIGHT,
+                  // height: CARD_HEIGHT,
                   marginLeft: 10,
                   marginTop: sizes.m15,
                   borderRadius: sizes.m7,
@@ -375,7 +375,7 @@ const PlayerDetail = (props) => {
               <TouchableOpacity
                 style={{
                   width: CARD_WIDTH,
-                  height: CARD_HEIGHT,
+                  // height: CARD_HEIGHT,
                   marginLeft: 10,
                   marginTop: sizes.m15,
                   borderRadius: sizes.m7,
@@ -426,7 +426,7 @@ const PlayerDetail = (props) => {
               <TouchableOpacity
                 style={{
                   width: CARD_WIDTH,
-                  height: CARD_HEIGHT,
+                  // height: CARD_HEIGHT,
                   marginLeft: 10,
                   marginTop: sizes.m15,
                   borderRadius: sizes.m7,
@@ -476,7 +476,7 @@ const PlayerDetail = (props) => {
               <TouchableOpacity
                 style={{
                   width: CARD_WIDTH,
-                  height: CARD_HEIGHT,
+                  // height: CARD_HEIGHT,
                   marginLeft: 10,
                   marginTop: sizes.m15,
                   borderRadius: sizes.m7,

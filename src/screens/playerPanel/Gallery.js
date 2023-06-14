@@ -137,7 +137,7 @@ const Gallery = () => {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${apiActiveURL}list-Player-Gallery`,
+      url: `${apiActiveURL}list-Player-Gallery?player_id=${userLoginSuccess.data.id}`,
       headers: {
         Authorization: `Bearer ${userLoginSuccess.token}`,
       },

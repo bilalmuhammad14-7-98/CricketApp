@@ -100,7 +100,7 @@ const EditProfile = (props) => {
   const [modal, setModal] = useState(false);
   const [selectedDays, setSelectedDays] = useState([]);
   const { route } = props;
-  const { item } = route.params;
+  const { item } = params;
   const [userData, setUserData] = useState();
 
   const [selectedGender, setSelectedGender] = useState(
@@ -198,7 +198,7 @@ const EditProfile = (props) => {
       });
   };
 
-  onDaySelect = (selectedItems) => {
+  const onDaySelect = (selectedItems) => {
     setSelectedDays(selectedItems);
   };
 
@@ -220,8 +220,8 @@ const EditProfile = (props) => {
 
     var data = new FormData();
     data.append("firstName", model.firstName);
-    data.append("lastName", model.lastName);
-    data.append("middleName", model.middleName);
+    // data.append("lastName", model.lastName);
+    // data.append("middleName", model.middleName);
     data.append("address", model.address);
     data.append("gender", selectedGender ? selectedGender.label : "");
     data.append(
@@ -284,14 +284,24 @@ const EditProfile = (props) => {
 
     await axios(config)
       .then(function (response) {
-        dispatch(
-          showSnackBar({
-            visible: true,
-            text: response.data.message,
-            error: false,
-          })
-        );
-        navigation.navigate("UserProfile");
+        if (response.data.success) {
+          dispatch(
+            showSnackBar({
+              visible: true,
+              text: response.data.message,
+              error: false,
+            })
+          );
+          navigation.navigate("UserProfile");
+        } else {
+          dispatch(
+            showSnackBar({
+              visible: true,
+              text: response.data.message,
+              error: true,
+            })
+          );
+        }
         // listTeams();
       })
       .catch(function (error) {
@@ -380,7 +390,7 @@ const EditProfile = (props) => {
     });
 
     console.log(result);
-
+    setModal(false);
     if (!result.canceled) {
       let pathParts = result.uri.split("/");
       console.log(pathParts, "path parts");
@@ -596,7 +606,7 @@ const EditProfile = (props) => {
               placeholderText="First Name"
             />
 
-            <CustomFormInput
+            {/* <CustomFormInput
               // autoComplete="name"
               onChangeText={(val) => setModel({ ...model, lastName: val })}
               value={model.lastName}
@@ -608,7 +618,7 @@ const EditProfile = (props) => {
               onChangeText={(val) => setModel({ ...model, middleName: val })}
               value={model.middleName}
               placeholderText="Middle Name"
-            />
+            /> */}
 
             <CustomFormInput
               // autoComplete="name"
@@ -639,6 +649,7 @@ const EditProfile = (props) => {
               onChangeText={(val) => setModel({ ...model, dob: val })}
               value={model.dob}
               placeholderText="Age"
+              keyboardType="number-pad"
             />
 
             {userLoginSuccess?.data?.roleId == "recruiter" ||

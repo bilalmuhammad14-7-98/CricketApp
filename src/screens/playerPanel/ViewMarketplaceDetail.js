@@ -18,7 +18,11 @@ import { apiActiveURL } from "../../ApiBaseURL";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { colors } from "../../config/colors";
-import { useIsFocused, useRoute } from "@react-navigation/native";
+import {
+  useIsFocused,
+  useNavigation,
+  useRoute,
+} from "@react-navigation/native";
 import Swiper from "react-native-swiper";
 import { sizes } from "../../config/sizes";
 import withToast from "../../components/Toast";
@@ -36,11 +40,14 @@ const curve_height = windowHeight * 0.2;
 const swiper_height = windowHeight * 0.04;
 const ViewMarketplaceDetail = (props) => {
   const { params } = useRoute();
+  const navigation = useNavigation();
   const [marketplace, setMarketplace] = useState([]);
   const [imageData, setImageData] = useState([]);
   const [loader, setLoader] = useState(true);
   const isFocused = useIsFocused();
-
+  const userLoginSuccess = useSelector((state) => {
+    return state.loginData.data;
+  });
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View>
@@ -80,7 +87,7 @@ const ViewMarketplaceDetail = (props) => {
             Posted By
           </Text>
           <Text style={{ marginVertical: 5, fontSize: 16 }}>
-            {params.data.post_by}
+            {params.my ? userLoginSuccess.data?.fullName : params.data.post_by}
           </Text>
           <Text style={{ fontSize: 16, fontWeight: "bold", marginTop: 10 }}>
             Title
@@ -102,6 +109,31 @@ const ViewMarketplaceDetail = (props) => {
               {params.data.contact}
             </Text>
           </TouchableOpacity>
+          {params?.my && (
+            <TouchableOpacity
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginTop: 5,
+              }}
+              onPress={() => {
+                navigation.navigate("MarketPlace", {
+                  edit: true,
+                  data: params.data,
+                });
+              }}
+            >
+              <Feather
+                color={"#2BB789"}
+                size={20}
+                name="edit"
+                style={{ marginRight: 10 }}
+              />
+              <Text style={{ fontSize: 14, color: "#2BB789" }}>
+                Edit MarketPlace
+              </Text>
+            </TouchableOpacity>
+          )}
           {/* <Text>{item.description}</Text> */}
         </View>
       </View>

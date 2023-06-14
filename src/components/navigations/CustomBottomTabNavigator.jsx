@@ -1,6 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useFocusEffect } from "@react-navigation/native";
 import {
   StyleSheet,
   View,
@@ -53,15 +53,17 @@ import ViewMarketplaceDetail from "../../screens/playerPanel/ViewMarketplaceDeta
 import Request from "../../screens/UmpireScreens/Request";
 import ScheduleMatches from "../../screens/playerPanel/ScheduleMatches";
 import UmpireDetails from "../../screens/playerPanel/UmpireDetails";
-import { apiActiveURL, SCREEN_WIDTH } from "../../ApiBaseURL";
+import { apiActiveURL, imageURL, SCREEN_WIDTH } from "../../ApiBaseURL";
 import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 import { setNotification } from "../../store/actions";
 import { useState } from "react";
 import { getMonths, showToast } from "../../util";
 import CustomToast from "../formComponents/CustomToast";
 import ViewMyMarketplace from "../../screens/playerPanel/ViewMyMarketplace";
+import UmpireProfile from "../../screens/ProfileScreen/UmpireProfile";
+import RecruiterProfile from "../../screens/ProfileScreen/RecruiterProfile";
 const upper_margin = windowWidth * 0.001;
 const upper_margin1 = windowWidth * 0.01;
 const LOGO_SIZE = windowHeight * 0.06;
@@ -76,6 +78,7 @@ const StackUserProfile = createNativeStackNavigator();
 const StackMarketPlace = createNativeStackNavigator();
 
 const NotiIcon = () => {
+  const [count, setCount] = useState(0);
   const [visible, setVisible] = useState(false);
   const [loader, setLoader] = useState(false);
   const [notification, setNotification] = useState([]);
@@ -176,6 +179,34 @@ const NotiIcon = () => {
         console.log(error);
       });
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      getNotificationCount();
+    }, [notification])
+  );
+  const getNotificationCount = () => {
+    let config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: `${apiActiveURL}count-notifications`,
+      headers: {
+        Authorization: `Bearer ${userLoginSuccess.token}`,
+      },
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        if (response.data.success) {
+          setCount(response.data.notifications);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
   return (
     <TouchableOpacity
       style={{ marginRight: upper_margin1 }}
@@ -187,6 +218,17 @@ const NotiIcon = () => {
         }
       }}
     >
+      {count != 0 && (
+        <View
+          style={{
+            backgroundColor: "#2BB789",
+            marginBottom: -5,
+            borderRadius: 100,
+          }}
+        >
+          <Text style={{ color: "#fff", textAlign: "center" }}>{count}</Text>
+        </View>
+      )}
       <Ionicons name="notifications" size={logo_size} color="#2BB789" />
       <CustomToast show={toast.show} message={toast.message} />
       <Portal>
@@ -284,7 +326,9 @@ function PlayerHomeNavigationContainer() {
                   size={LOGO_SIZE}
                   source={
                     userLoginSuccess?.data?.profileImg
-                      ? userLoginSuccess?.data?.profileImg
+                      ? {
+                          uri: `${userLoginSuccess?.data?.profileImg}`,
+                        }
                       : images.FypLogo
                   }
                 />
@@ -503,13 +547,32 @@ function PlayerHomeNavigationContainer() {
 
       <StackPlayerHome.Screen
         name="umpireprofile"
-        component={UmpireDetails}
+        component={UmpireProfile}
         options={({ navigation }) => ({
           title: "",
           headerLeft: () => {
             return (
               <NavigationHeader
                 title={"Umpire Details"}
+                navigation={navigation}
+              />
+            );
+          },
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
+      <StackPlayerHome.Screen
+        name="recruiterprofile"
+        component={RecruiterProfile}
+        options={({ navigation }) => ({
+          title: "",
+          headerLeft: () => {
+            return (
+              <NavigationHeader
+                title={"Recruiter Details"}
                 navigation={navigation}
               />
             );
@@ -682,6 +745,26 @@ function UserProfileNavigationContainer() {
             return (
               <NavigationHeader
                 title={"Cricket Profile"}
+                navigation={navigation}
+              />
+            );
+          },
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
+
+      <StackUserProfile.Screen
+        name="umpireprofile"
+        component={UmpireProfile}
+        options={({ navigation }) => ({
+          title: "",
+          headerLeft: () => {
+            return (
+              <NavigationHeader
+                title={"Umpire Profile"}
                 navigation={navigation}
               />
             );

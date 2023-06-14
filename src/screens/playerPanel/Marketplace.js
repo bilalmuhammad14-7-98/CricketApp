@@ -24,17 +24,23 @@ import { ScrollView } from "react-native-gesture-handler";
 import { LinearGradient } from "expo-linear-gradient";
 import { windowHeight, windowWidth } from "../../config/dimensions";
 import * as ImagePicker from "expo-image-picker";
-import { useNavigation, useTheme } from "@react-navigation/native";
+import {
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+  useTheme,
+} from "@react-navigation/native";
 import { Avatar } from "react-native-paper";
 import { sizes } from "../../config/sizes";
 import images from "../../config/images";
 import axios from "axios";
-import { apiActiveURL, SCREEN_HEIGHT } from "../../ApiBaseURL";
+import { apiActiveURL, imageURL, SCREEN_HEIGHT } from "../../ApiBaseURL";
 import { useDispatch, useSelector } from "react-redux";
 import Toast from "react-native-root-toast";
 import PlayerCustomButtom from "../../components/formComponents/PlayerCustomButtom";
 import withToast from "../../components/Toast";
 import { showSnackBar } from "../../store/actions";
+import { useCallback } from "react";
 
 const CARD_WIDTH = windowWidth * 0.05;
 const CARD_HEIGHT = windowHeight * 0.23;
@@ -46,13 +52,13 @@ const LOGO_SIZE = windowHeight * 0.15;
 const Marketplace = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
+  const { params } = useRoute();
   const [modal, setModal] = useState(false);
   const [image, setImage] = useState([]);
   const [loader, setLoader] = useState(false);
 
   const [imageName, setImageName] = useState();
   const [imgObj, setImgObj] = useState(null);
-  console.log(image, "image");
   const [model, setModel] = useState({
     team_name: "",
     title: "",
@@ -92,10 +98,9 @@ const Marketplace = () => {
       // allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
-      allowsMultipleSelection: false,
+      allowsMultipleSelection: true,
     });
-    // let imagesArr = [];
-    console.log(result, "selected images");
+
     setModal(false);
     if (!result?.cancelled) {
       if (result?.selected) {
@@ -104,55 +109,9 @@ const Marketplace = () => {
       } else {
         const temp = [];
         temp.push({ uri: result.uri });
-        console.log(temp, "temp");
-        // handleUpdate(temp);
         setImage([...image, ...temp]);
       }
     }
-    // if (!result.canceled) {
-    // result.selected.forEach((result, index) => {
-    //   // let pathParts = result.uri.split("/");
-    //   const fileParts = image.uri.split(".");
-
-    //   const fileExtension = fileParts[fileParts.length - 1];
-
-    //   console.log(result.uri.split("."))
-    //   console.log(pathParts, "path parts");
-    //   let typeLength = pathParts[pathParts.length - 1].split(".");
-    //   let typeimg = typeLength[1];
-    //   console.log(typeimg, "type----------");
-
-    //   imageObj.push({
-    //     name: pathParts[pathParts.length - 1],
-    //     type: `image/${typeimg}`,
-    //     uri: Platform.OS === 'android'
-    //                   ? result.uri
-    //                   : result.uri.replace('file://', ''),
-    //                 })
-    //   setImgObj(imageObj)
-
-    // });
-
-    // console.log(image, "images arr");
-    // }
-
-    // if (!result.canceled) {
-    //   let pathParts = result.uri.split("/");
-    //   console.log(pathParts, "path parts");
-    //   let typeLength = pathParts[pathParts.length - 1].split(".");
-    //   let typeimg = typeLength[1];
-    //   console.log(typeimg, "type----------");
-    //   const imageObj = {
-    //     name: pathParts[pathParts.length - 1],
-    //     type: `image/${typeimg}`,
-    //     uri: result.uri,
-    //   };
-    //   setImgObj(imageObj);
-    //   console.log(imageObj, "image obj");
-    //   console.log(pathParts[pathParts.length - 1].split("."), "name");
-    //   setImageName(pathParts[pathParts.length - 1]);
-    //   setImage(result.uri);
-    // }
   };
 
   const handleUpdate = (images) => {
@@ -189,6 +148,7 @@ const Marketplace = () => {
       data.append("description", model.description);
       data.append("contact_info", "76663647336");
       data.append("price", model.price);
+      if (params?.edit) data.append("market_place_id", params.data.id);
 
       images.forEach((image, index) => {
         const fileParts = image.uri.split(".");
@@ -200,24 +160,22 @@ const Marketplace = () => {
           type: `image/${fileExtension}`,
         });
       });
-      // data.append("images[]", imgObj);
-      // console.log();
+      console.log("ALLL IMAGES IN API OF EDIT", images);
       var config = {
         method: "post",
         maxBodyLength: Infinity,
-        url: `${apiActiveURL}post-market-place`,
+        url: `${apiActiveURL}${
+          params.edit ? "edit-market-place" : "post-market-place"
+        }`,
         headers: {
           Authorization: `Bearer ${userLoginSuccess.token}`,
           "Content-Type": "multipart/form-data",
         },
         data: data,
       };
-      console.log(imgObj, "imgObj");
-      console.log(config.data, "config");
       // return
       axios(config)
         .then(function (response) {
-          console.log(response.data, "market plce request response");
           // if(response.status === 'Posted in market successfully!')
           setLoader(false);
 
@@ -229,6 +187,7 @@ const Marketplace = () => {
                 error: false,
               })
             );
+            if (params?.edit) return navigation.navigate("ViewMyMarketplace");
             return navigation.goBack();
           } else {
             dispatch(
@@ -254,15 +213,55 @@ const Marketplace = () => {
         })
       );
     }
-    console.log(image, "images");
   };
   const handleDelete = (uri) => {
+    let data = new FormData();
     const index = image.findIndex((i) => i.uri === uri);
-    if (index != -1) {
-      image.splice(index, 1);
-    }
-    setImage([...image]);
+
+    data.append("market_place_id", image[index].id.toString());
+
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: `${apiActiveURL}delete-market-place-image`,
+      headers: {
+        Authorization: `Bearer ${userLoginSuccess.token}`,
+      },
+      data: data,
+    };
+    axios
+      .request(config)
+      .then((response) => {
+        if (response.data.success) {
+          if (index != -1) {
+            image.splice(index, 1);
+          }
+          setImage([...image]);
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
+
+  useFocusEffect(
+    useCallback(() => {
+      if (params?.edit) {
+        setModel({
+          title: params?.data?.title,
+          description: params?.data?.description,
+          price: params?.data?.price,
+          contact_info: params?.data?.contact,
+        });
+        const temp = [];
+        params?.data?.images?.map((img) => {
+          temp.push({ ...img, uri: `${imageURL}${img.image_path}` });
+        });
+        image.length = 0;
+        setImage([...temp]);
+      }
+    }, [])
+  );
   return (
     <ScrollView showsVerticalScrollIndicator={false}>
       <View style={{ flex: 1, marginBottom: sizes.bottomTabHeight + 1 }}>
@@ -348,7 +347,6 @@ const Marketplace = () => {
                   alignItems: "center",
                 }}
                 renderItem={({ item, index }) => {
-                  console.log(item);
                   return (
                     <Pressable
                       onPress={() => {}}
@@ -389,7 +387,11 @@ const Marketplace = () => {
               txtStyle={{ fontSize: 16 }}
               btnLabel={
                 !loader ? (
-                  "Post in Marketplace"
+                  <>
+                    {params?.edit
+                      ? "Edit in Marketplace"
+                      : "Post in Marketplace"}
+                  </>
                 ) : (
                   <ActivityIndicator animating size={30} color="#fff" />
                 )

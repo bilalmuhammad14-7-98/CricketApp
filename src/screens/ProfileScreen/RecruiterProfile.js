@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Image,
 } from "react-native";
 
 //icons import
@@ -23,7 +24,7 @@ import { Avatar } from "react-native-paper";
 import { windowHeight, windowWidth } from "../../config/dimensions";
 import images from "../../config/images";
 import { sizes } from "../../config/sizes";
-import { useRoute, useTheme } from "@react-navigation/native";
+import { useNavigation, useRoute, useTheme } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { ScrollView } from "react-native-gesture-handler";
 
@@ -35,8 +36,9 @@ import PlayerGallery from "../../components/PlayerProfile/PlayerGallery";
 import { profileContext } from "../../components/context/context";
 import { searchPlayer } from "../../services/playerService";
 import withToast from "../../components/Toast";
+import UmpireStateCard from "../../components/PlayerProfile/UmpireStats";
 import UmpireGallery from "../../components/PlayerProfile/UmpireGallery";
-import { useSelector } from "react-redux";
+import PlayerCustomButtom from "../../components/formComponents/PlayerCustomButtom";
 
 const CARD_WIDTH = windowWidth * 0.05;
 const DATA_WIDTH = windowWidth * 0.87;
@@ -44,57 +46,55 @@ const CARD_HEIGHT = windowHeight * 0.23;
 const curve_height = windowHeight * 0.24;
 const IMAGE_SIZE = windowHeight * 0.13;
 
-const CricketProfile = (props) => {
+const RecruiterProfile = (props) => {
+  const navigation = useNavigation();
   const [gamesTab, setGamesTab] = useState(1);
   const { params } = useRoute();
-  const userLoginSuccess = useSelector((state) => {
-    console.log(state.loginData.data);
-    return state.loginData.data;
-  });
+
   const onSelectSwitch = (value) => {
     setGamesTab(value);
   };
-  const { profile } = useContext(profileContext);
-  // console.log(profile.payLoad.name);
 
-  const [model, setModel] = useState({
-    Name: "",
-    PlayingRole: "",
-    BattingStyle: "",
-    BowlingStyle: "",
-  });
+  const renderList = () => {
+    return (
+      <View style={styles.cardsWrapper}>
+        <View style={styles.card}>
+          <View style={styles.cardImgWrapper}>
+            <Image
+              source={{ uri: params?.profile?.team[0].team_logo }}
+              resizeMode="contain"
+              style={styles.cardImg}
+            />
+          </View>
 
-  const fetchPlayerProfile = async () => {
-    try {
-      var res = await searchPlayer();
-      var payLoad = res.payLoad;
-      console.log(res);
-      if (!res.isOk) {
-        alert(payLoad.message);
-        return;
-      }
+          <View style={styles.cardInfo}>
+            <Text
+              style={styles.cardTitle}
+              numberOfLines={1}
+              ellipsizeMode="tail"
+            >
+              {params?.profile?.team[0].team_name}
+            </Text>
+            <PlayerCustomButtom
+              textColor="white"
+              btnLabel="View Players"
+              onPress={() => {
+                navigation.navigate("TeamList", {
+                  data: params?.profile?.team[0].player_id,
+                });
+              }}
+              myStyle={{
+                alignSelf: "flex-end",
 
-      setModel({
-        ...model,
-        Name: payLoad.User.name,
-        PlayingRole: payLoad.PlayingRole,
-        BowlingStyle: payLoad.BowlingStyle,
-        BattingStyle: payLoad.BattingStyle,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+                // marginRight: 20,
+                // paddingVertical: 10,
+              }}
+            />
+          </View>
+        </View>
+      </View>
+    );
   };
-
-  // const init = async () => {
-  //   // await fetchPlayerProfile();
-  //   setIsLoading(false);
-  // };
-
-  // useEffect(() => {
-  //   init();
-  // }, []);
-
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -158,15 +158,15 @@ const CricketProfile = (props) => {
               <CustomSwitch
                 selectionMode={1}
                 option1="My Stats"
-                option2="My Teams"
-                option3="Gallery"
+                option2="Gallery"
+                option3="My Team"
                 onSelectSwitch={onSelectSwitch}
               />
             </View>
 
-            {gamesTab == 1 && <PlayerStatsCard />}
-            {gamesTab == 2 && <PlayerTeam />}
-            {gamesTab == 3 && <UmpireGallery />}
+            {gamesTab == 1 && <UmpireStateCard profile={params?.profile} />}
+            {gamesTab == 2 && <UmpireGallery />}
+            {gamesTab == 3 && renderList()}
           </View>
         </View>
       </View>
@@ -174,7 +174,7 @@ const CricketProfile = (props) => {
   );
 };
 
-export default withToast(CricketProfile);
+export default withToast(RecruiterProfile);
 
 const styles = StyleSheet.create({
   logo: {
@@ -216,5 +216,63 @@ const styles = StyleSheet.create({
     // marginHorizontal: 20,
     paddingHorizontal: sizes.m10,
     justifyContent: "space-between",
+  },
+
+  cardsWrapper: {
+    // marginTop: 10,
+    width: "90%",
+    alignSelf: "center",
+    marginTop: 5,
+  },
+
+  card: {
+    height: 100,
+    marginTop: 8,
+    flexDirection: "row",
+    shadowColor: "#999",
+    shadowOffset: { width: CARD_WIDTH, height: CARD_HEIGHT },
+    shadowOpacity: 1,
+    shadowRadius: 2,
+    elevation: 5,
+  },
+
+  cardImgWrapper: {
+    flex: 1,
+    flexDirection: "row",
+    // backgroundColor: "red",
+    borderWidth: 1,
+    borderRadius: 3,
+    borderColor: "green",
+  },
+
+  cardImg: {
+    height: "50%",
+    width: "100%",
+    alignSelf: "center",
+    borderRadius: 10,
+    borderBottomRightRadius: 0,
+    borderTopRightRadius: 0,
+  },
+
+  cardInfo: {
+    flex: 2,
+    padding: 10,
+    borderColor: "#2BB789",
+    borderWidth: 1,
+    borderLeftWidth: 0,
+    borderBottomRightRadius: 8,
+    borderTopRightRadius: 8,
+    backgroundColor: "#fff",
+    justifyContent: "space-between",
+    // flexDirection: "row",
+  },
+
+  cardTitle: {
+    fontWeight: "bold",
+  },
+
+  cardDetails: {
+    fontSize: 12,
+    color: "#444",
   },
 });
