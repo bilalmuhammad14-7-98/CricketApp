@@ -199,7 +199,7 @@ const TeamsScreen = () => {
                 />
               </View>
             ) : (
-              <View style={{ backgroundColor: "yellow" }}>
+              <View style={{ justifyContent: "space-evenly" }}>
                 <PlayerCustomButtom
                   textColor="white"
                   btnLabel={item.requested_status}

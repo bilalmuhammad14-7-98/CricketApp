@@ -14,6 +14,7 @@ import {
   MaterialIcons,
 } from "react-native-vector-icons";
 import { sizes } from "../../config/sizes";
+import { ActivityIndicator } from "react-native-paper";
 
 const button_width = windowWidth * 0.33;
 const IMAGE_SIZE1 = windowHeight * 0.025;
@@ -26,11 +27,14 @@ export default function PlayerCustomButtom({
   myStyle,
   onLongPress,
   icon,
+  loader,
+  disabled,
 }) {
   const a = useTheme();
   const colors = a.colors;
   return (
     <TouchableOpacity
+      disabled={disabled ? disabled : loader}
       onPress={onPress}
       onLongPress={onLongPress}
       style={[
@@ -49,16 +53,20 @@ export default function PlayerCustomButtom({
           color="#fff"
           resizeMode="contain"
         />
-        <Text
-          style={[
-            styles.text,
-            {
-              color: textColor,
-            },
-          ]}
-        >
-          {btnLabel}
-        </Text>
+        {loader ? (
+          <ActivityIndicator size="small" />
+        ) : (
+          <Text
+            style={[
+              styles.text,
+              {
+                color: textColor,
+              },
+            ]}
+          >
+            {btnLabel}
+          </Text>
+        )}
       </View>
     </TouchableOpacity>
   );

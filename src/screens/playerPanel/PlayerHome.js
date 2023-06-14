@@ -154,6 +154,18 @@ const PlayerHome = () => {
       },
     },
     {
+      name: "Player Request Reply",
+      code: colors.white,
+      image: images.FinalLogoOnLight,
+      navigationScreen: () => {
+        {
+          navigation.navigate("PlayerHomeRoot", {
+            screen: "playerreply",
+          });
+        }
+      },
+    },
+    {
       name: "Umpire/Referee",
       code: colors.white,
       image: images.UmpireAndReferee,
@@ -178,6 +190,18 @@ const PlayerHome = () => {
         {
           navigation.navigate("PlayerHomeRoot", {
             screen: "AllPlayersScreen",
+          });
+        }
+      },
+    },
+    {
+      name: "Recruiter Requests",
+      code: colors.white,
+      image: images.cricketerAndfootballer,
+      navigationScreen: () => {
+        {
+          navigation.navigate("PlayerHomeRoot", {
+            screen: "recruterrequest",
           });
         }
       },

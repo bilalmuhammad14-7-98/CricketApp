@@ -34,12 +34,13 @@ import { ScrollView } from "react-native-gesture-handler";
 import axios from "axios";
 import { http } from "../../components/http/http";
 import { apiActiveURL } from "../../ApiBaseURL";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useIsFocused } from "@react-navigation/native";
 import { LongPressGestureHandler, State } from "react-native-gesture-handler";
 import Toast from "react-native-root-toast";
 import Search from "../../components/PlayerProfile/Search";
 import withToast from "../../components/Toast";
+import { showSnackBar } from "../../store/actions";
 
 const LOGO_SIZE = windowHeight * 0.1;
 const CARD_WIDTH = windowWidth * 0.95;
@@ -53,9 +54,9 @@ const INPUT_HEIGHT1 = windowHeight * 0.07;
 
 const AllPlayer = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const isFocused = useIsFocused();
   const userLoginSuccess = useSelector((state) => {
-    // console.log(state, "state");
     return state.loginData.data;
   });
   const [players, setPlayers] = useState([]);
@@ -75,7 +76,6 @@ const AllPlayer = () => {
   }, [isFocused]);
 
   const listPlayers = async () => {
-    console.log(userLoginSuccess?.data?.team_id, "recruiter id");
     var config = {
       method: "get",
       maxBodyLength: Infinity,
@@ -96,72 +96,11 @@ const AllPlayer = () => {
       });
   };
 
-  const onPress = async (item) => {
-    console.log(item, "clicked item");
-  };
-
-  const handleLongPress = (item) => {
-    console.log(item, "long press item");
-    setPressedItem(item);
-    setModal(true);
-    // Additional actions you want to perform on long press
-  };
-
-  const makeCaptian = async () => {
-    console.log(pressedItem, "final data");
-    var data = new FormData();
-    data.append("playerId", pressedItem?.playerId);
-    data.append("teamId", userLoginSuccess?.data?.team_id);
-
-    var config = {
-      method: "post",
-      maxBodyLength: Infinity,
-      url: `${apiActiveURL}change-Captain`,
-      headers: {
-        Authorization: `Bearer ${userLoginSuccess.token}`,
-        "Content-Type": "multipart/form-data",
-      },
-      data: data,
-    };
-
-    console.log(config, "config");
-
-    await axios(config)
-      .then(function (response) {
-        console.log(response, "make captain response");
-
-        Toast.show(response.data.message, {
-          duration: 2000,
-          position: Toast.positions.TOP,
-          textColor: "#FFFFFF",
-          shadow: true,
-          animation: true,
-          hideOnPress: true,
-          delay: 0,
-          position: 80,
-          backgroundColor: "#32de84",
-          style: {
-            height: 100,
-            padding: 30,
-            borderRadius: 10,
-            paddingLeft: 45,
-            paddingRight: 15,
-          },
-        });
-        listPlayers();
-        setModal(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  };
-
   useEffect(() => {
     listPlayers();
   }, []);
 
   const renderList = (item, index) => {
-    console.log(item, "item");
     return (
       <TouchableOpacity
         style={{ flex: 1 }}
@@ -188,6 +127,7 @@ const AllPlayer = () => {
                 flex: 1,
                 justifyContent: "space-between",
                 padding: sizes.m7,
+                flexDirection: "row",
               }}
             >
               <View>
@@ -215,9 +155,22 @@ const AllPlayer = () => {
                 style={{
                   marginRight: sizes.m5,
                   marginBottom: sizes.m5,
-                  justifyContent: "flex-end",
+                  justifyContent: "space-evenly",
                 }}
               >
+                {userLoginSuccess?.data?.roleId == "recruiter" && (
+                  <PlayerCustomButtom
+                    textColor="white"
+                    btnLabel="Hire Player"
+                    onPress={() => {
+                      // onPress(item);
+                      hirePlayer(item);
+                    }}
+                    myStyle={{
+                      alignSelf: "flex-end",
+                    }}
+                  />
+                )}
                 <PlayerCustomButtom
                   textColor="white"
                   btnLabel="View Profile"
@@ -237,6 +190,46 @@ const AllPlayer = () => {
     );
   };
 
+  const hirePlayer = (item) => {
+    let data = new FormData();
+    data.append("player_id", item.id);
+    data.append("team_id", userLoginSuccess.data.team_id);
+
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: `${apiActiveURL}send-player-team-request`,
+      headers: {
+        Authorization: `Bearer ${userLoginSuccess.token}`,
+      },
+      data: data,
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        if (response.data.success) {
+          dispatch(
+            showSnackBar({ visible: true, text: response.data.message })
+          );
+        } else {
+          dispatch(
+            showSnackBar({
+              visible: true,
+              text: response.data.message,
+              error: true,
+            })
+          );
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        dispatch(
+          showSnackBar({ visible: true, text: error.message, error: true })
+        );
+      });
+  };
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -263,48 +256,6 @@ const AllPlayer = () => {
               borderTopRightRadius: 30,
             }}
           >
-            <Modal
-              //  animationType="slide"
-              transparent={true}
-              visible={modal}
-              onRequestClose={() => {
-                setModal(false);
-              }}
-            >
-              <View style={styles.modalView}>
-                <Text>
-                  Are you sure you want to make {pressedItem?.playerName} a
-                  captian
-                </Text>
-                <View style={styles.modalButtonView}>
-                  <Button onPress={() => setModal(false)}>Cancel</Button>
-                  <Button onPress={() => makeCaptian()}>ok</Button>
-                  {/* <Button
-                    icon="image-area"
-                    mode="contained"
-                    theme={theme}
-                    onPress={() => pickFromGallery()}
-                  >
-                    Gallery
-                  </Button> */}
-                </View>
-              </View>
-            </Modal>
-            {/* <PlayerCustomButtom
-              textColor="white"
-              btnLabel="View Player request"
-              onPress={() => {
-                navigation.navigate("PlayerRequest");
-              }}
-              myStyle={{
-                marginTop: 10,
-                alignSelf: "flex-end",
-                marginRight: 20,
-                paddingVertical: 15,
-                paddingHorizontal: 20,
-                borderRadius: 40,
-              }}
-            /> */}
             {searchedBlock[0] == "empty" ? (
               <View style={{ justifyContent: "center", alignItems: "center" }}>
                 <Text>No player found</Text>
@@ -315,7 +266,7 @@ const AllPlayer = () => {
                 renderItem={(item) => {
                   return renderList(item.item);
                 }}
-                keyExtractor={(item) => `${item.playerId}`}
+                keyExtractor={(item) => `${item.id}`}
               />
             )}
           </View>

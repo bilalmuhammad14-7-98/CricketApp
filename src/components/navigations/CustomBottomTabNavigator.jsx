@@ -64,6 +64,8 @@ import CustomToast from "../formComponents/CustomToast";
 import ViewMyMarketplace from "../../screens/playerPanel/ViewMyMarketplace";
 import UmpireProfile from "../../screens/ProfileScreen/UmpireProfile";
 import RecruiterProfile from "../../screens/ProfileScreen/RecruiterProfile";
+import RecruterRequest from "../../screens/playerPanel/RecruterRequest";
+import PlayerReply from "../../screens/playerPanel/PlayerReply";
 const upper_margin = windowWidth * 0.001;
 const upper_margin1 = windowWidth * 0.01;
 const LOGO_SIZE = windowHeight * 0.06;
@@ -383,6 +385,47 @@ function PlayerHomeNavigationContainer() {
           },
         })}
       />
+
+      <StackPlayerHome.Screen
+        name="recruterrequest"
+        component={RecruterRequest}
+        options={({ navigation }) => ({
+          title: "",
+          headerLeft: () => {
+            return (
+              <NavigationHeader
+                title={"Recruiter Requests"}
+                navigation={navigation}
+              />
+            );
+          },
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
+
+      <StackPlayerHome.Screen
+        name="playerreply"
+        component={PlayerReply}
+        options={({ navigation }) => ({
+          title: "",
+          headerLeft: () => {
+            return (
+              <NavigationHeader
+                title={"Player Reply"}
+                navigation={navigation}
+              />
+            );
+          },
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
+
       <StackPlayerHome.Screen
         name="AllPlayersScreen"
         component={AllPlayer}
