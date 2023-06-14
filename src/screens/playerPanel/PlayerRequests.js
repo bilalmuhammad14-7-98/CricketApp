@@ -77,7 +77,6 @@ const PlayerRequests = (navigation) => {
   };
 
   const onPress = async (item, status) => {
-    console.log(item, status, "clicked item");
     var data = new FormData();
     data.append("team_req_id", item.team_req_id);
     data.append("team_id", item.team_id);

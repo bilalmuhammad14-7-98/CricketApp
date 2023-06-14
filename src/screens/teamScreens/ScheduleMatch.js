@@ -125,6 +125,15 @@ const ScheduleMatch = (props) => {
     setTime(currentTime);
   };
   const scheduleMatch = async (date) => {
+    // console.log("request_sender_team_id", userLoginSuccess.data.team_id);
+    // console.log("requested_receiver_team_id", params.data.value);
+    // console.log("request_receiver_id", params.data.recruiter_id);
+    // console.log("venue", venue);
+    // console.log("description", description);
+    console.log("match_date_time", formatDateTime(date));
+    console.log("CORRECT DATE", "21-06-2023 10:21:19");
+    // console.log("match_type", type.label);
+    // return;
     if (type && venue && description && formatDateTime(date)) {
       setLoader(true);
 
@@ -151,15 +160,25 @@ const ScheduleMatch = (props) => {
 
       await axios(config)
         .then(function (response) {
-          dispatch(
-            showSnackBar({
-              visible: true,
-              text: response.data.message,
-              error: false,
-            })
-          );
           setLoader(false);
-          if (response.data.success) navigation.goBack();
+          if (response.data.success) {
+            dispatch(
+              showSnackBar({
+                visible: true,
+                text: response.data.message,
+                error: false,
+              })
+            );
+            navigation.goBack();
+          } else {
+            dispatch(
+              showSnackBar({
+                visible: true,
+                text: response.data.message,
+                error: true,
+              })
+            );
+          }
           // listTeams();
         })
         .catch(function (error) {
@@ -181,12 +200,18 @@ const ScheduleMatch = (props) => {
   };
 
   const formatDateTime = (dateTime) => {
+    console.log(new Date(dateTime).getDay(), "dateTime");
+    console.log(new Date(dateTime).getMonth() + 1, "dateTime");
+    console.log(new Date(dateTime).getFullYear(), "dateTime");
+    const dateFormat = new Date(dateTime);
+    const newFormattedDate = `${dateFormat.getDay()}-${dateFormat.getMonth()}-${dateFormat.getFullYear()}`;
+    console.log(newFormattedDate, "newFormattedDate");
     const formattedDate = dateTime
       .toLocaleDateString("en-GB")
       .replace(/\//g, "-");
     const formattedTime = dateTime.toLocaleTimeString("en-GB");
 
-    return `${formattedDate} ${formattedTime}`;
+    return `${newFormattedDate} ${formattedTime}`;
   };
   const minimumDate = new Date();
 
@@ -257,6 +282,7 @@ const ScheduleMatch = (props) => {
           <Text
             style={{
               textAlign: "center",
+              fontSize: 26,
             }}
           >
             {finalDate ? finalDate : null}
