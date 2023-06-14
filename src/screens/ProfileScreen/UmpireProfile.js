@@ -37,6 +37,7 @@ import { searchPlayer } from "../../services/playerService";
 import withToast from "../../components/Toast";
 import UmpireStateCard from "../../components/PlayerProfile/UmpireStats";
 import UmpireGallery from "../../components/PlayerProfile/UmpireGallery";
+import { useSelector } from "react-redux";
 
 const CARD_WIDTH = windowWidth * 0.05;
 const DATA_WIDTH = windowWidth * 0.87;
@@ -47,7 +48,9 @@ const IMAGE_SIZE = windowHeight * 0.13;
 const UmpireProfile = (props) => {
   const [gamesTab, setGamesTab] = useState(1);
   const { params } = useRoute();
-
+  const userLoginSuccess = useSelector((state) => {
+    return state.loginData.data;
+  });
   const onSelectSwitch = (value) => {
     setGamesTab(value);
   };
@@ -112,11 +115,18 @@ const UmpireProfile = (props) => {
               >
                 <Avatar.Image
                   size={IMAGE_SIZE}
-                  source={{ uri: params?.profile?.profileImg }}
+                  source={{
+                    uri:
+                      userLoginSuccess?.data?.roleId == "recruiter"
+                        ? params?.profile?.umpire_profile_img
+                        : params?.profile?.profileImg,
+                  }}
                 />
                 <View style={{ marginLeft: 10 }}>
                   <Text style={styles.profile_text1}>
-                    {params?.profile?.fullName}
+                    {userLoginSuccess?.data?.roleId == "recruiter"
+                      ? params?.profile?.umpire_name
+                      : params?.profile?.fullName}
                   </Text>
                   <Text style={styles.profile_text1}>
                     {params?.profile?.email}

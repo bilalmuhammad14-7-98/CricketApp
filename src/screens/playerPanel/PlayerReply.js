@@ -193,8 +193,8 @@ const PlayerReply = (navigation) => {
                 <Avatar.Image
                   size={LOGO_SIZE}
                   source={
-                    item?.playerImage
-                      ? { uri: item?.playerImage }
+                    item?.player_img
+                      ? { uri: item?.player_img }
                       : images.FypLogo
                   }
                 />

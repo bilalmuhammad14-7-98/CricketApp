@@ -193,8 +193,8 @@ const RecruterRequest = (navigation) => {
                 <Avatar.Image
                   size={LOGO_SIZE}
                   source={
-                    item?.playerImage
-                      ? { uri: item?.playerImage }
+                    item?.recruiter_img
+                      ? { uri: item?.recruiter_img }
                       : images.FypLogo
                   }
                 />
@@ -336,13 +336,17 @@ const RecruterRequest = (navigation) => {
               borderTopRightRadius: 30,
             }}
           >
-            <FlatList
-              data={players}
-              renderItem={(item) => {
-                return renderList(item.item);
-              }}
-              keyExtractor={(item) => `${item.player_id}`}
-            />
+            {players.length == 0 ? (
+              <Text style={{ textAlign: "center" }}>No Request Found</Text>
+            ) : (
+              <FlatList
+                data={players}
+                renderItem={(item) => {
+                  return renderList(item.item);
+                }}
+                keyExtractor={(item) => `${item.player_id}`}
+              />
+            )}
           </View>
         </View>
       </View>

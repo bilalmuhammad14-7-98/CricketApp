@@ -357,9 +357,26 @@ const UmpireScreen = () => {
           setTimeout(() => {
             navigation.goBack();
           }, 2000);
+        } else {
+          hideModal();
+          dispatch(
+            showSnackBar({
+              visible: true,
+              text: response.data.message,
+              error: true,
+            })
+          );
         }
       })
       .catch((error) => {
+        hideModal();
+        dispatch(
+          showSnackBar({
+            visible: true,
+            text: response.data.message,
+            error: true,
+          })
+        );
         console.log(error);
       });
   };
