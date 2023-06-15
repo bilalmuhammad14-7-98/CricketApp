@@ -7,7 +7,7 @@ import {
   StatusBar,
   TouchableOpacity,
   TextInput,
-  FlatList
+  FlatList,
 } from "react-native";
 
 //import icons
@@ -25,13 +25,12 @@ import {
 import { windowHeight, windowWidth } from "../../config/dimensions";
 import images from "../../config/images";
 import { sizes } from "../../config/sizes";
-import { useTheme } from "@react-navigation/native";
+import { useNavigation, useTheme } from "@react-navigation/native";
 import { ScrollView } from "react-native-gesture-handler";
-
-
 
 import colors from "../../config/colors";
 import PlayerCustomButtom from "../formComponents/PlayerCustomButtom";
+import { useSelector } from "react-redux";
 
 const CARD_WIDTH = windowWidth * 0.93;
 const CARD_HEIGHT = windowHeight * 0.11;
@@ -39,74 +38,10 @@ const INPUT_WIDTH = windowWidth - 25;
 
 const PlayerTeam = () => {
   const theme = useTheme();
-
-
-  const data1 = [
-    {
-      id: 1,
-      name: "Falcon FC1",
-      // notification: "accept it"
-    },
-
-    {
-      id: 2,
-      name: "User564",
-      // notification: "follow you"
-    },
-
-    {
-      id: 3,
-      name: "Shaheer",
-      // notification: "accept it"
-    },
-
-    {
-      id: 4,
-      name: "Ali",
-      // notification: "accept it"
-    },
-
-    {
-      id: 5,
-      name: "Shan",
-      // notification: "accept it"
-    },
-  ];
-
-  const renderList = (item) => {
-    return (
-      <View style={styles.cardsWrapper} key={item.id}>
-        <View style={styles.card}>
-          <View style={styles.cardImgWrapper}>
-            <Image
-              source={images.logo}
-              resizeMode="cover"
-              style={styles.cardImg}
-            />
-          </View>
-
-          <View style={styles.cardInfo}>
-            <Text
-              style={styles.cardTitle}
-              numberOfLines={1}
-              ellipsizeMode="tail"
-            >
-              {item.name}
-            </Text>
-            <PlayerCustomButtom
-              textColor="white"
-              btnLabel="Request to Join"
-              myStyle={{
-                alignSelf: "flex-end",
-              }}
-            />
-          </View>
-        </View>
-      </View>
-    );
-  };
-
-
+  const navigation = useNavigation();
+  const userLoginSuccess = useSelector((state) => {
+    return state.loginData.data;
+  });
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -116,16 +51,56 @@ const PlayerTeam = () => {
       }}
     >
       <View>
-        <StatusBar barStyle = "light-content" />
+        <StatusBar barStyle="light-content" />
         <View>
-            <FlatList
-              data={data1}
-              renderItem={({ item }) => {
-                return renderList(item);
-              }}
-              keyExtractor={(item) => `${item.id}`}
-            />
+          <View style={styles.cardsWrapper}>
+            <View style={styles.card}>
+              <View
+                style={[
+                  styles.cardInfo,
+                  {
+                    justifyContent: "space-around",
+                    flexDirection: "row",
+                  },
+                ]}
+              >
+                <View
+                  style={{
+                    justifyContent: "space-around",
+                    flex: 1,
+                  }}
+                >
+                  <Text
+                    style={styles.cardTitle}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                  >
+                    Team Name:
+                  </Text>
+                  <Text
+                    style={styles.cardTitle}
+                    numberOfLines={1}
+                    ellipsizeMode="tail"
+                  >
+                    {userLoginSuccess?.data?.player_team_name}
+                  </Text>
+                </View>
+                <PlayerCustomButtom
+                  textColor="white"
+                  btnLabel="View Players"
+                  onPress={() => {
+                    navigation.navigate("TeamList", {
+                      data: userLoginSuccess?.data?.player_team_id,
+                    });
+                  }}
+                  myStyle={{
+                    alignSelf: "center",
+                  }}
+                />
+              </View>
+            </View>
           </View>
+        </View>
       </View>
     </ScrollView>
   );
@@ -200,5 +175,4 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#444",
   },
-
 });

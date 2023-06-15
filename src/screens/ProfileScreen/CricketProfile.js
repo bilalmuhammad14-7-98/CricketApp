@@ -47,10 +47,6 @@ const IMAGE_SIZE = windowHeight * 0.13;
 const CricketProfile = (props) => {
   const [gamesTab, setGamesTab] = useState(1);
   const { params } = useRoute();
-  const userLoginSuccess = useSelector((state) => {
-    console.log(state.loginData.data);
-    return state.loginData.data;
-  });
   const onSelectSwitch = (value) => {
     setGamesTab(value);
   };

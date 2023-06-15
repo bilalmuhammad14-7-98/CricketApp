@@ -60,6 +60,7 @@ const TeamsScreen = () => {
   const [search, setSearch] = useState("");
   const [data, setData] = useState("");
   const [teams, setTeams] = useState([]);
+  const [myTeam, setMyTeam] = useState([]);
   // const [filter, setFilter] = useState("");
 
   const [clicked, setClicked] = useState(false);
@@ -80,11 +81,6 @@ const TeamsScreen = () => {
     }
   }, [isFocused]);
 
-  useEffect(() => {
-    // console.log("bilal");
-    listTeams();
-  }, []);
-
   const listTeams = async () => {
     // console.log(userLoginSuccess.token, "teams");
     var config = {
@@ -100,7 +96,27 @@ const TeamsScreen = () => {
       .then(function (response) {
         console.log(response.data.teams, "teams response ===");
         // setCountry(response.data.countries);
-        setTeams(response.data.teams);
+        var temp = [];
+        var temp2 = [];
+        if (userLoginSuccess?.data?.roleId == "recruiter") {
+          temp = response.data.teams;
+        }
+        if (
+          userLoginSuccess?.data?.roleId != "recruiter" &&
+          userLoginSuccess?.data?.roleId != "umpire"
+        ) {
+          response.data.teams.map((t) => {
+            if (13 == t.value) {
+              temp2.push(t);
+            } else {
+              temp.push(t);
+            }
+          });
+        }
+        console.log(temp, "temptemp");
+        console.log(temp2, "temp2temp2");
+        setTeams(temp);
+        setMyTeam(temp2);
       })
       .catch(function (error) {
         // console.log(error, "error");
@@ -108,8 +124,6 @@ const TeamsScreen = () => {
   };
 
   const onPress = async (item) => {
-    console.log(item, "Button pressed!");
-
     let data = new FormData();
 
     data.append("team_id", item.value);
@@ -141,7 +155,7 @@ const TeamsScreen = () => {
       });
   };
 
-  const renderList = (item) => {
+  const renderList = (item, status) => {
     // console.log(item, "item---");
     return (
       <View style={styles.cardsWrapper} key={item.value}>
@@ -200,16 +214,18 @@ const TeamsScreen = () => {
               </View>
             ) : (
               <View style={{ justifyContent: "space-evenly" }}>
-                <PlayerCustomButtom
-                  textColor="white"
-                  btnLabel={item.requested_status}
-                  onPress={() => {
-                    onPress(item);
-                  }}
-                  myStyle={{
-                    alignSelf: "flex-end",
-                  }}
-                />
+                {!status && (
+                  <PlayerCustomButtom
+                    textColor="white"
+                    btnLabel={item.requested_status}
+                    onPress={() => {
+                      onPress(item);
+                    }}
+                    myStyle={{
+                      alignSelf: "flex-end",
+                    }}
+                  />
+                )}
 
                 <PlayerCustomButtom
                   textColor="white"
@@ -317,14 +333,57 @@ const TeamsScreen = () => {
                 <Text>No Teams found</Text>
               </View>
             ) : (
-              <FlatList
-                data={searchedBlock.length > 0 ? searchedBlock : teams}
-                renderItem={({ item }) => {
-                  console.log(item, "item list");
-                  return renderList(item);
-                }}
-                keyExtractor={(item) => `${item.value}`}
-              />
+              <>
+                {userLoginSuccess?.data?.roleId != "recruiter" &&
+                  userLoginSuccess?.data?.roleId != "umpire" && (
+                    <>
+                      <Text
+                        style={[
+                          styles.cardTitle,
+                          { fontSize: 16, textAlign: "center" },
+                        ]}
+                      >
+                        My Team
+                      </Text>
+                      {myTeam?.length > 0 ? (
+                        <FlatList
+                          data={myTeam}
+                          renderItem={({ item }) => {
+                            return renderList(item, true);
+                          }}
+                          keyExtractor={(item) => `${item.value}`}
+                        />
+                      ) : (
+                        <Text
+                          style={[
+                            styles.cardTitle,
+                            { fontSize: 16, textAlign: "center" },
+                          ]}
+                        >
+                          Not In A Team Yet
+                        </Text>
+                      )}
+                    </>
+                  )}
+                {userLoginSuccess?.data?.roleId != "recruiter" &&
+                  userLoginSuccess?.data?.roleId != "umpire" && (
+                    <Text
+                      style={[
+                        styles.cardTitle,
+                        { fontSize: 16, textAlign: "center" },
+                      ]}
+                    >
+                      Other Teams
+                    </Text>
+                  )}
+                <FlatList
+                  data={searchedBlock.length > 0 ? searchedBlock : teams}
+                  renderItem={({ item }) => {
+                    return renderList(item, myTeam?.length > 0);
+                  }}
+                  keyExtractor={(item) => `${item.value}`}
+                />
+              </>
             )}
           </View>
         </View>

@@ -140,14 +140,14 @@ const UmpireGallery = ({ profile }) => {
       maxBodyLength: Infinity,
       url: `${apiActiveURL}list-Player-Gallery?player_id=${
         userLoginSuccess?.data?.roleId == "recruiter"
-          ? profile?.umpire_id
+          ? profile?.id
           : userLoginSuccess.data.id
       }`,
       headers: {
         Authorization: `Bearer ${userLoginSuccess.token}`,
       },
     };
-
+    console.log(config, "config");
     axios
       .request(config)
       .then((response) => {
