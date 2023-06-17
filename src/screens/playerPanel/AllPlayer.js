@@ -176,7 +176,10 @@ const AllPlayer = () => {
                   btnLabel="View Profile"
                   onPress={() => {
                     // onPress(item);
-                    navigation.navigate("PlayerDetailsScreen", { data: item });
+                    navigation.navigate("CricketProfile", {
+                      profile: item,
+                      other: true,
+                    });
                   }}
                   myStyle={{
                     alignSelf: "flex-end",

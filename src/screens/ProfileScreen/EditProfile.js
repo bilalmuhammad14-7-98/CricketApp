@@ -707,6 +707,7 @@ const EditProfile = (props) => {
               onChangeText={(val) => setModel({ ...model, password: val })}
               value={model.password}
               placeholderText="Password"
+              secureTextEntry={true}
             />
 
             <CustomFormInput

@@ -70,27 +70,6 @@ const Marketplace = () => {
   const userLoginSuccess = useSelector((state) => {
     return state.loginData.data;
   });
-  // useEffect(() => {
-  //   Toast.show(",dsaldsadsa", {
-  //     duration: 2000,
-  //     position: Toast.positions.TOP,
-  //     textColor: "#FFFFFF",
-  //     shadow: true,
-  //     animation: true,
-  //     hideOnPress: true,
-  //     delay: 0,
-  //     position: 80,
-  //     backgroundColor: "green",
-  //     style: {
-  //       height: 100,
-  //       padding: 30,
-  //       borderRadius: 10,
-  //       paddingLeft: 45,
-  //       paddingRight: 15,
-  //       zIndex:1
-  //     },
-  //   });
-  // }, []);
   const { colors } = useTheme();
   const pickFromGallery = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -147,8 +126,8 @@ const Marketplace = () => {
       data.append("title", model.title);
       data.append("description", model.description);
       data.append("contact_info", "76663647336");
-      data.append("price", model.price);
-      if (params?.edit) data.append("market_place_id", params.data.id);
+      data.append("price", model.price.toString());
+      if (params?.edit) data.append("market_place_id", params?.data.id);
 
       images.forEach((image, index) => {
         const fileParts = image.uri.split(".");
@@ -165,7 +144,7 @@ const Marketplace = () => {
         method: "post",
         maxBodyLength: Infinity,
         url: `${apiActiveURL}${
-          params.edit ? "edit-market-place" : "post-market-place"
+          params?.edit ? "edit-market-place" : "post-market-place"
         }`,
         headers: {
           Authorization: `Bearer ${userLoginSuccess.token}`,
@@ -217,7 +196,7 @@ const Marketplace = () => {
   const handleDelete = (uri) => {
     let data = new FormData();
     const index = image.findIndex((i) => i.uri === uri);
-
+    if (!image[index]?.id) return handleDeleteLocal(uri);
     data.append("market_place_id", image[index].id.toString());
 
     let config = {
@@ -242,6 +221,14 @@ const Marketplace = () => {
       .catch((error) => {
         console.log(error);
       });
+  };
+
+  const handleDeleteLocal = (uri) => {
+    const index = image.findIndex((i) => i.uri === uri);
+    if (index != -1) {
+      image.splice(index, 1);
+    }
+    setImage([...image]);
   };
 
   useFocusEffect(
@@ -368,7 +355,11 @@ const Marketplace = () => {
                         color="red"
                         size={20}
                         style={{ marginLeft: -20, zIndex: 100 }}
-                        onPress={() => handleDelete(item.uri)}
+                        onPress={() =>
+                          params?.edit
+                            ? handleDelete(item.uri)
+                            : handleDeleteLocal(item.uri)
+                        }
                       />
                     </Pressable>
                   );

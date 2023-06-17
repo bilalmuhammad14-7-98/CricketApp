@@ -47,6 +47,7 @@ const IMAGE_SIZE = windowHeight * 0.13;
 const CricketProfile = (props) => {
   const [gamesTab, setGamesTab] = useState(1);
   const { params } = useRoute();
+  if (params?.other) console.log(params?.profile, "params?.profile ======");
   const onSelectSwitch = (value) => {
     setGamesTab(value);
   };
@@ -111,11 +112,17 @@ const CricketProfile = (props) => {
               >
                 <Avatar.Image
                   size={IMAGE_SIZE}
-                  source={{ uri: params?.profile?.profileImg }}
+                  source={{
+                    uri: params?.other
+                      ? params?.profile?.player_profile_img
+                      : params?.profile?.profileImg,
+                  }}
                 />
                 <View style={{ marginLeft: 10 }}>
                   <Text style={styles.profile_text1}>
-                    {params?.profile?.fullName}
+                    {params?.other
+                      ? params?.profile?.player_name
+                      : params?.profile?.fullName}
                   </Text>
                   <Text style={styles.profile_text1}>
                     {params?.profile?.email}
@@ -154,15 +161,24 @@ const CricketProfile = (props) => {
               <CustomSwitch
                 selectionMode={1}
                 option1="My Stats"
-                option2="My Teams"
+                option2="Team"
                 option3="Gallery"
                 onSelectSwitch={onSelectSwitch}
               />
             </View>
 
-            {gamesTab == 1 && <PlayerStatsCard />}
-            {gamesTab == 2 && <PlayerTeam />}
-            {gamesTab == 3 && <UmpireGallery />}
+            {gamesTab == 1 && (
+              <PlayerStatsCard
+                profile={params?.profile}
+                other={params?.other}
+              />
+            )}
+            {gamesTab == 2 && (
+              <PlayerTeam profile={params?.profile} other={params?.other} />
+            )}
+            {gamesTab == 3 && (
+              <UmpireGallery profile={params?.profile} other={params?.other} />
+            )}
           </View>
         </View>
       </View>

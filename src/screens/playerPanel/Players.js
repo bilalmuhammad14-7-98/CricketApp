@@ -377,13 +377,21 @@ const PlayersScreen = () => {
                 <Text>No Player found</Text>
               </View>
             ) : (
-              <FlatList
-                data={searchedBlock.length > 0 ? searchedBlock : players}
-                renderItem={(item) => {
-                  return renderList(item.item);
-                }}
-                keyExtractor={(item) => `${item.playerId}`}
-              />
+              <>
+                {players.length == 0 ? (
+                  <Text style={{ textAlign: "center", fontWeight: "bold" }}>
+                    No Players Found
+                  </Text>
+                ) : (
+                  <FlatList
+                    data={searchedBlock.length > 0 ? searchedBlock : players}
+                    renderItem={(item) => {
+                      return renderList(item.item);
+                    }}
+                    keyExtractor={(item) => `${item.playerId}`}
+                  />
+                )}
+              </>
             )}
           </View>
         </View>

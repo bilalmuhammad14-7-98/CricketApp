@@ -27,7 +27,9 @@ import { colors } from "../../config/colors";
 import ImageView from "react-native-image-viewing";
 import withToast from "../../components/Toast";
 import { showSnackBar } from "../../store/actions";
+import { ActivityIndicator } from "react-native-paper";
 const Gallery = () => {
+  const [loader, setLoader] = useState(false);
   const dispatch = useDispatch();
   const [toast, setToast] = useState({
     show: false,
@@ -51,22 +53,24 @@ const Gallery = () => {
     // const test = [1, 2, 3];
     // image.length = 0;
     if (!result?.cancelled) {
+      setLoader(true);
+      setImage([]);
       if (result?.selected) {
         uploadImages(result.selected);
-        if (image.length > 0) {
-          setImage([...image, ...result.selected]);
-        } else {
-          setImage([...result.selected]);
-        }
+        // if (image.length > 0) {
+        //   setImage([...image, ...result.selected]);
+        // } else {
+        //   setImage([...result.selected]);
+        // }
       } else {
         const temp = [];
         temp.push({ uri: result.uri });
         uploadImages(temp);
-        if (image.length > 0) {
-          setImage([...image, ...temp]);
-        } else {
-          setImage([...temp]);
-        }
+        // if (image.length > 0) {
+        //   setImage([...image, ...temp]);
+        // } else {
+        //   setImage([...temp]);
+        // }
       }
     }
   };
@@ -109,6 +113,7 @@ const Gallery = () => {
           "RESPONSE OF IMAGE UPLOAD ===========================================================================> "
         );
         if (response.data.success) {
+          // setLoader(false);
           dispatch(
             showSnackBar({
               visible: true,
@@ -116,7 +121,10 @@ const Gallery = () => {
               error: false,
             })
           );
+          image.length = 0;
+          getuserGallery();
         } else {
+          setLoader(false);
           dispatch(
             showSnackBar({
               visible: true,
@@ -127,6 +135,7 @@ const Gallery = () => {
         }
       })
       .catch((error) => {
+        setLoader(false);
         dispatch(
           showSnackBar({ visible: true, text: error.message, error: true })
         );
@@ -134,6 +143,7 @@ const Gallery = () => {
   };
 
   const getuserGallery = () => {
+    setLoader(true);
     let config = {
       method: "get",
       maxBodyLength: Infinity,
@@ -147,14 +157,18 @@ const Gallery = () => {
       .request(config)
       .then((response) => {
         console.log(response?.data, "response?.data OF GET IMAGE");
-        response?.data?.teams?.map((team) => {
-          team.images?.map((img) => {
-            image.push({ uri: `${imageURL}${img.profile_img}`, id: img.id });
+        if (response?.data?.success) {
+          response?.data?.teams?.map((team) => {
+            team.images?.map((img) => {
+              image.push({ uri: `${imageURL}${img.profile_img}`, id: img.id });
+            });
           });
-        });
-        setImage([...image]);
+          setImage([...image]);
+        }
+        setLoader(false);
       })
       .catch((error) => {
+        setLoader(false);
         dispatch(
           showSnackBar({ visible: true, text: "error.message", error: true })
         );
@@ -166,11 +180,17 @@ const Gallery = () => {
     }, 500);
   }, []);
 
-  useFocusEffect(
-    useCallback(() => {
-      getuserGallery();
-    }, [])
-  );
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     getuserGallery();
+  //   }, [])
+  // );
+
+  useEffect(() => {
+    getuserGallery();
+
+    return () => {};
+  }, []);
 
   const handleDelete = (id) => {
     Alert.alert(
@@ -199,6 +219,7 @@ const Gallery = () => {
     );
   };
   const deleteGallery = (id) => {
+    setLoader(true);
     let data = new FormData();
     data.append("player_gallery_id", id);
 
@@ -217,18 +238,36 @@ const Gallery = () => {
       .then((response) => {
         if (response.data.success) {
           const index = image.findIndex((i) => i.id === id);
-          if (index != -1) {
-            image.splice(index, 1);
-          }
-          setImage([...image]);
+          // if (index != -1) {
+          //   image.splice(index, 1);
+          // }
+          image.length = 0;
+          getuserGallery();
+          dispatch(
+            showSnackBar({ visible: true, text: "Deleted Successfully" })
+          );
+        } else {
+          dispatch(
+            showSnackBar({
+              visible: true,
+              text: response.data.message,
+              error: true,
+            })
+          );
+          setLoader(false);
         }
       })
       .catch((error) => {
         console.log(error);
+        dispatch(
+          showSnackBar({ visible: true, text: error.message, error: true })
+        );
+        setLoader(false);
       });
   };
   const [visible, setIsVisible] = useState(false);
   const [index, setIndex] = useState(0);
+
   return (
     <View>
       <CustomToast show={toast.show} message={toast.message} />
@@ -253,10 +292,21 @@ const Gallery = () => {
           }}
           onPress={pickImage}
         >
-          <Feather style={{ fontSize: 20 }} name="camera" />
-          <Text style={{ fontWeight: "bold", marginLeft: 10 }}>
-            Upload Images
-          </Text>
+          {loader ? (
+            <>
+              <ActivityIndicator size="small" />
+              <Text style={{ fontWeight: "bold", marginLeft: 10 }}>
+                Loading ...
+              </Text>
+            </>
+          ) : (
+            <>
+              <Feather style={{ fontSize: 20 }} name="camera" />
+              <Text style={{ fontWeight: "bold", marginLeft: 10 }}>
+                Upload Images
+              </Text>
+            </>
+          )}
         </TouchableOpacity>
         <View style={{ height: SCREEN_HEIGHT - 200 }}>
           {image && image.length > 0 && (

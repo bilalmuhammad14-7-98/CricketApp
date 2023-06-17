@@ -244,13 +244,19 @@ const PlayerRequests = (navigation) => {
               borderTopRightRadius: 30,
             }}
           >
-            <FlatList
-              data={players}
-              renderItem={(item) => {
-                return renderList(item.item);
-              }}
-              keyExtractor={(item) => `${item.player_id}`}
-            />
+            {players?.length == 0 ? (
+              <Text style={{ textAlign: "center", fontWeight: "bold" }}>
+                No Request Found
+              </Text>
+            ) : (
+              <FlatList
+                data={players}
+                renderItem={(item) => {
+                  return renderList(item.item);
+                }}
+                keyExtractor={(item) => `${item.player_id}`}
+              />
+            )}
           </View>
         </View>
       </View>

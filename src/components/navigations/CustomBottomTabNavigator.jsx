@@ -185,9 +185,13 @@ const NotiIcon = () => {
   useFocusEffect(
     useCallback(() => {
       getNotificationCount();
-    }, [notification])
+    }, [notification, userLoginSuccess])
   );
   const getNotificationCount = () => {
+    console.log(
+      userLoginSuccess.token,
+      "userLoginSuccess.tokenuserLoginSuccess.tokenuserLoginSuccess.tokenuserLoginSuccess.token"
+    );
     let config = {
       method: "get",
       maxBodyLength: Infinity,

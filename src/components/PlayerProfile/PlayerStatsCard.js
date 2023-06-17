@@ -23,7 +23,7 @@ import {
 import { windowHeight, windowWidth } from "../../config/dimensions";
 import images from "../../config/images";
 import { sizes } from "../../config/sizes";
-import { useTheme } from "@react-navigation/native";
+import { useRoute, useTheme } from "@react-navigation/native";
 
 const CARD_WIDTH1 = windowWidth * 0.03;
 const CARD_HEIGHT1 = windowWidth * 0.1;
@@ -85,60 +85,46 @@ const Card = ({ item }) => {
   );
 };
 
-const PlayerStatsCard = () => {
+const PlayerStatsCard = ({ profile, other }) => {
   const { colors } = useTheme();
   const cardItems = [
     {
-      name1: "0",
+      name1: profile?.total_matches ? profile?.total_matches : "N/A",
       name: "Matches",
       code: colors.black,
       //   image: images.cricketerAndfootballer,
     },
     {
-      name1: "0",
-      name: "Innings",
+      name1: profile?.bowling_style ? profile?.bowling_style : "N/A",
+      name: "Bowling Style",
       code: colors.black,
 
       //   image: images.UmpireAndReferee,
     },
     {
-      name1: "0",
+      name1: profile?.total_runs ? profile?.total_runs : "N/A",
       name: "Runs",
       code: colors.black,
       //   image: images.UmpireAndReferee,
     },
 
     {
-      name1: "0",
-      name: "Highest",
+      name1: profile?.batting_style ? profile?.batting_style : "N/A",
+      name: "Batting Style",
       code: colors.black,
       //   image: images.UmpireAndReferee,
     },
 
     {
-      name1: "0",
-      name: "50s",
+      name1: profile?.total_runs ? profile?.total_runs : "N/A",
+      name: "Runs",
       code: colors.black,
       //   image: images.UmpireAndReferee,
     },
 
     {
-      name1: "0",
+      name1: profile?.total_wickets ? profile?.total_wickets : "N/A",
       name: "Wickets",
-      code: colors.black,
-      //   image: images.UmpireAndReferee,
-    },
-
-    {
-      name1: "0",
-      name: "Best",
-      code: colors.black,
-      //   image: images.UmpireAndReferee,
-    },
-
-    {
-      name1: "0",
-      name: "Runs Conceded",
       code: colors.black,
       //   image: images.UmpireAndReferee,
     },

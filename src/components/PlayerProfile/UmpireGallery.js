@@ -75,7 +75,7 @@ const Card = ({ item, index }) => {
   );
 };
 
-const UmpireGallery = ({ profile }) => {
+const UmpireGallery = ({ profile, other }) => {
   const { colors } = useTheme();
   const dispatch = useDispatch();
   const [image, setImage] = useState([]);
@@ -140,6 +140,8 @@ const UmpireGallery = ({ profile }) => {
       maxBodyLength: Infinity,
       url: `${apiActiveURL}list-Player-Gallery?player_id=${
         userLoginSuccess?.data?.roleId == "recruiter"
+          ? profile?.id
+          : other
           ? profile?.id
           : userLoginSuccess.data.id
       }`,
