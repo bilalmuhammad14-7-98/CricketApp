@@ -67,6 +67,7 @@ const TeamsScreen = () => {
   const [searchedBlock, setSearchedBlock] = useState([]);
 
   const userLoginSuccess = useSelector((state) => {
+    console.log(state.loginData.data, "state.loginData.data");
     return state.loginData.data;
   });
 
@@ -106,7 +107,7 @@ const TeamsScreen = () => {
           userLoginSuccess?.data?.roleId != "umpire"
         ) {
           response.data.teams.map((t) => {
-            if (13 == t.value) {
+            if (userLoginSuccess?.data?.player_team_id == t.value) {
               temp2.push(t);
             } else {
               temp.push(t);

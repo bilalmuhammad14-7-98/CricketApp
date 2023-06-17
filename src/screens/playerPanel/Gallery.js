@@ -309,7 +309,7 @@ const Gallery = () => {
           )}
         </TouchableOpacity>
         <View style={{ height: SCREEN_HEIGHT - 200 }}>
-          {image && image.length > 0 && (
+          {image && image.length > 0 ? (
             <FlatList
               data={image}
               numColumns={3}
@@ -348,6 +348,10 @@ const Gallery = () => {
                 );
               }}
             />
+          ) : (
+            <Text style={{ fontWeight: "bold", textAlign: "center" }}>
+              No Images Found
+            </Text>
           )}
         </View>
       </View>

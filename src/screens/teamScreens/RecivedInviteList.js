@@ -130,6 +130,10 @@ const RecivedInviteList = () => {
             <Text>{item.match_date_time}</Text>
             <Text style={styles.cardTitle}>Match Type: </Text>
             <Text>{item.match_type}</Text>
+            <Text style={styles.cardTitle}>Sender: </Text>
+            <Text>{item.request_sender_id}</Text>
+            <Text style={styles.cardTitle}>Sender Team: </Text>
+            <Text>{item.request_sender_team_id}</Text>
           </View>
         </View>
       </View>
@@ -160,14 +164,20 @@ const RecivedInviteList = () => {
               paddingVertical: 10,
             }}
           >
-            <FlatList
-              data={invite}
-              renderItem={({ item }) => {
-                console.log(item, "item list");
-                return renderList(item);
-              }}
-              keyExtractor={(item) => `${item.value}`}
-            />
+            {invite.length > 0 ? (
+              <FlatList
+                data={invite}
+                renderItem={({ item }) => {
+                  console.log(item, "item list");
+                  return renderList(item);
+                }}
+                keyExtractor={(item) => `${item.value}`}
+              />
+            ) : (
+              <Text style={{ fontWeight: "bold", textAlign: "center" }}>
+                No Invitations
+              </Text>
+            )}
           </View>
         </View>
       </View>

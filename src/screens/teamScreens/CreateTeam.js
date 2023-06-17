@@ -64,6 +64,7 @@ import { searchPlayer } from "../../services/playerService";
 import { useDispatch, useSelector } from "react-redux";
 import withToast from "../../components/Toast";
 import { showSnackBar } from "../../store/actions";
+import { generatePassword } from "../../util";
 const CARD_WIDTH = windowWidth * 0.05;
 const CARD_HEIGHT = windowHeight * 0.23;
 const curve_height = windowHeight * 0.15;
@@ -186,6 +187,7 @@ const CreateTeam = (props) => {
       console.log(pathParts[pathParts.length - 1].split("."), "name");
       setImageName(pathParts[pathParts.length - 1]);
       setImage(result.uri);
+      setModal(false);
     }
   };
 
@@ -207,15 +209,15 @@ const CreateTeam = (props) => {
 
     var data = new FormData();
     data.append("team_name", model.team_name);
-    data.append("team_reg_no", model.team_reg_no);
+    data.append("team_reg_no", generatePassword(10));
     data.append("team_logo_path", imgObj !== null ? imgObj : "");
     data.append("country_id", selectedCountry?.value);
     data.append("city_id", selectedCity?.value);
-    data.append("team_total_players", model.team_total_players);
-    data.append("team_total_wins", model.team_total_wins);
-    data.append("team_total_lose", model.team_total_lose);
-    data.append("team_total_overs", model.team_total_overs);
-    data.append("team_total_runs", model.team_total_runs);
+    // data.append("team_total_players", model.team_total_players);
+    // data.append("team_total_wins", model.team_total_wins);
+    // data.append("team_total_lose", model.team_total_lose);
+    // data.append("team_total_overs", model.team_total_overs);
+    // data.append("team_total_runs", model.team_total_runs);
 
     var config = {
       method: "post",
@@ -233,18 +235,35 @@ const CreateTeam = (props) => {
     await axios(config)
       .then(function (response) {
         console.log(response, "create team data response");
-        dispatch(
-          showSnackBar({
-            visible: true,
-            text: response.data.message,
-            error: false,
-          })
-        );
-        navigation.goBack();
+        if (response.data.success) {
+          dispatch(
+            showSnackBar({
+              visible: true,
+              text: response.data.message,
+              error: false,
+            })
+          );
+          navigation.goBack();
+        } else {
+          dispatch(
+            showSnackBar({
+              visible: true,
+              text: response.data.message,
+              error: true,
+            })
+          );
+        }
         // listTeams();
       })
       .catch(function (error) {
         console.log(error);
+        dispatch(
+          showSnackBar({
+            visible: true,
+            text: error.message,
+            error: true,
+          })
+        );
       });
   };
   return (
@@ -322,12 +341,12 @@ const CreateTeam = (props) => {
               placeholderText="Team Name"
             />
 
-            <CustomFormInput
+            {/* <CustomFormInput
               // autoComplete="name"
               onChangeText={(val) => setModel({ ...model, team_reg_no: val })}
               value={model.team_reg_no}
               placeholderText="Team Registeration Number"
-            />
+            /> */}
 
             <View>
               <Text
@@ -364,7 +383,7 @@ const CreateTeam = (props) => {
               />
             </View>
 
-            <CustomFormInput
+            {/* <CustomFormInput
               // autoComplete="name"
               onChangeText={(val) =>
                 setModel({ ...model, team_total_players: val })
@@ -407,12 +426,12 @@ const CreateTeam = (props) => {
               }
               value={model.team_total_runs}
               placeholderText="Team Total Runs"
-            />
+            /> */}
 
             <TouchableOpacity>
               <CustomButton
                 textColor="white"
-                btnLabel="Update"
+                btnLabel="Create"
                 Press={handleUpdate}
               />
             </TouchableOpacity>

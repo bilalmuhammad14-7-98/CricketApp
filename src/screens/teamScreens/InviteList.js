@@ -241,14 +241,20 @@ const InviteList = () => {
               paddingVertical: 10,
             }}
           >
-            <FlatList
-              data={invite}
-              renderItem={({ item }) => {
-                console.log(item, "item list");
-                return renderList(item);
-              }}
-              keyExtractor={(item) => `${item.id}`}
-            />
+            {invite.length > 0 ? (
+              <FlatList
+                data={invite}
+                renderItem={({ item }) => {
+                  console.log(item, "item list");
+                  return renderList(item);
+                }}
+                keyExtractor={(item) => `${item.id}`}
+              />
+            ) : (
+              <Text style={{ fontWeight: "bold", textAlign: "center" }}>
+                No Invitations
+              </Text>
+            )}
           </View>
         </View>
       </View>

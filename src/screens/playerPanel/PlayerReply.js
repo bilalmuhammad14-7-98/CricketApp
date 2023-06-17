@@ -302,13 +302,19 @@ const PlayerReply = (navigation) => {
               borderTopRightRadius: 30,
             }}
           >
-            <FlatList
-              data={players}
-              renderItem={(item) => {
-                return renderList(item.item);
-              }}
-              keyExtractor={(item) => `${item.player_id}`}
-            />
+            {players.length > 0 ? (
+              <FlatList
+                data={players}
+                renderItem={(item) => {
+                  return renderList(item.item);
+                }}
+                keyExtractor={(item) => `${item.player_id}`}
+              />
+            ) : (
+              <Text style={{ fontWeight: "bold", textAlign: "center" }}>
+                No reply found
+              </Text>
+            )}
           </View>
         </View>
       </View>
