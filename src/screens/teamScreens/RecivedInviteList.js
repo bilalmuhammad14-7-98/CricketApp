@@ -134,6 +134,8 @@ const RecivedInviteList = () => {
             <Text>{item.request_sender_id}</Text>
             <Text style={styles.cardTitle}>Sender Team: </Text>
             <Text>{item.request_sender_team_id}</Text>
+            <Text style={styles.cardTitle}>Sender Phone Number: </Text>
+            <Text>{item.request_sender_phone}</Text>
           </View>
         </View>
       </View>

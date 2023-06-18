@@ -211,7 +211,9 @@ const PlayersScreen = () => {
                 <Avatar.Image
                   size={LOGO_SIZE}
                   source={
-                    item?.playerImage ? { uri: item?.playerImage } : images.logo
+                    item?.player_profile_img
+                      ? { uri: item?.player_profile_img }
+                      : images.logo
                   }
                 />
               </View>
@@ -230,7 +232,7 @@ const PlayersScreen = () => {
                   ellipsizeMode="tail"
                   style={styles.text}
                 >
-                  {item?.playerName}
+                  {item?.player_name}
                 </Text>
 
                 {item?.isCaptian == "true" ? (
@@ -261,10 +263,14 @@ const PlayersScreen = () => {
                   btnLabel="View Profile"
                   Press={() => {
                     // onPress(item);
-                    navigation.navigate("MyPlayerDetail", {
-                      playerId: item.playerId,
-                      screenName: "myPlayer",
+                    navigation.navigate("CricketProfile", {
+                      profile: item,
+                      other: true,
                     });
+                    // navigation.navigate("MyPlayerDetail", {
+                    //   playerId: item.playerId,
+                    //   screenName: "myPlayer",
+                    // });
                   }}
                   myStyle={{
                     // alignSelf: "flex-end",
@@ -317,7 +323,7 @@ const PlayersScreen = () => {
           <StatusBar barStyle="dark-content" />
           <Search
             searchArray={players}
-            searchField="playerName"
+            searchField="player_name"
             results={(data) => {
               setSearchedBlock([...data]);
             }}
@@ -340,7 +346,7 @@ const PlayersScreen = () => {
             >
               <View style={styles.modalView}>
                 <Text>
-                  Are you sure you want to make {pressedItem?.playerName} a
+                  Are you sure you want to make {pressedItem?.player_name} a
                   captian
                 </Text>
                 <View style={styles.modalButtonView}>

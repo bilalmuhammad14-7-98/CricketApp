@@ -115,7 +115,9 @@ const TeamList = () => {
                 <Avatar.Image
                   size={LOGO_SIZE}
                   source={
-                    item?.playerImage ? { uri: item?.playerImage } : images.logo
+                    item?.player_profile_img
+                      ? { uri: item?.player_profile_img }
+                      : images.logo
                   }
                 />
               </View>
@@ -134,7 +136,7 @@ const TeamList = () => {
                   ellipsizeMode="tail"
                   style={styles.text}
                 >
-                  {item?.playerName}
+                  {item?.player_name}
                 </Text>
 
                 {item?.isCaptian == "true" ? (
@@ -161,10 +163,14 @@ const TeamList = () => {
                   btnLabel="View Profile"
                   onPress={() => {
                     // onPress(item);
-                    navigation.navigate("MyPlayerDetail", {
-                      playerId: item.playerId,
-                      screenName: "myPlayer",
+                    navigation.navigate("CricketProfile", {
+                      profile: item,
+                      other: true,
                     });
+                    // navigation.navigate("MyPlayerDetail", {
+                    //   playerId: item.playerId,
+                    //   screenName: "myPlayer",
+                    // });
                   }}
                   myStyle={{
                     alignSelf: "flex-end",

@@ -130,6 +130,12 @@ const InviteList = () => {
             <Text>{item.match_date_time}</Text>
             <Text style={styles.cardTitle}>Match Type: </Text>
             <Text>{item.match_type}</Text>
+            <Text style={styles.cardTitle}>Reciever: </Text>
+            <Text>{item.request_receiver_name}</Text>
+            <Text style={styles.cardTitle}>Reciever Team: </Text>
+            <Text>{item.requested_receiver_team_name}</Text>
+            <Text style={styles.cardTitle}>Reciever Phone Number: </Text>
+            <Text>{item.request_receiver_phone}</Text>
           </View>
         </View>
       </View>

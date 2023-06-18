@@ -104,9 +104,9 @@ const EditProfile = (props) => {
   const [userData, setUserData] = useState();
 
   const [selectedGender, setSelectedGender] = useState(
-    item.gender == "male"
+    item?.gender == "male"
       ? { label: "male", value: "1" }
-      : item.gender == "female"
+      : item?.gender == "female"
       ? { label: "female", value: "2" }
       : ""
   );
@@ -151,20 +151,20 @@ const EditProfile = (props) => {
   const [bowlingStyle, setBowlingStyle] = useState([]);
 
   const [selectedCountry, setSelectedCountry] = useState(
-    item.countryName == "pakistan" ? { value: 1, label: "pakistan" } : ""
+    item?.countryName == "pakistan" ? { value: 1, label: "pakistan" } : ""
   );
   const [country, setCountry] = useState([]);
 
   const [selectedCity, setSelectedCity] = useState(
-    item.cityName == "karachi" ? { value: 1, label: "karachi" } : ""
+    item?.cityName == "karachi" ? { value: 1, label: "karachi" } : ""
   );
   const [cities, setCities] = useState([]);
 
   const [model, setModel] = useState({
-    firstName: item ? item.first_name : "",
-    lastName: item ? item.last_name : "",
-    middleName: item ? item.middle_name : "",
-    address: item ? item.address : "",
+    firstName: item ? item?.first_name : "",
+    lastName: item ? item?.last_name : "",
+    middleName: item ? item?.middle_name : "",
+    address: item ? item?.address : "",
     dob: item ? item?.dob : "",
     total_runs: item ? item?.player[0]?.total_runs : "",
     total_overs: item ? item?.player[0]?.total_overs : "",

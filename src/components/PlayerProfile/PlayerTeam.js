@@ -43,6 +43,7 @@ const PlayerTeam = ({ profile, other }) => {
     return state.loginData.data;
   });
   console.log(profile?.player_team == "", "profile TEST");
+  console.log(other, "profile TEST");
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -54,12 +55,70 @@ const PlayerTeam = ({ profile, other }) => {
       <View>
         <StatusBar barStyle="light-content" />
         <View>
-          {other && profile?.player_team == "" ? (
-            <Text
-              style={{ textAlign: "center", fontWeight: "bold", marginTop: 20 }}
-            >
-              Not Part Of Any Team
-            </Text>
+          {other ? (
+            profile?.player_team == "" ? (
+              <Text
+                style={{
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  marginTop: 20,
+                }}
+              >
+                Not Part Of Any Team
+              </Text>
+            ) : (
+              <View style={styles.cardsWrapper}>
+                <View style={styles.card}>
+                  <View
+                    style={[
+                      styles.cardInfo,
+                      {
+                        justifyContent: "space-around",
+                        flexDirection: "row",
+                      },
+                    ]}
+                  >
+                    <View
+                      style={{
+                        justifyContent: "space-around",
+                        flex: 1,
+                      }}
+                    >
+                      <Text
+                        style={styles.cardTitle}
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                      >
+                        Team Name:
+                      </Text>
+                      <Text
+                        style={styles.cardTitle}
+                        numberOfLines={1}
+                        ellipsizeMode="tail"
+                      >
+                        {other
+                          ? profile?.player_team
+                          : userLoginSuccess?.data?.player_team_name}
+                      </Text>
+                    </View>
+                    <PlayerCustomButtom
+                      textColor="white"
+                      btnLabel="View Players"
+                      onPress={() => {
+                        navigation.navigate("TeamList", {
+                          data: other
+                            ? profile?.player_team_id
+                            : userLoginSuccess?.data?.player_team_id,
+                        });
+                      }}
+                      myStyle={{
+                        alignSelf: "center",
+                      }}
+                    />
+                  </View>
+                </View>
+              </View>
+            )
           ) : (
             <>
               {userLoginSuccess?.data?.player_team_name == "" ? (
