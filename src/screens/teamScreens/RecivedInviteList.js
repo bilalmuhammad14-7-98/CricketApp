@@ -36,10 +36,11 @@ import SearchBar from "../../components/formComponents/SearchBar";
 
 import { apiActiveURL } from "../../ApiBaseURL";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { useIsFocused } from "@react-navigation/native";
 import withToast from "../../components/Toast";
+import { showSnackBar } from "../../store/actions";
 
 const curve_height = windowHeight * 0.2;
 const CARD_WIDTH = windowWidth * 0.93;
@@ -52,6 +53,7 @@ const cross_icon = windowHeight * 0.01;
 
 const RecivedInviteList = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
   const isFocused = useIsFocused();
   const searchRef = useRef();
   const [search, setSearch] = useState("");
@@ -117,7 +119,7 @@ const RecivedInviteList = () => {
   const renderList = (item) => {
     // console.log(item, "item---");
     return (
-      <View style={styles.cardsWrapper} key={item.value}>
+      <View style={styles.cardsWrapper} key={item.id}>
         <View style={styles.card}>
           {/* <View style={styles.cardImgWrapper}></View> */}
 
@@ -136,12 +138,87 @@ const RecivedInviteList = () => {
             <Text>{item.request_sender_team_id}</Text>
             <Text style={styles.cardTitle}>Sender Phone Number: </Text>
             <Text>{item.request_sender_phone}</Text>
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "space-around",
+                marginVertical: 10,
+              }}
+            >
+              <PlayerCustomButtom
+                textColor="white"
+                btnLabel="Accept"
+                onPress={() => {
+                  handleStatus({ id: item.id, status: "accepted" });
+                }}
+                myStyle={{ paddingVertical: 10 }}
+              />
+              <PlayerCustomButtom
+                textColor="white"
+                btnLabel="Decline"
+                onPress={() => {
+                  handleStatus({ id: item.id, status: "decline" });
+                }}
+                myStyle={{ backgroundColor: "red", paddingVertical: 10 }}
+              />
+            </View>
           </View>
         </View>
       </View>
     );
   };
 
+  const handleStatus = ({ id, status }) => {
+    console.log(id, status);
+    // return;
+    let data = new FormData();
+    data.append("requestId", id);
+    data.append("request_status", status);
+
+    let config = {
+      method: "post",
+      maxBodyLength: Infinity,
+      url: `${apiActiveURL}match-update-status`,
+      headers: {
+        Authorization: `Bearer ${userLoginSuccess.token}`,
+      },
+      data: data,
+    };
+
+    axios
+      .request(config)
+      .then((response) => {
+        console.log(JSON.stringify(response.data));
+        if (response.data.success) {
+          dispatch(
+            showSnackBar({
+              visible: true,
+              text: response.data.message,
+              error: false,
+            })
+          );
+          navigation.goBack();
+        } else {
+          dispatch(
+            showSnackBar({
+              visible: true,
+              text: response.data.message,
+              error: false,
+            })
+          );
+        }
+      })
+      .catch((error) => {
+        dispatch(
+          showSnackBar({
+            visible: true,
+            text: error.message,
+            error: false,
+          })
+        );
+        console.log(error);
+      });
+  };
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -173,7 +250,7 @@ const RecivedInviteList = () => {
                   console.log(item, "item list");
                   return renderList(item);
                 }}
-                keyExtractor={(item) => `${item.value}`}
+                keyExtractor={(item) => `${item.id}`}
               />
             ) : (
               <Text style={{ fontWeight: "bold", textAlign: "center" }}>
@@ -234,7 +311,7 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    height: CARD_HEIGHT,
+    // height: CARD_HEIGHT,
     marginTop: 8,
     flexDirection: "row",
     // shadowColor: "#999",
