@@ -31,7 +31,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { ScrollView } from "react-native-gesture-handler";
 import axios from "axios";
 import { http } from "../../components/http/http";
-import { apiActiveURL } from "../../ApiBaseURL";
+import { apiActiveURL, imageURL } from "../../ApiBaseURL";
 import { useDispatch, useSelector } from "react-redux";
 import Toast from "react-native-root-toast";
 import withToast from "../../components/Toast";
@@ -194,7 +194,7 @@ const PlayerReply = (navigation) => {
                   size={LOGO_SIZE}
                   source={
                     item?.player_img
-                      ? { uri: item?.player_img }
+                      ? { uri: `${imageURL}${item?.player_img}` }
                       : images.FypLogo
                   }
                 />

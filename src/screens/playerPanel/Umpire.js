@@ -334,7 +334,7 @@ const UmpireScreen = () => {
     let config = {
       method: "post",
       maxBodyLength: Infinity,
-      url: `${apiActiveURL}send-umpire-reques`,
+      url: `${apiActiveURL}send-umpire-request`,
       headers: {
         Authorization: `Bearer ${userLoginSuccess.token}`,
       },
