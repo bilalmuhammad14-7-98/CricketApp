@@ -118,7 +118,7 @@ const PlayerRequests = (navigation) => {
   }, []);
 
   const renderList = (item, index) => {
-    console.log(item, "item");
+    console.log(item, "item all");
     return (
       <View style={{ flex: 1 }}>
         <View>

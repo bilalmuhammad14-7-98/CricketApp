@@ -24,6 +24,7 @@ import { windowHeight, windowWidth } from "../../config/dimensions";
 import images from "../../config/images";
 import { sizes } from "../../config/sizes";
 import { useRoute, useTheme } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 
 const CARD_WIDTH1 = windowWidth * 0.03;
 const CARD_HEIGHT1 = windowWidth * 0.1;
@@ -32,7 +33,6 @@ const CARD_HEIGHT = windowHeight * 0.12;
 
 const Card = ({ item }) => {
   const { colors } = useTheme();
-
   return (
     <TouchableOpacity
       style={{
@@ -87,6 +87,7 @@ const Card = ({ item }) => {
 
 const PlayerStatsCard = ({ profile, other }) => {
   const { colors } = useTheme();
+  console.log(profile, "profile in stats");
   const cardItems = [
     {
       name1: profile?.total_matches ? profile?.total_matches : "N/A",

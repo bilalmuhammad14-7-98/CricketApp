@@ -172,11 +172,22 @@ const UmpireGallery = ({ profile, other }) => {
       <View
         style={{ flexDirection: "row", flexWrap: "wrap", paddingBottom: 30 }}
       >
-        {image &&
-          image.length > 0 &&
+        {image && image.length > 0 ? (
           image.map((item) => {
             return <Card item={item} />;
-          })}
+          })
+        ) : (
+          <Text
+            style={{
+              textAlign: "center",
+              fontWeight: "bold",
+              marginTop: 10,
+              flex: 1,
+            }}
+          >
+            No Gallery Found
+          </Text>
+        )}
       </View>
     </View>
   );

@@ -24,6 +24,7 @@ import { windowHeight, windowWidth } from "../../config/dimensions";
 import images from "../../config/images";
 import { sizes } from "../../config/sizes";
 import { useTheme } from "@react-navigation/native";
+import { useSelector } from "react-redux";
 
 const CARD_WIDTH1 = windowWidth * 0.03;
 const CARD_HEIGHT1 = windowWidth * 0.1;
@@ -90,32 +91,51 @@ const Card = ({ item }) => {
 
 const UmpireStateCard = ({ profile }) => {
   console.log(profile, "profile ======> ");
+  const userLoginSuccess = useSelector((state) => {
+    return state.loginData.data;
+  });
   const { colors } = useTheme();
   const cardItems = [
     {
-      name1: profile.phone,
+      name1: profile?.phone ? profile?.phone : "N/A",
       name: "Phone",
       code: colors.black,
       //   image: images.cricketerAndfootballer,
     },
     {
-      name1: profile.gender ? profile.gender : "N/A",
+      name1: profile?.gender ? profile?.gender : "N/A",
       name: "Gender",
       code: colors.black,
 
       //   image: images.UmpireAndReferee,
     },
     {
-      name1: profile.fees ? profile.fees : "N/A",
+      name1: profile?.fees ? profile?.fees : "N/A",
       name: "Fees",
       code: colors.black,
       //   image: images.UmpireAndReferee,
     },
 
     {
-      name1: profile.available_days,
+      name1: profile?.available_days ? profile?.available_days : "N/A",
       name: "Availible Days",
       code: colors.black,
+      //   image: images.UmpireAndReferee,
+    },
+  ];
+
+  const recCardItems = [
+    {
+      name1: profile?.phone ? profile?.phone : "N/A",
+      name: "Phone",
+      code: colors.black,
+      //   image: images.cricketerAndfootballer,
+    },
+    {
+      name1: profile?.gender ? profile?.gender : "N/A",
+      name: "Gender",
+      code: colors.black,
+
       //   image: images.UmpireAndReferee,
     },
   ];
@@ -143,9 +163,13 @@ const UmpireStateCard = ({ profile }) => {
             justifyContent: "center",
           }}
         >
-          {cardItems.map((item) => {
-            return <Card item={item} />;
-          })}
+          {userLoginSuccess?.data?.roleId == "recruiter"
+            ? recCardItems.map((item) => {
+                return <Card item={item} />;
+              })
+            : cardItems.map((item) => {
+                return <Card item={item} />;
+              })}
         </View>
       </View>
     </View>

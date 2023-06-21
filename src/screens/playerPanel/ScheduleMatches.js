@@ -121,6 +121,12 @@ const ScheduleMatches = () => {
             <Text>{item.match_date_time}</Text>
             <Text style={styles.cardTitle}>Match Type: </Text>
             <Text>{item.match_type}</Text>
+            <Text style={styles.cardTitle}>Reciever: </Text>
+            <Text>{item.request_receiver_name}</Text>
+            <Text style={styles.cardTitle}>Reciever Team: </Text>
+            <Text>{item.requested_receiver_team_name}</Text>
+            <Text style={styles.cardTitle}>Sender Team: </Text>
+            <Text>{item.requested_sender_team_name}</Text>
           </View>
         </View>
       </View>
@@ -219,7 +225,7 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    height: CARD_HEIGHT,
+    // height: CARD_HEIGHT,
     marginTop: 8,
     flexDirection: "row",
     // shadowColor: "#999",

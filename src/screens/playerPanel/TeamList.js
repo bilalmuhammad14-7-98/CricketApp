@@ -101,7 +101,7 @@ const TeamList = () => {
   }, []);
 
   const renderList = (item, index) => {
-    console.log(item, "item");
+    console.log(item, "item team list");
     return (
       <TouchableOpacity
         style={{ flex: 1 }}

@@ -197,7 +197,7 @@ const PlayersScreen = () => {
   }, []);
 
   const renderList = (item, index) => {
-    console.log(item, "item");
+    console.log(item, "item a1", item.player_name);
     return (
       <TouchableOpacity
         style={{ flex: 1 }}

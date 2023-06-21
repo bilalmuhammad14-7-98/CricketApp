@@ -61,7 +61,9 @@ const RecruiterProfile = (props) => {
         <View style={styles.card}>
           <View style={styles.cardImgWrapper}>
             <Image
-              source={{ uri: params?.profile?.team[0].team_logo }}
+              source={{
+                uri: params?.profile ? params?.profile?.team[0]?.team_logo : "",
+              }}
               resizeMode="contain"
               style={styles.cardImg}
             />
@@ -163,10 +165,25 @@ const RecruiterProfile = (props) => {
                 onSelectSwitch={onSelectSwitch}
               />
             </View>
-
             {gamesTab == 1 && <UmpireStateCard profile={params?.profile} />}
             {gamesTab == 2 && <UmpireGallery />}
-            {gamesTab == 3 && renderList()}
+            {gamesTab == 3 ? (
+              params?.profile?.team?.length != 0 ? (
+                renderList()
+              ) : (
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    textAlign: "center",
+                    margin: 20,
+                  }}
+                >
+                  No Team Found
+                </Text>
+              )
+            ) : (
+              <></>
+            )}
           </View>
         </View>
       </View>
