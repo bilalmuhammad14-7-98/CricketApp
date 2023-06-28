@@ -197,7 +197,7 @@ const UmpireScreen = () => {
                   onPress={() => {
                     // return console.log(item);
                     // navigation.navigate("umpireprofile", { umpire: item });
-                    return navigation.navigate("umpireprofile", {
+                    return navigation.navigate("umpireprofileforrecruiter", {
                       profile: item,
                     });
                   }}
@@ -312,6 +312,14 @@ const UmpireScreen = () => {
         if (response?.data?.data?.length > 0) {
           setMatches([...response?.data?.data]);
           showModal();
+        } else {
+          dispatch(
+            showSnackBar({
+              visible: true,
+              text: "No Current Match Found",
+              error: true,
+            })
+          );
         }
       })
       .catch((error) => {

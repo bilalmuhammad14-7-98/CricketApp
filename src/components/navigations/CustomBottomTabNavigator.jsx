@@ -66,6 +66,8 @@ import UmpireProfile from "../../screens/ProfileScreen/UmpireProfile";
 import RecruiterProfile from "../../screens/ProfileScreen/RecruiterProfile";
 import RecruterRequest from "../../screens/playerPanel/RecruterRequest";
 import PlayerReply from "../../screens/playerPanel/PlayerReply";
+import UmpireProfileForRecruiter from "../../screens/ProfileScreen/UmpireProfileForRecruiter";
+import UmpireAcceptedRequestList from "../../screens/UmpireScreens/UmpireAcceptedRequestList";
 const upper_margin = windowWidth * 0.001;
 const upper_margin1 = windowWidth * 0.01;
 const LOGO_SIZE = windowHeight * 0.06;
@@ -310,10 +312,6 @@ function PlayerHomeNavigationContainer() {
   const userLoginSuccess = useSelector((state) => {
     return state.loginData.data;
   });
-  console.log(
-    userLoginSuccess,
-    "userLoginSuccessuserLoginSuccessuserLoginSuccess"
-  );
   return (
     <StackPlayerHome.Navigator screenOptions={{ headerShown: true }}>
       <StackPlayerHome.Screen
@@ -543,6 +541,25 @@ function PlayerHomeNavigationContainer() {
           },
         })}
       />
+      <StackPlayerHome.Screen
+        name="Umpiringacceotedrequest"
+        component={UmpireAcceptedRequestList}
+        options={({ navigation }) => ({
+          title: "",
+          headerLeft: () => {
+            return (
+              <NavigationHeader
+                title={"Accpted Requests"}
+                navigation={navigation}
+              />
+            );
+          },
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
 
       <StackPlayerHome.Screen
         name="PlayerRequest"
@@ -591,7 +608,25 @@ function PlayerHomeNavigationContainer() {
           },
         })}
       />
-
+      <StackPlayerHome.Screen
+        name="umpireprofileforrecruiter"
+        component={UmpireProfileForRecruiter}
+        options={({ navigation }) => ({
+          title: "",
+          headerLeft: () => {
+            return (
+              <NavigationHeader
+                title={"Umpire Details"}
+                navigation={navigation}
+              />
+            );
+          },
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
       <StackPlayerHome.Screen
         name="umpireprofile"
         component={UmpireProfile}
@@ -611,6 +646,7 @@ function PlayerHomeNavigationContainer() {
           },
         })}
       />
+
       <StackPlayerHome.Screen
         name="recruiterprofile"
         component={RecruiterProfile}
@@ -620,6 +656,25 @@ function PlayerHomeNavigationContainer() {
             return (
               <NavigationHeader
                 title={"Recruiter Details"}
+                navigation={navigation}
+              />
+            );
+          },
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
+      <StackUserProfile.Screen
+        name="CricketProfile"
+        component={CricketProfile}
+        options={({ navigation }) => ({
+          title: "",
+          headerLeft: () => {
+            return (
+              <NavigationHeader
+                title={"Cricket Profile"}
                 navigation={navigation}
               />
             );
@@ -735,6 +790,25 @@ function TeamsScreenNavigationContainer() {
             );
           },
 
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
+      <StackUserProfile.Screen
+        name="CricketProfile"
+        component={CricketProfile}
+        options={({ navigation }) => ({
+          title: "",
+          headerLeft: () => {
+            return (
+              <NavigationHeader
+                title={"Cricket Profile"}
+                navigation={navigation}
+              />
+            );
+          },
           headerStyle: {
             backgroundColor: "#FAF9F6",
             elevation: 0,

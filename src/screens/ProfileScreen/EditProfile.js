@@ -213,55 +213,99 @@ const EditProfile = (props) => {
       country: selectedCountry,
       city: selectedCity,
     };
-    // console.log(updateData, selectedGender.value, image, "dropdown data");
-    console.log(imgObj, "imagesOBJ");
 
-    // return;
-
-    var data = new FormData();
-    data.append("firstName", model.firstName);
-    // data.append("lastName", model.lastName);
-    // data.append("middleName", model.middleName);
-    data.append("address", model.address);
-    data.append("gender", selectedGender ? selectedGender.label : "");
-    data.append(
-      "profile_img",
-      imgObj ? imgObj : ""
-      // {
-      //   name: imgObj.name,
-      //   type: imgObj.type,
-      //   uri: imgObj.uri,
-      //   // Platform.OS === 'android'
-      //   // ? photo.uri
-      //   // : photo.uri.replace('file://', ''),
-      // }
+    console.log("firstName", model?.firstName ? model.firstName : "");
+    console.log("address", model?.address ? model?.address : "");
+    console.log("gender", selectedGender ? selectedGender?.label : "");
+    console.log("profile_img", imgObj ? imgObj : "");
+    console.log("banner", "");
+    console.log("dob", model?.dob ? model?.dob : "");
+    console.log(
+      "batting_style_id",
+      selectedBattingStyle?.value ? selectedBattingStyle?.value : ""
     );
+    console.log("total_runs", model?.total_runs ? model?.total_runs : "");
+    console.log("total_overs", model.total_overs ? model.total_overs : "");
+    console.log(
+      "total_wickets",
+      model?.total_wickets ? model?.total_wickets : ""
+    );
+    console.log(
+      "total_matches",
+      model?.total_matches ? model?.total_matches : ""
+    );
+    console.log(
+      "player_ratings",
+      model?.player_ratings ? model?.player_ratings : ""
+    );
+    console.log("password", model?.password ? model?.password : "");
+    console.log(
+      "bowling_style_id",
+      selectedBowlingStyle?.value ? selectedBowlingStyle?.value : ""
+    );
+    console.log(
+      "playing_role_id",
+      selectedPlayingRole?.value ? selectedPlayingRole?.value : ""
+    );
+
+    console.log("phone", model?.phone ? model?.phone : "");
+    console.log("city", selectedCity?.value ? selectedCity?.value : "");
+    console.log(
+      "country",
+      selectedCountry?.value ? selectedCountry?.value : ""
+    );
+    console.log("fees", model?.fees ? model?.fees : "");
+    console.log("description", model?.description ? model?.description : "");
+    console.log(
+      "available_days",
+      selectedDays && selectedDays?.length > 0
+        ? JSON.stringify(selectedDays)
+        : []
+    );
+    // Consoles all
+    var data = new FormData();
+    data.append("firstName", model?.firstName ? model.firstName : "");
+    data.append("address", model?.address ? model?.address : "");
+    data.append("gender", selectedGender ? selectedGender?.label : "");
+    data.append("profile_img", imgObj ? imgObj : "");
     data.append("banner", "");
-    data.append("dob", model.dob);
+    data.append("dob", model?.dob ? model?.dob : "");
     data.append(
       "batting_style_id",
-      selectedBattingStyle ? selectedBattingStyle.value : ""
+      selectedBattingStyle?.value ? selectedBattingStyle?.value : ""
     );
-    data.append("total_runs", model.total_runs);
-    data.append("total_overs", model.total_overs);
-    data.append("total_wickets", model.total_wickets);
-    data.append("total_matches", model.total_matches);
-    data.append("player_ratings", model.player_ratings);
-    data.append("password", model.password);
+    data.append("total_runs", model?.total_runs ? model?.total_runs : "");
+    data.append("total_overs", model.total_overs ? model.total_overs : "");
+    data.append(
+      "total_wickets",
+      model?.total_wickets ? model?.total_wickets : ""
+    );
+    data.append(
+      "total_matches",
+      model?.total_matches ? model?.total_matches : ""
+    );
+    data.append(
+      "player_ratings",
+      model?.player_ratings ? model?.player_ratings : ""
+    );
+    data.append("password", model?.password ? model?.password : "");
     data.append(
       "bowling_style_id",
-      selectedBowlingStyle ? selectedBowlingStyle.value : ""
+      selectedBowlingStyle?.value ? selectedBowlingStyle?.value : ""
     );
     data.append(
       "playing_role_id",
-      selectedPlayingRole ? selectedPlayingRole.value : ""
+      selectedPlayingRole?.value ? selectedPlayingRole?.value : ""
     );
 
-    data.append("phone", model.phone);
-    data.append("city", selectedCity && selectedCity.value);
-    data.append("country", selectedCountry && selectedCountry.value);
-    data.append("fees", model.fees ? model.fees : "");
-    data.append("description", model.description ? model.description : "");
+    data.append("phone", model?.phone ? model?.phone : "");
+    data.append("city", selectedCity?.value ? selectedCity?.value : "");
+    data.append(
+      "country",
+      selectedCountry?.value ? selectedCountry?.value : ""
+    );
+    data.append("fees", model?.fees ? model?.fees : "");
+    data.append("description", model?.description ? model?.description : "");
     data.append(
       "available_days",
       selectedDays && selectedDays?.length > 0

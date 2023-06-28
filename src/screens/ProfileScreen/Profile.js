@@ -191,8 +191,17 @@ const Profile = (props) => {
                           profile: userData,
                         });
                       }
+                      var updatedProfile = {
+                        ...userData,
+                        ...userData?.player[0],
+                      };
                       navigation.navigate("CricketProfile", {
-                        profile: userData,
+                        profile: {
+                          ...updatedProfile,
+                          batting_style: updatedProfile?.bowling_style_id,
+                          bowling_style: updatedProfile?.bowling_style_id,
+                        },
+                        other: false,
                       });
                     }}
                     style={{

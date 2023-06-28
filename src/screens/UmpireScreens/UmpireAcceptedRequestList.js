@@ -56,7 +56,7 @@ const cross_icon = windowHeight * 0.01;
 const Search_Bar = windowHeight * 0.06;
 const INPUT_HEIGHT1 = windowHeight * 0.07;
 
-const Request = () => {
+const UmpireAcceptedRequestList = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const [recruterRequests, setRecruterRequests] = useState([]);
@@ -101,7 +101,7 @@ const Request = () => {
             flex: 1,
             justifyContent: "space-between",
             padding: sizes.m7,
-            // flexDirection: "row",
+            flexDirection: "row",
           }}
         >
           <View
@@ -136,42 +136,6 @@ const Request = () => {
               Type: {item?.match_type}
             </Text>
             {/* <Text style={styles.text}>{item.notification}</Text> */}
-          </View>
-          <View
-            style={{
-              marginRight: sizes.m5,
-              marginBottom: sizes.m5,
-              flexDirection: "row",
-              // justifyContent: "flex-end",
-              // justifyContent: "center",
-            }}
-          >
-            <PlayerCustomButtom
-              textColor="white"
-              btnLabel="Accept"
-              myStyle={{
-                alignSelf: "flex-end",
-                width: windowWidth * 0.22,
-              }}
-              onPress={() => {
-                handleRequest({ matchid: item.id, status: "accept" });
-              }}
-            />
-            <PlayerCustomButtom
-              textColor="white"
-              btnLabel="Decline"
-              myStyle={{
-                alignSelf: "flex-end",
-                width: windowWidth * 0.22,
-                backgroundColor: "red",
-                marginTop: 5,
-                marginLeft: 5,
-              }}
-              icon="delete"
-              onPress={() => {
-                handleRequest({ matchid: item.id, status: "decline" });
-              }}
-            />
           </View>
         </View>
       </TouchableOpacity>
@@ -259,7 +223,7 @@ const Request = () => {
     let config = {
       method: "get",
       maxBodyLength: Infinity,
-      url: `${apiActiveURL}get-Umpiring-list?status=requested`,
+      url: `${apiActiveURL}get-Umpiring-list?status=accept`,
       headers: {
         Authorization: `Bearer ${userLoginSuccess.token}`,
       },
@@ -361,7 +325,6 @@ const Request = () => {
               </View>
             </View>
           </LinearGradient>
-
           <View
             style={{
               marginTop: -35,
@@ -370,20 +333,6 @@ const Request = () => {
               borderTopRightRadius: 30,
             }}
           >
-            <PlayerCustomButtom
-              textColor="white"
-              btnLabel="Accpted Match List"
-              onPress={() => {
-                navigation.navigate("Umpiringacceotedrequest");
-              }}
-              myStyle={{
-                alignSelf: "center",
-                // marginRight: 20,
-                marginTop: 20,
-                paddingVertical: 10,
-                width: 150,
-              }}
-            />
             {recruterRequests.length == 0 ? (
               <View>
                 <Text style={[styles.text, { textAlign: "center" }]}>
@@ -407,7 +356,7 @@ const Request = () => {
   );
 };
 
-export default withToast(Request);
+export default withToast(UmpireAcceptedRequestList);
 
 const styles = StyleSheet.create({
   root: {

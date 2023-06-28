@@ -222,6 +222,7 @@ const PlayersScreen = () => {
             <View
               style={{
                 flex: 1,
+                flexDirection: "row",
                 justifyContent: "space-between",
                 padding: sizes.m7,
               }}
@@ -247,34 +248,17 @@ const PlayersScreen = () => {
                   </>
                 ) : null}
               </View>
-              <View
-                style={{
-                  marginRight: sizes.m5,
-                  // backgroundColor: "red",
-                  flexDirection: "row",
-                  // marginHorizontal: 13,
-                  width: "100%",
-                  // marginBottom: sizes.m5,
-                  justifyContent: "flex-end",
-                }}
-              >
+              <View>
                 <CustomButton
                   textColor="white"
                   btnLabel="View Profile"
                   Press={() => {
-                    // onPress(item);
                     navigation.navigate("CricketProfile", {
                       profile: item,
                       other: true,
                     });
-                    // navigation.navigate("MyPlayerDetail", {
-                    //   playerId: item.playerId,
-                    //   screenName: "myPlayer",
-                    // });
                   }}
                   myStyle={{
-                    // alignSelf: "flex-end",
-
                     width: 100,
                   }}
                   txtStyle={{ fontSize: 12 }}
@@ -294,7 +278,6 @@ const PlayersScreen = () => {
                   }
                   Press={() => {
                     deletePlayer(item.playerId);
-                    // onPress(item);
                   }}
                   txtStyle={{ fontSize: 12 }}
                   myStyle={{
@@ -429,7 +412,7 @@ const styles = StyleSheet.create({
 
   card: {
     width: CARD_WIDTH,
-    height: CARD_HEIGHT,
+    // height: CARD_HEIGHT,
     marginTop: sizes.m15,
     borderRadius: sizes.m15,
     borderColor: "#2bb789",
