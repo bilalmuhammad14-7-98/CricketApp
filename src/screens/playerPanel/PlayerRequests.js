@@ -99,14 +99,24 @@ const PlayerRequests = (navigation) => {
     await axios(config)
       .then(function (response) {
         console.log(response, "players request response");
-        dispatch(
-          showSnackBar({
-            visible: true,
-            text: response.data.message,
-            error: false,
-          })
-        );
-        listPlayers();
+        if (response.data.success) {
+          dispatch(
+            showSnackBar({
+              visible: true,
+              text: response.data.message,
+              error: false,
+            })
+          );
+          listPlayers();
+        } else {
+          dispatch(
+            showSnackBar({
+              visible: true,
+              text: response.data.message,
+              error: true,
+            })
+          );
+        }
       })
       .catch(function (error) {
         console.log(error);
@@ -254,7 +264,7 @@ const PlayerRequests = (navigation) => {
                 renderItem={(item) => {
                   return renderList(item.item);
                 }}
-                keyExtractor={(item) => `${item.player_id}`}
+                keyExtractor={(item) => `${item.team_req_id}`}
               />
             )}
           </View>

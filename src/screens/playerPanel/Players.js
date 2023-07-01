@@ -254,7 +254,7 @@ const PlayersScreen = () => {
                   btnLabel="View Profile"
                   Press={() => {
                     navigation.navigate("CricketProfile", {
-                      profile: item,
+                      profile: { ...item, id: item.playerId },
                       other: true,
                     });
                   }}

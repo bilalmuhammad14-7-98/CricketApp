@@ -195,38 +195,38 @@ const Signup = (props) => {
       return;
     }
 
-    if (phone.length != 11) {
-      dispatch(
-        showSnackBar({
-          visible: true,
-          text: "Invalid phone number",
-          error: true,
-        })
-      );
-      return;
-    }
+    // if (phone.length != 11) {
+    //   dispatch(
+    //     showSnackBar({
+    //       visible: true,
+    //       text: "Invalid phone number",
+    //       error: true,
+    //     })
+    //   );
+    //   return;
+    // }
 
-    if (phone.length != 11) {
-      dispatch(
-        showSnackBar({
-          visible: true,
-          text: "Invalid phone number",
-          error: true,
-        })
-      );
-      return;
-    }
+    // if (phone.length != 11) {
+    //   dispatch(
+    //     showSnackBar({
+    //       visible: true,
+    //       text: "Invalid phone number",
+    //       error: true,
+    //     })
+    //   );
+    //   return;
+    // }
 
-    if (phone.length != 11) {
-      dispatch(
-        showSnackBar({
-          visible: true,
-          text: "Invalid phone number",
-          error: true,
-        })
-      );
-      return;
-    }
+    // if (phone.length != 11) {
+    //   dispatch(
+    //     showSnackBar({
+    //       visible: true,
+    //       text: "Invalid phone number",
+    //       error: true,
+    //     })
+    //   );
+    //   return;
+    // }
 
     if (!selectedCountry) {
       dispatch(
@@ -344,7 +344,7 @@ const Signup = (props) => {
               value={phone}
               onChangeText={(text) => setPhone(text)}
               placeholder="Phone"
-              keyboardType="numeric"
+              keyboardType="text"
               // keyboardType={"email-address"}
             />
             {/* <AuthCustomFormInput

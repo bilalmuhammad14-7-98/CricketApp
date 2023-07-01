@@ -164,7 +164,7 @@ const TeamList = () => {
                   onPress={() => {
                     // onPress(item);
                     navigation.navigate("CricketProfile", {
-                      profile: item,
+                      profile: { ...item, id: item.playerId },
                       other: true,
                     });
                     // navigation.navigate("MyPlayerDetail", {

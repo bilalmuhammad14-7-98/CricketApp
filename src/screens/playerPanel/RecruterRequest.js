@@ -26,12 +26,12 @@ import images from "../../config/images";
 import { sizes } from "../../config/sizes";
 import PlayerCustomButtom from "../../components/formComponents/PlayerCustomButtom";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { NavigationContainer } from "@react-navigation/native";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { ScrollView } from "react-native-gesture-handler";
 import axios from "axios";
 import { http } from "../../components/http/http";
-import { apiActiveURL } from "../../ApiBaseURL";
+import { apiActiveURL, imageURL } from "../../ApiBaseURL";
 import { useDispatch, useSelector } from "react-redux";
 import Toast from "react-native-root-toast";
 import withToast from "../../components/Toast";
@@ -47,8 +47,9 @@ const cross_icon = windowHeight * 0.01;
 const Search_Bar = windowHeight * 0.06;
 const INPUT_HEIGHT1 = windowHeight * 0.07;
 
-const RecruterRequest = (navigation) => {
+const RecruterRequest = () => {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const userLoginSuccess = useSelector((state) => {
     return state.loginData.data;
   });
@@ -76,15 +77,15 @@ const RecruterRequest = (navigation) => {
   };
 
   const onPress = async (item, status) => {
-    // console.log(item.team_id, "team_id");
-    // console.log(item.team_req_id, "team_req_id");
-    // console.log(item.recruiter_id, "recruiter_id");
-    // console.log(status, "recruiter_id");
+    console.log(item.team_id, "team_id");
+    console.log(item.team_req_id, "team_req_id");
+    console.log(item.recruiter_id, "recruiter_id");
+    console.log(status, "recruiter_id");
     // return console.log(item);
     let data = new FormData();
-    data.append("team_req_id", item.team_id.toString());
-    data.append("team_id", item.team_id.toString());
-    data.append("recruiter_id", item.recruiter_id.toString());
+    data.append("team_req_id", item.team_req_id);
+    data.append("team_id", item.team_id);
+    data.append("recruiter_id", item.recruiter_id);
     data.append("status", status);
 
     let config = {
@@ -99,6 +100,10 @@ const RecruterRequest = (navigation) => {
 
     await axios(config)
       .then(function (response) {
+        console.log(item.team_id, "team_id");
+        console.log(item.team_req_id, "team_req_id");
+        console.log(item.recruiter_id, "recruiter_id");
+        console.log(status, "recruiter_id");
         console.log(response.data, "players request response");
         if (response.data.success) {
           dispatch(
@@ -108,7 +113,7 @@ const RecruterRequest = (navigation) => {
               error: false,
             })
           );
-          listPlayers();
+          navigation.goBack();
         } else {
           dispatch(
             showSnackBar({
@@ -194,7 +199,7 @@ const RecruterRequest = (navigation) => {
                   size={LOGO_SIZE}
                   source={
                     item?.recruiter_img
-                      ? { uri: item?.recruiter_img }
+                      ? { uri: `${imageURL}${item?.recruiter_img}` }
                       : images.FypLogo
                   }
                 />
@@ -344,7 +349,7 @@ const RecruterRequest = (navigation) => {
                 renderItem={(item) => {
                   return renderList(item.item);
                 }}
-                keyExtractor={(item) => `${item.player_id}`}
+                keyExtractor={(item) => `${item.team_req_id}`}
               />
             )}
           </View>
