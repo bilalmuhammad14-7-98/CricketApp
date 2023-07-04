@@ -44,6 +44,7 @@ import ScheduleMatch from "../../screens/teamScreens/ScheduleMatch";
 import InviteList from "../../screens/teamScreens/InviteList";
 import RecivedInviteList from "../../screens/teamScreens/RecivedInviteList";
 import AllPlayer from "../../screens/playerPanel/AllPlayer";
+import FilterPlayer from "../../screens/playerPanel/FilterPlayer";
 import PlayerDetail from "../../screens/playerPanel/PlayerDetail";
 import Gallery from "../../screens/playerPanel/Gallery";
 import MyPlayerDetail from "../../screens/playerPanel/MyPlayerDetail";
@@ -68,6 +69,7 @@ import RecruterRequest from "../../screens/playerPanel/RecruterRequest";
 import PlayerReply from "../../screens/playerPanel/PlayerReply";
 import UmpireProfileForRecruiter from "../../screens/ProfileScreen/UmpireProfileForRecruiter";
 import UmpireAcceptedRequestList from "../../screens/UmpireScreens/UmpireAcceptedRequestList";
+
 const upper_margin = windowWidth * 0.001;
 const upper_margin1 = windowWidth * 0.01;
 const LOGO_SIZE = windowHeight * 0.06;
@@ -437,6 +439,26 @@ function PlayerHomeNavigationContainer() {
             return (
               <NavigationHeader
                 title={"All Players List"}
+                navigation={navigation}
+              />
+            );
+          },
+          headerStyle: {
+            backgroundColor: "#FAF9F6",
+            elevation: 0,
+          },
+        })}
+      />
+
+<StackPlayerHome.Screen
+        name="FilterPlayersScreen"
+        component={FilterPlayer}
+        options={({ navigation }) => ({
+          title: "",
+          headerLeft: () => {
+            return (
+              <NavigationHeader
+                title={"Filter Players"}
                 navigation={navigation}
               />
             );

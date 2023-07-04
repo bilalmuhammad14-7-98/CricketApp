@@ -52,7 +52,7 @@ const cross_icon = windowHeight * 0.01;
 const Search_Bar = windowHeight * 0.06;
 const INPUT_HEIGHT1 = windowHeight * 0.07;
 
-const AllPlayer = () => {
+const FilterPlayer = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   const isFocused = useIsFocused();
@@ -63,17 +63,42 @@ const AllPlayer = () => {
   const [pressedItem, setPressedItem] = useState(null);
   const [modal, setModal] = useState(false);
   const [searchedBlock, setSearchedBlock] = useState([]);
+  const [type, setType] = useState("player");
 
   useEffect(() => {
     if (isFocused) {
       // This code will run when the screen gains focus
       // alert("screen gained focus");
-      listPlayers();
+      //   listPlayers();
     } else {
       // This code will run when the screen loses focus
       // alert("screen lost focus");
     }
   }, [isFocused]);
+
+  const filterData = async (data) => {
+    console.log(data, "data");
+    setType(data);
+
+    var config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: `${apiActiveURL}list-filter-player?type=${data}`,
+      headers: {
+        Authorization: `Bearer ${userLoginSuccess.token}`,
+      },
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console.log(response.data, "filter players response");
+        setPlayers(response?.data?.players);
+        // setTeams(response.data.teams);
+      })
+      .catch(function (error) {
+        console.log(error, "error");
+      });
+  };
 
   const listPlayers = async () => {
     var config = {
@@ -97,7 +122,7 @@ const AllPlayer = () => {
   };
 
   useEffect(() => {
-    listPlayers();
+    // listPlayers();
   }, []);
 
   const renderList = (item, index) => {
@@ -251,6 +276,7 @@ const AllPlayer = () => {
               setSearchedBlock([...data]);
             }}
           />
+
           <View
             style={{
               marginTop: -35,
@@ -259,20 +285,67 @@ const AllPlayer = () => {
               borderTopRightRadius: 30,
             }}
           >
-            {userLoginSuccess?.data?.roleId == "recruiter" && (
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                marginBottom: 20,
+                marginTop: 10,
+              }}
+            >
               <PlayerCustomButtom
                 textColor="white"
-                btnLabel="Filter"
+                btnLabel="Top Batsman"
                 onPress={() => {
-                  // onPress(item);
-                  navigation.navigate("FilterPlayersScreen");
+                  filterData("batsman");
+                  //   navigation.navigate("FilterPlayersScreen");
                 }}
                 myStyle={{
                   alignSelf: "center",
-                  marginTop: 10,
+                  //   marginTop: 10,
                 }}
               />
-            )}
+            </View>
+
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+                // backgroundColor: "pink",
+              }}
+            >
+              <PlayerCustomButtom
+                textColor="white"
+                btnLabel="Top Bowler"
+                onPress={() => {
+                  filterData("bowler");
+                  // onPress(item);
+                  //   navigation.navigate("FilterPlayersScreen");
+                }}
+                myStyle={{
+                  alignSelf: "center",
+                  // marginTop: 10,
+                }}
+              />
+            </View>
+
+            <View
+              style={{
+                flex: 1,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <Text
+                adjustsFontSizeToFit={true}
+                numberOfLines={1}
+                style={{ textAlignVertical: "center", textAlign: "center" }}
+              >
+                Top {type}s
+              </Text>
+            </View>
 
             {searchedBlock[0] == "empty" ? (
               <View style={{ justifyContent: "center", alignItems: "center" }}>
@@ -294,7 +367,7 @@ const AllPlayer = () => {
   );
 };
 
-export default withToast(AllPlayer);
+export default withToast(FilterPlayer);
 
 const styles = StyleSheet.create({
   root: {

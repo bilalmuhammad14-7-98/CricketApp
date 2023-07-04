@@ -76,6 +76,7 @@ const TeamsScreen = () => {
       // This code will run when the screen gains focus
       // alert("screen gained focus");
       listTeams();
+      myTeams();
     } else {
       // This code will run when the screen loses focus
       // alert("screen lost focus");
@@ -117,7 +118,28 @@ const TeamsScreen = () => {
         console.log(temp, "temptemp");
         console.log(temp2, "temp2temp2");
         setTeams(temp);
-        setMyTeam(temp2);
+        // setMyTeam(temp2);
+      })
+      .catch(function (error) {
+        // console.log(error, "error");
+      });
+  };
+
+  const myTeams = async () => {
+    // console.log(userLoginSuccess.token, "teams");
+    var config = {
+      method: "get",
+      maxBodyLength: Infinity,
+      url: `${apiActiveURL}my-teams?player_id=${userLoginSuccess.data.id}`,
+      headers: {
+        Authorization: `Bearer ${userLoginSuccess.token}`,
+      },
+    };
+
+    await axios(config)
+      .then(function (response) {
+        console.log(response.data.teams, "my teams teams response ===");
+        setMyTeam(response.data.teams);
       })
       .catch(function (error) {
         // console.log(error, "error");
